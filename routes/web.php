@@ -65,3 +65,18 @@ $router->group([
     });
 
 });
+
+
+// 前台接口
+$router->group([
+    // 路由前缀
+    'prefix' => 'front',
+    // 路由中间件
+    'middleware' => ['api_sign_valid', 'access_control_allow_origin']
+], function () use ($router) {
+
+    // 产品
+    $router->group(['prefix' => 'product'], function () use ($router) {
+        $router->post('get', 'Front\ProductController@get');
+    });
+});
