@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
-use App\Enums\CpTypeEnums;
-use App\Enums\ProductTypeEnums;
+use App\Common\Enums\CpTypeEnums;
+use App\Common\Enums\ProductTypeEnums;
 use App\Models\ProductModel;
 
 class ProductController extends BaseController
