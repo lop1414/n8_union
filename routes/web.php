@@ -79,4 +79,20 @@ $router->group([
     $router->group(['prefix' => 'product'], function () use ($router) {
         $router->post('get', 'Front\ProductController@get');
     });
+
+    // open api 签名验证
+    $router->group(['prefix' => 'auth'], function () use ($router) {
+        $router->post('signAuth', 'Front\OpenApiController@auth');
+    });
+
+    $router->group(['prefix' => 'n8_global_user'], function () use ($router) {
+        $router->post('read', 'Front\N8GlobalUserController@read');
+        $router->post('make', 'Front\N8GlobalUserController@make');
+    });
+
+    $router->group(['prefix' => 'n8_global_order'], function () use ($router) {
+        $router->post('read', 'Front\N8GlobalOrderController@read');
+        $router->post('make', 'Front\N8GlobalOrderController@make');
+
+    });
 });

@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\StatusEnum;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
-use App\Enums\MenuEnums;
+use App\Enums\MenuLevelEnums;
 use App\Models\MenuLevelModel;
 
 class MenuController extends BaseController
@@ -44,7 +44,7 @@ class MenuController extends BaseController
             if(!in_array($menu['id'],$existIds)){
                 $model = new MenuLevelModel();
                 $model->menu_id = $menu['id'];
-                $model->level = MenuEnums::DEFAULT;
+                $model->level = MenuLevelEnums::DEFAULT;
                 $model->level = StatusEnum::ENABLE;
                 $model->save();
             }
@@ -74,21 +74,21 @@ class MenuController extends BaseController
 
 
         $this->curdService->getQueryBefore(function(){
-            $level = MenuEnums::DEFAULT;
+            $level = MenuLevelEnums::DEFAULT;
             if(isset($this->curdService->requestData['cp_type']) && !empty($this->curdService->requestData['cp_type'])){
-                $level = MenuEnums::CP_TYPE;
+                $level = MenuLevelEnums::CP_TYPE;
             }
 
             if(isset($this->curdService->requestData['business']) && !empty($this->curdService->requestData['business'])){
-                $level = MenuEnums::BUSINESS;
+                $level = MenuLevelEnums::BUSINESS;
             }
 
             if(isset($this->curdService->requestData['product_id']) && !empty($this->curdService->requestData['product_id'])){
-                $level = MenuEnums::PRODUCT;
+                $level = MenuLevelEnums::PRODUCT;
             }
 
             $this->curdService->customBuilder(function ($builder) use ($level){
-                $builder->whereIn('level',[MenuEnums::COMMON,$level]);
+                $builder->whereIn('level',[MenuLevelEnums::COMMON,$level]);
             });
 
         });
@@ -122,7 +122,7 @@ class MenuController extends BaseController
      */
     public function saveValidRule(){
         $this->curdService->addField('menu_id')->addValidRule('required');
-        $this->curdService->addField('level')->addValidEnum(MenuEnums::class);
+        $this->curdService->addField('level')->addValidEnum(MenuLevelEnums::class);
         $this->curdService->addColumns(['menu_id']);
     }
 

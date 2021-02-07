@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\RefreshCacheCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        // 缓存
+        RefreshCacheCommand::class,
     ];
 
     /**
