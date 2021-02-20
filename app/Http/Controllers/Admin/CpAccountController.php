@@ -6,8 +6,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\StatusEnum;
 use App\Common\Tools\CustomException;
-use App\Enums\CpTypeEnums;
+use App\Common\Enums\CpTypeEnums;
 use App\Models\CpAccountModel;
+use App\Services\YwSyncAccountService;
+use Illuminate\Http\Request;
 
 class CpAccountController extends BaseController
 {
@@ -78,5 +80,25 @@ class CpAccountController extends BaseController
             }
 
         });
+    }
+
+
+    public function syncAccount(Request $request){
+        $requestData = $request->all();
+
+        $this->curdService->setRequestData($requestData);
+
+        // 查找
+        $item = $this->curdService->read();
+
+
+        if($item->cp_type == CpTypeEnums::YW){
+            $service = new YwSyncAccountService();
+            $service->h5($item);
+            $service->kyy($item);
+        }
+
+        return $this->success();
+
     }
 }

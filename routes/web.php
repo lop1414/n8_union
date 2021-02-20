@@ -44,6 +44,7 @@ $router->group([
         $router->post('read', 'Admin\CpAccountController@read');
         $router->post('enable', 'Admin\CpAccountController@enable');
         $router->post('disable', 'Admin\CpAccountController@disable');
+        $router->post('sync_account', 'Admin\CpAccountController@syncAccount');
     });
 
     // 产品
