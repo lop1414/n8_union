@@ -81,6 +81,11 @@ $router->group([
         $router->post('get', 'Front\ProductController@get');
     });
 
+    // CP账户
+    $router->group(['prefix' => 'cp_account'], function () use ($router) {
+        $router->post('read', 'Front\CpAccountController@read');
+    });
+
     // open api 签名验证
     $router->group(['prefix' => 'auth'], function () use ($router) {
         $router->post('signAuth', 'Front\OpenApiController@auth');
