@@ -28,14 +28,14 @@ class OpenApiController extends FrontController
      * @throws CustomException
      */
     public function auth(Request $request){
-        $req = $request->all();
+        $authData = $request->input('auth_data');
 
-        $this->validRule($req,[
+        $this->validRule($authData,[
             'product_id'    =>  'required'
         ]);
 
         $productInfo = (new ProductModel())
-            ->where('id',$req['product_id'])
+            ->where('id',$authData['product_id'])
             ->first();
 
 
@@ -49,7 +49,7 @@ class OpenApiController extends FrontController
 
 
         // 验证
-        (new OpenApiAuthService())->valid($req,$productInfo->secret);
+        (new OpenApiAuthService())->valid($authData,$productInfo->secret);
 
         return $this->success();
     }
