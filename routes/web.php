@@ -99,6 +99,9 @@ $router->group([
     $router->group(['prefix' => 'n8_global_order'], function () use ($router) {
         $router->post('read', 'Front\N8GlobalOrderController@read');
         $router->post('make', 'Front\N8GlobalOrderController@make');
+    });
 
+    $router->group(['prefix' => 'n8_union_user'], function () use ($router) {
+        $router->post('create', 'Front\N8UnionUserController@create');
     });
 });
