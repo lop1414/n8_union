@@ -1,0 +1,43 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 虚拟机 192.168.10.10
+ Source Server Type    : MySQL
+ Source Server Version : 50731
+ Source Host           : localhost:3306
+ Source Schema         : n8_union
+
+ Target Server Type    : MySQL
+ Target Server Version : 50731
+ File Encoding         : 65001
+
+ Date: 03/03/2021 19:53:04
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for n8_union_user_extends
+-- ----------------------------
+DROP TABLE IF EXISTS `n8_union_user_extends`;
+CREATE TABLE `n8_union_user_extends` (
+  `uuid` bigint(20) NOT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  `ua` text,
+  `muid` varchar(255) DEFAULT NULL COMMENT '设备号',
+  `oaid` varchar(255) DEFAULT NULL,
+  `device_brand` varchar(255) DEFAULT NULL COMMENT '设备品牌',
+  `device_manufacturer` varchar(255) DEFAULT NULL COMMENT '设备生产商',
+  `device_model` varchar(255) DEFAULT NULL COMMENT '设备型号',
+  `device_product` varchar(255) DEFAULT NULL COMMENT '设备代号',
+  `device_os_version_name` varchar(255) DEFAULT NULL COMMENT '操作系统版本名称',
+  `device_os_version_code` varchar(255) DEFAULT NULL COMMENT '操作系统版本号',
+  `device_platform_version_name` varchar(255) DEFAULT NULL COMMENT '运行平台版本名称',
+  `device_platform_version_code` varchar(255) DEFAULT NULL COMMENT '运行平台版本号',
+  `android_id` varchar(255) DEFAULT NULL COMMENT '安卓ID',
+  `request_id` varchar(255) DEFAULT NULL COMMENT '广告商的请求ID',
+  PRIMARY KEY (`uuid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='联运用户扩张信息';
+
+SET FOREIGN_KEY_CHECKS = 1;
