@@ -44,4 +44,11 @@ class ProductModel extends BaseModel
         return $this->hasMany('App\Models\N8GlobalOrderModel','product_id','id');
     }
 
+    /**
+     * 平台账户 一对一
+     */
+    public function cp_account(){
+        return $this->hasOne('App\Models\CpAccountModel', 'id', 'cp_account_id');
+    }
+
 }

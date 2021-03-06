@@ -2,6 +2,8 @@
 
 namespace App\Sdks\Yw;
 
+use App\Sdks\Yw\Traits\Book;
+use App\Sdks\Yw\Traits\Chapter;
 use App\Sdks\Yw\Traits\Order;
 use App\Sdks\Yw\Traits\Product;
 use App\Sdks\Yw\Traits\Request;
@@ -12,6 +14,8 @@ class YwSdk
     use Request;
     use Order;
     use Product;
+    use Book;
+    use Chapter;
 
     /**
      * @var
