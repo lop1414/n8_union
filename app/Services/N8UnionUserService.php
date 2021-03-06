@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Common\Services\BaseService;
+use App\Models\ChannelModel;
+use App\Models\CpChannelModel;
 use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
 use Illuminate\Support\Facades\DB;
@@ -17,13 +19,23 @@ class N8UnionUserService extends BaseService
         try{
             DB::beginTransaction();
 
+            $channelInfo = (new ChannelModel())
+                ->where('id',$data['channel_id'])
+                ->first();
+            $cpChannelInfo = (new CpChannelModel())
+                ->where('product_id',$channelInfo->product_id)
+                ->where('cp_channel_id',$channelInfo->cp_channel_id)
+                ->first();
 
             $ret = (new N8UnionUserModel())->create([
-                'n8_guid'      => $data['n8_guid'],
-                'channel_id'   => $data['channel_id'],
-                'created_time' => $data['created_time'],
-                'click_id'     => $data['click_id'] ?? 0,
-                'created_at'   => date('Y-m-d H:i:s')
+                'n8_guid'       => $data['n8_guid'],
+                'channel_id'    => $data['channel_id'],
+                'created_time'  => $data['created_time'],
+                'cp_book_id'    => $cpChannelInfo->cp_book_id,
+                'cp_chapter_id' => $cpChannelInfo->cp_chapter_id,
+                'cp_force_chapter_id' => $cpChannelInfo->cp_force_chapter_id,
+                'admin_id'      => $channelInfo->admin_id,
+                'created_at'    => date('Y-m-d H:i:s')
             ]);
 
 
@@ -46,11 +58,13 @@ class N8UnionUserService extends BaseService
             ]);
 
 
-            $ret->extend;
             DB::commit();
+
+            $ret->extend;
 
         }catch (\Exception $e){
             DB::rollBack();
+
             $ret =  false;
         }
 

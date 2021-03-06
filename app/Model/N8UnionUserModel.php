@@ -31,6 +31,10 @@ class N8UnionUserModel extends BaseModel
         'n8_guid',
         'channel_id',
         'created_time',
+        'cp_book_id',
+        'cp_chapter_id',
+        'cp_force_chapter_id',
+        'admin_id',
         'click_id',
         'created_at'
     ];

@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Front;
 
 use App\Common\Controllers\Front\FrontController;
 use App\Common\Traits\ValidRule;
-use App\Models\N8UnionUserExtendModel;
-use App\Models\N8UnionUserModel;
 use App\Services\N8UnionUserService;
 use Illuminate\Http\Request;
 
