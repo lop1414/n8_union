@@ -37,12 +37,14 @@ class ProductModel extends BaseModel
         return $this->hasMany('App\Models\N8GlobalUserModel','product_id','id');
     }
 
+
     /**
      * 关联全局订单 一对多
      */
     public function n8_global_order(){
         return $this->hasMany('App\Models\N8GlobalOrderModel','product_id','id');
     }
+
 
     /**
      * 平台账户 一对一

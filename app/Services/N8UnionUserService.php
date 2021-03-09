@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Common\Services\BaseService;
+use App\Common\Tools\CustomException;
 use App\Models\ChannelModel;
 use App\Models\CpChannelModel;
 use App\Models\N8UnionUserExtendModel;
@@ -62,13 +63,20 @@ class N8UnionUserService extends BaseService
 
             $ret->extend;
 
+            return $ret;
+
         }catch (\Exception $e){
             DB::rollBack();
 
-            $ret =  false;
+            if($e->getCode() == 23000){
+                throw new CustomException([
+                    'code'      => 'UUID_EXIST',
+                    'message'   => '用户已存在',
+                    'log'       => true,
+                    'data'      => $data
+                ]);
+            }
         }
-
-        return $ret;
 
     }
 
