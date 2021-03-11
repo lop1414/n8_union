@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Services\Yw;
+namespace App\Services\Bm;
 
 use App\Common\Services\BaseService;
 use App\Common\Enums\CpTypeEnums;
 use App\Models\ProductModel;
 
-class YwService extends BaseService
+class BmService extends BaseService
 {
 
     /**
      * @var string
      * 平台类型
      */
-    protected $cpType = CpTypeEnums::YW;
+    protected $cpType = CpTypeEnums::BM;
 
 
     /**

@@ -24,8 +24,54 @@ class ProductController extends BaseController
         parent::__construct();
     }
 
+
+
     /**
-     * 保持验证规则
+     * 分页列表预处理
+     */
+    public function selectPrepare(){
+
+
+        $this->curdService->selectQueryAfter(function(){
+
+            foreach ($this->curdService->responseData['list'] as $item){
+                $item->cp_account;
+            }
+        });
+    }
+
+
+
+    /**
+     * 列表预处理
+     */
+    public function getPrepare(){
+
+
+        $this->curdService->getQueryAfter(function(){
+            foreach ($this->curdService->responseData as $item){
+                $item->cp_account;
+            }
+        });
+    }
+
+
+
+
+    /**
+     * 详情预处理
+     */
+    public function readPrepare(){
+
+        $this->curdService->findAfter(function(){
+            $this->curdService->responseData->cp_account;
+        });
+    }
+
+
+
+    /**
+     * 保存验证规则
      */
     public function saveValidRule(){
         $this->curdService->addField('name')->addValidRule('required|max:12');
@@ -34,10 +80,11 @@ class ProductController extends BaseController
         $this->curdService->addField('type')->addValidRule('required')
             ->addValidEnum(ProductTypeEnums::class);
         $this->curdService->addField('cp_product_alias')->addValidRule('required');
-        $this->curdService->addField('account')->addValidRule('required');
+        $this->curdService->addField('cp_account_id')->addDefaultValue(0);
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class)
             ->addDefaultValue(StatusEnum::ENABLE);
     }
+
 
     /**
      * 创建预处理
