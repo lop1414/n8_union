@@ -16,6 +16,8 @@ class ChannelController extends BaseController
 {
 
 
+    public $adminUser;
+
 
     /**
      * constructor.
@@ -25,6 +27,9 @@ class ChannelController extends BaseController
         $this->model = new ChannelModel();
 
         parent::__construct();
+
+        $this->adminUser = Functions::getGlobalData('admin_user_info');
+
     }
 
 
@@ -36,9 +41,42 @@ class ChannelController extends BaseController
 
 
     /**
+     * 有数据权限
+     * @return bool
+     */
+    public function isDataAuth(){
+        if($this->adminUser['is_admin']) return true;
+
+        return false;
+    }
+
+
+
+    /**
+     * 根据权限过滤
+     */
+    public function dataFilter(){
+        if(!$this->isDataAuth()){
+            $this->curdService->addFiltering([
+                [
+                    'field'     => 'admin_id',
+                    'operator'  => 'EQUALS',
+                    'value'     => $this->adminUser['admin_user']['id']
+                ]
+            ]);
+        }
+    }
+
+
+
+
+    /**
      * 分页列表预处理
      */
     public function selectPrepare(){
+
+        $this->dataFilter();
+
         $this->curdService->selectQueryAfter(function(){
 
             $map = $this->getAdminUser();
@@ -58,6 +96,14 @@ class ChannelController extends BaseController
      */
     public function getPrepare(){
 
+        if(!$this->isDataAuth()){
+            $this->curdService->getQueryBefore(function (){
+                $this->curdService->customBuilder(function ($build){
+                    $build->where('admin_id',$this->adminUser['admin_user']['id']);
+                });
+            });
+        }
+
         $this->curdService->getQueryAfter(function(){
             $map = $this->getAdminUser();
 
@@ -76,7 +122,6 @@ class ChannelController extends BaseController
      * 详情预处理
      */
     public function readPrepare(){
-
 
         $this->curdService->findAfter(function(){
             $this->curdService->responseData->product;
@@ -117,9 +162,7 @@ class ChannelController extends BaseController
                 ]);
             }
 
-            $adminUser = Functions::getGlobalData('admin_user_info');
-
-            $this->curdService->handleData['admin_id'] = $adminUser['admin_user']['id'];
+            $this->curdService->handleData['admin_id'] = $this->adminUser['admin_user']['id'];
         });
 
 
