@@ -79,6 +79,14 @@ $router->group([
     });
 
 
+    // CP渠道
+    $router->group(['prefix' => 'cp_channel'], function () use ($router) {
+        $router->post('select', 'Admin\CpChannelController@select');
+        $router->post('get', 'Admin\CpChannelController@get');
+        $router->post('read', 'Admin\CpChannelController@read');
+    });
+
+
 
     // 队列数据
     $router->group(['prefix' => 'failed_queue'], function () use ($router) {
@@ -88,6 +96,9 @@ $router->group([
     });
 
 });
+
+
+
 
 
 // 前台接口
