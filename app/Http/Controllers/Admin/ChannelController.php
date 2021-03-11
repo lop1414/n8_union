@@ -84,6 +84,9 @@ class ChannelController extends BaseController
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->product;
                 $item->cp_channel;
+                $item->cp_channel->book;
+                $item->cp_channel->chapter;
+                $item->cp_channel->force_chapter;
                 $item->admin_name = $map[$item->admin_id];
             }
         });
@@ -110,6 +113,9 @@ class ChannelController extends BaseController
             foreach ($this->curdService->responseData as $item){
                 $item->product;
                 $item->cp_channel;
+                $item->cp_channel->book;
+                $item->cp_channel->chapter;
+                $item->cp_channel->force_chapter;
                 $item->admin_name = $map[$item->admin_id];
             }
         });
@@ -126,6 +132,9 @@ class ChannelController extends BaseController
         $this->curdService->findAfter(function(){
             $this->curdService->responseData->product;
             $this->curdService->responseData->cp_channel;
+            $this->curdService->responseData->cp_channel->book;
+            $this->curdService->responseData->cp_channel->chapter;
+            $this->curdService->responseData->cp_channel->force_chapter;
 
             $map = $this->getAdminUser([
                 'id'  => $this->curdService->responseData->admin_id
