@@ -30,6 +30,6 @@ CREATE TABLE `cp_accounts` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='平台账户';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台账户';
 
 SET FOREIGN_KEY_CHECKS = 1;

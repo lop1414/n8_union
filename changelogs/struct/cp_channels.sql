@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 06/03/2021 16:35:22
+ Date: 11/03/2021 11:14:48
 */
 
 SET NAMES utf8mb4;
@@ -29,6 +29,8 @@ CREATE TABLE `cp_channels` (
   `cp_book_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '平台书籍id',
   `cp_chapter_id` varchar(64) NOT NULL DEFAULT '0' COMMENT '平台章节id',
   `cp_force_chapter_id` varchar(64) DEFAULT NULL COMMENT '平台强制章节id',
+  `create_time` timestamp NULL DEFAULT NULL COMMENT '平台创建时间',
+  `updated_time` timestamp NULL DEFAULT NULL COMMENT '平台更改时间',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
