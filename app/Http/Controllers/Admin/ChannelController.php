@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
+use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Models\ChannelModel;
 use App\Models\N8UnionUserModel;
@@ -28,14 +29,24 @@ class ChannelController extends BaseController
 
 
 
+    public function getAdminUser($filter = []){
+        $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
+        return array_column($adminUsers,'name','id');
+    }
+
+
     /**
      * 分页列表预处理
      */
     public function selectPrepare(){
         $this->curdService->selectQueryAfter(function(){
 
+            $map = $this->getAdminUser();
+
             foreach ($this->curdService->responseData['list'] as $item){
+                $item->product;
                 $item->cp_channel;
+                $item->admin_name = $map[$item->admin_id];
             }
         });
     }
@@ -48,8 +59,12 @@ class ChannelController extends BaseController
     public function getPrepare(){
 
         $this->curdService->getQueryAfter(function(){
+            $map = $this->getAdminUser();
+
             foreach ($this->curdService->responseData as $item){
+                $item->product;
                 $item->cp_channel;
+                $item->admin_name = $map[$item->admin_id];
             }
         });
     }
@@ -62,9 +77,16 @@ class ChannelController extends BaseController
      */
     public function readPrepare(){
 
-        $this->curdService->findAfter(function(){
 
+        $this->curdService->findAfter(function(){
+            $this->curdService->responseData->product;
             $this->curdService->responseData->cp_channel;
+
+            $map = $this->getAdminUser([
+                'id'  => $this->curdService->responseData->admin_id
+            ]);
+
+            $this->curdService->responseData->admin_name = $map[$this->curdService->responseData->admin_id];
         });
     }
 
