@@ -58,6 +58,28 @@ $router->group([
         $router->post('disable', 'Admin\ProductController@disable');
     });
 
+
+    // union 用户
+    $router->group(['prefix' => 'union_user'], function () use ($router) {
+        $router->post('select', 'Admin\N8UnionUserController@select');
+        $router->post('get', 'Admin\N8UnionUserController@get');
+        $router->post('read', 'Admin\N8UnionUserController@read');
+    });
+
+
+    // 渠道
+    $router->group(['prefix' => 'channel'], function () use ($router) {
+        $router->post('select', 'Admin\ChannelController@select');
+        $router->post('get', 'Admin\ChannelController@get');
+        $router->post('read', 'Admin\ChannelController@read');
+        $router->post('create', 'Admin\ChannelController@create');
+        $router->post('update', 'Admin\ChannelController@update');
+        $router->post('enable', 'Admin\ProductController@enable');
+        $router->post('disable', 'Admin\ProductController@disable');
+    });
+
+
+
     // 队列数据
     $router->group(['prefix' => 'failed_queue'], function () use ($router) {
         $router->post('select', '\App\Common\Controllers\Admin\FailedQueueController@select');

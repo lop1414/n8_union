@@ -23,9 +23,9 @@ class N8UnionUserService extends BaseService
             $channelInfo = (new ChannelModel())
                 ->where('id',$data['channel_id'])
                 ->first();
+
             $cpChannelInfo = (new CpChannelModel())
-                ->where('product_id',$channelInfo->product_id)
-                ->where('cp_channel_id',$channelInfo->cp_channel_id)
+                ->where('id',$channelInfo->gcid)
                 ->first();
 
             $ret = (new N8UnionUserModel())->create([

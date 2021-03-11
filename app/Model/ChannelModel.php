@@ -13,4 +13,13 @@ class ChannelModel extends BaseModel
      */
     protected $table = 'channels';
 
+
+
+    /**
+     * 关联CP渠道信息 一对一
+     */
+    public function cp_channel(){
+        return $this->hasOne('App\Models\CpChannelModel', 'id', 'gcid');
+    }
+
 }
