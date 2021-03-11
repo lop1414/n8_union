@@ -47,4 +47,30 @@ class N8UnionUserModel extends BaseModel
         return $this->hasOne('App\Models\N8UnionUserExtendModel', 'uuid', 'id');
     }
 
+
+
+
+    /**
+     * 书籍
+     */
+    public function book(){
+        return $this->hasOne('App\Models\BookModel', 'id', 'book_id');
+    }
+
+
+    /**
+     * 章节
+     */
+    public function chapter(){
+        return $this->hasOne('App\Models\ChapterModel', 'id', 'chapter_id');
+    }
+
+
+    /**
+     * 强制章节
+     */
+    public function force_chapter(){
+        return $this->hasOne('App\Models\ChapterModel', 'id', 'force_chapter_id');
+    }
+
 }

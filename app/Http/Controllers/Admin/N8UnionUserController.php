@@ -12,6 +12,13 @@ class N8UnionUserController extends BaseController
 
 
     /**
+     * @var string
+     * 默认排序字段
+     */
+    protected $defaultOrderBy = 'created_time';
+
+
+    /**
      * constructor.
      */
     public function __construct()
@@ -32,6 +39,9 @@ class N8UnionUserController extends BaseController
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->extend;
+                $item->book;
+                $item->chapter;
+                $item->force_chapter;
             }
         });
     }
@@ -46,6 +56,9 @@ class N8UnionUserController extends BaseController
         $this->curdService->getQueryAfter(function(){
             foreach ($this->curdService->responseData as $item){
                 $item->extend;
+                $item->book;
+                $item->chapter;
+                $item->force_chapter;
             }
         });
     }
@@ -61,6 +74,9 @@ class N8UnionUserController extends BaseController
         $this->curdService->findAfter(function(){
 
             $this->curdService->responseData->extend;
+            $this->curdService->responseData->book;
+            $this->curdService->responseData->chapter;
+            $this->curdService->responseData->force_chapter;
         });
     }
 
