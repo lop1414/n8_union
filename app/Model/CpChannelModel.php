@@ -15,6 +15,14 @@ class CpChannelModel extends BaseModel
 
 
     /**
+     * 渠道
+     */
+    public function channel(){
+        return $this->hasOne('App\Models\ChannelModel', 'gcid', 'id');
+    }
+
+
+    /**
      * 书籍
      */
     public function book(){

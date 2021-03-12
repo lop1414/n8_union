@@ -134,7 +134,15 @@ $router->group([
         $router->post('make', 'Front\N8GlobalOrderController@make');
     });
 
+    // 联运用户
     $router->group(['prefix' => 'n8_union_user'], function () use ($router) {
         $router->post('create', 'Front\N8UnionUserController@create');
+    });
+
+
+    // 渠道
+    $router->group(['prefix' => 'n8_channel'], function () use ($router) {
+        $router->post('read', 'Front\N8ChannelController@read');
+        $router->post('readByCpChannel', 'Front\N8ChannelController@readByCpChannel');
     });
 });
