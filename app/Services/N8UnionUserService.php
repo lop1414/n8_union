@@ -27,7 +27,7 @@ class N8UnionUserService extends BaseService
             $ret = (new N8UnionUserModel())->create([
                 'n8_guid'       => $data['n8_guid'],
                 'channel_id'    => $data['channel_id'],
-                'created_time'  => $data['created_time'],
+                'created_time'  => $data['action_time'],
                 'book_id'    => $channelInfo->cp_channel->book_id,
                 'chapter_id' => $channelInfo->cp_channel->chapter_id,
                 'force_chapter_id' => $channelInfo->cp_channel->force_chapter_id,

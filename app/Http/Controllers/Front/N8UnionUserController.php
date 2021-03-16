@@ -27,7 +27,7 @@ class N8UnionUserController extends FrontController
         $this->validRule($requestData,[
             'n8_guid'      => 'required',
             'channel_id'   => 'required',
-            'created_time' => 'required'
+            'action_time'  => 'required'
         ]);
 
 
