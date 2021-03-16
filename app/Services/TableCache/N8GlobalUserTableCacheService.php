@@ -21,7 +21,7 @@ class N8GlobalUserTableCacheService extends BaseService
     }
 
 
-    public function getInfo($guid){
+    public function get($guid){
         return $this->tableCacheTool->get($guid);
 
     }
@@ -33,6 +33,11 @@ class N8GlobalUserTableCacheService extends BaseService
     }
 
 
+    public function del($guid){
+        return $this->tableCacheTool->del($guid);
+    }
+
+
 
 
     public function getKeyByOpenId($data){
@@ -40,7 +45,7 @@ class N8GlobalUserTableCacheService extends BaseService
     }
 
 
-    public function getInfoByOpenId($productId,$openId){
+    public function getByOpenId($productId,$openId){
         $key = $this->getKeyByOpenId([
             'product_id' => $productId,
             'open_id'    => $openId
@@ -54,6 +59,14 @@ class N8GlobalUserTableCacheService extends BaseService
         return $this->tableCacheToolByOpenId->set($key,$data);
     }
 
+
+    public function delByOpenId($productId,$openId){
+        $key = $this->getKeyByOpenId([
+            'product_id' => $productId,
+            'open_id'    => $openId
+        ]);
+        return $this->tableCacheToolByOpenId->del($key);
+    }
 
 
 
@@ -78,7 +91,7 @@ class N8GlobalUserTableCacheService extends BaseService
      * @throws CustomException
      */
     public function isExistByOpenId($productId,$openId){
-        $guidInfo = $this->getInfoByOpenId($productId,$openId);
+        $guidInfo = $this->getByOpenId($productId,$openId);
 
         if(empty($guidInfo)){
             throw new CustomException([

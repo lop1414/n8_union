@@ -127,6 +127,7 @@ $router->group([
     $router->group(['prefix' => 'n8_global_user'], function () use ($router) {
         $router->post('read', 'Front\N8GlobalUserController@read');
         $router->post('make', 'Front\N8GlobalUserController@make');
+        $router->post('del', 'Front\N8GlobalUserController@del');
     });
 
     $router->group(['prefix' => 'n8_global_order'], function () use ($router) {

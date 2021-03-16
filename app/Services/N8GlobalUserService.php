@@ -27,7 +27,7 @@ class N8GlobalUserService extends BaseService
      * @throws CustomException
      */
     public function make($productId,$openId){
-        $info = $this->tableCacheService->getInfoByOpenId($productId,$openId);
+        $info = $this->tableCacheService->getByOpenId($productId,$openId);
         if(!empty($info)){
             throw new CustomException([
                 'code'    => 'GUID_EXIST',
@@ -49,5 +49,52 @@ class N8GlobalUserService extends BaseService
         return $info;
     }
 
+
+    public function read($guid){
+        $service = new N8GlobalUserTableCacheService();
+
+        return $service->get($guid);
+    }
+
+
+
+    public function readByOpenId($productId,$openId){
+        $service = new N8GlobalUserTableCacheService();
+
+        return $service->getByOpenId($productId,$openId);
+    }
+
+
+
+    public function del($guid){
+        $info = $this->read($guid);
+        if(empty($info)) return null;
+
+        $service = new N8GlobalUserTableCacheService();
+        $service->del($guid);
+        $service->delByOpenId($info['product_id'],$info['open_id']);
+
+        // 删表数据
+        return (new N8GlobalUserModel())->where('n8_guid',$guid)->delete();
+
+    }
+
+
+    public function delByOpenId($productId,$openId){
+        $info = $this->readByOpenId($productId,$openId);
+        if(empty($info)) return null;
+
+        $service = new N8GlobalUserTableCacheService();
+
+        $service->delByOpenId($productId,$openId);
+        $service->del($info['n8_guid']);
+
+        // 删表数据
+        return (new N8GlobalUserModel())
+            ->where('product_id',$productId)
+            ->where('open_id',$openId)
+            ->delete();
+
+    }
 
 }

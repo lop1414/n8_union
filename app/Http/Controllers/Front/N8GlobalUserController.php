@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Front;
 
 use App\Common\Controllers\Front\FrontController;
 use App\Services\N8GlobalUserService;
-use App\Services\TableCache\N8GlobalUserTableCacheService;
 use Illuminate\Http\Request;
 
 class N8GlobalUserController extends FrontController
@@ -48,12 +47,36 @@ class N8GlobalUserController extends FrontController
         $productId = $request->get('product_id');
         $openId = $request->get('open_id');
 
-        $service = new N8GlobalUserTableCacheService();
+        $service = new N8GlobalUserService();
 
         if(!empty($by) && $by == 'open_id'){
-            $info = $service->getInfoByOpenId($productId,$openId);
+            $info = $service->readByOpenId($productId,$openId);
         }else{
-            $info = $service->getInfo($guid);
+            $info = $service->read($guid);
+        }
+
+        return $this->success($info);
+    }
+
+
+
+    /**
+     * 删除信息
+     * @param Request $request
+     * @return mixed
+     */
+    public function del(Request $request){
+        $by = $request->get('by');
+        $guid = $request->get('n8_guid');
+        $productId = $request->get('product_id');
+        $openId = $request->get('open_id');
+
+        $service = new N8GlobalUserService();
+
+        if(!empty($by) && $by == 'open_id'){
+            $info = $service->delByOpenId($productId,$openId);
+        }else{
+            $info = $service->del($guid);
         }
 
         return $this->success($info);
