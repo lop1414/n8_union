@@ -60,27 +60,6 @@ class N8GlobalUserController extends FrontController
 
 
 
-    /**
-     * 删除信息
-     * @param Request $request
-     * @return mixed
-     */
-    public function del(Request $request){
-        $by = $request->get('by');
-        $guid = $request->get('n8_guid');
-        $productId = $request->get('product_id');
-        $openId = $request->get('open_id');
-
-        $service = new N8GlobalUserService();
-
-        if(!empty($by) && $by == 'open_id'){
-            $info = $service->delByOpenId($productId,$openId);
-        }else{
-            $info = $service->del($guid);
-        }
-
-        return $this->success($info);
-    }
 
 
 }
