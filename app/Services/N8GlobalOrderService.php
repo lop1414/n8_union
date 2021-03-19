@@ -30,28 +30,21 @@ class N8GlobalOrderService extends BaseService
      * @param $productId
      * @param $orderId
      * @return mixed
-     * @throws CustomException
      */
     public function make($productId,$orderId){
         $info = $this->tableCacheService->getInfoByOrderId($productId,$orderId);
-        if(!empty($info)){
-            throw new CustomException([
-                'code'    => 'GOID_EXIST',
-                'message' => '订单已存在',
-                'log'     => true,
-                'data'    => $info
+        if(empty($info)){
+
+            $tmpInfo = $this->model->create([
+                'product_id' => $productId,
+                'order_id'   => $orderId
             ]);
+
+            $info = $tmpInfo->toArray();
+
+            // 设置缓存
+            $this->tableCacheService->setAllTypeCache($info);
         }
-
-        $tmpInfo = $this->model->create([
-            'product_id' => $productId,
-            'order_id'   => $orderId
-        ]);
-
-        $info = $tmpInfo->toArray();
-
-        // 设置缓存
-        $this->tableCacheService->setAllTypeCache($info);
         return $info;
     }
 
