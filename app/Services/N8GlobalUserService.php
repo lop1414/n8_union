@@ -20,32 +20,28 @@ class N8GlobalUserService extends BaseService
     }
 
 
+
     /**
+     * 生成guid 已存在则返回已有的
+     *
      * @param $productId
      * @param $openId
      * @return mixed
-     * @throws CustomException
      */
     public function make($productId,$openId){
         $info = $this->tableCacheService->getByOpenId($productId,$openId);
-        if(!empty($info)){
-            throw new CustomException([
-                'code'    => 'GUID_EXIST',
-                'message' => '用户已存在',
-                'log'     => true,
-                'data'    => $info
+
+        if(empty($info)){
+            $tmpInfo = $this->model->create([
+                'open_id' => $openId,
+                'product_id' => $productId,
             ]);
+
+            $info = $tmpInfo->toArray();
+            // 设置缓存
+            $this->tableCacheService->setAllTypeCache($info);
         }
 
-        $tmpInfo = $this->model->create([
-            'open_id' => $openId,
-            'product_id' => $productId,
-        ]);
-
-        $info = $tmpInfo->toArray();
-
-        // 设置缓存
-        $this->tableCacheService->setAllTypeCache($info);
         return $info;
     }
 
