@@ -18,12 +18,12 @@ class N8GlobalUserController extends FrontController
 
 
 
+
     /**
-     * 制作 guid
+     * 生成 guid
      *
      * @param Request $request
      * @return mixed
-     * @throws \App\Common\Tools\CustomException
      */
     public function make(Request $request){
         $productId = $request->get('product_id');
@@ -34,6 +34,7 @@ class N8GlobalUserController extends FrontController
 
         return $this->success($info);
     }
+
 
 
     /**

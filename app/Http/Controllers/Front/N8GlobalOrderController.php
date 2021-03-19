@@ -20,11 +20,10 @@ class N8GlobalOrderController extends FrontController
 
 
     /**
-     * 制作 goid
+     * 生成 goid
      *
      * @param Request $request
      * @return mixed
-     * @throws \App\Common\Tools\CustomException
      */
     public function make(Request $request){
         $productId = $request->get('product_id');
