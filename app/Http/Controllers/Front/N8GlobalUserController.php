@@ -18,44 +18,28 @@ class N8GlobalUserController extends FrontController
 
 
 
+    public function read(Request $request){
 
-    /**
-     * 生成 guid
-     *
-     * @param Request $request
-     * @return mixed
-     */
-    public function make(Request $request){
-        $productId = $request->get('product_id');
-        $openId = $request->get('open_id');
+        $req = $request->all();
+        $this->validRule($req,[
+            'n8_guid' =>  'required',
+        ]);
 
-        $service = new N8GlobalUserService();
-        $info = $service->make($productId,$openId);
+        $info = (new N8GlobalUserService())->read($req['n8_guid']);
 
         return $this->success($info);
     }
 
 
 
-    /**
-     * 获取信息
-     * @param Request $request
-     * @return mixed
-     */
-    public function read(Request $request){
-        $by = $request->get('by');
-        $guid = $request->get('n8_guid');
-        $productId = $request->get('product_id');
-        $openId = $request->get('open_id');
+    public function readByOpenId(Request $request){
+        $req = $request->all();
+        $this->validRule($req,[
+            'product_id' =>  'required',
+            'open_id'    =>  'required',
+        ]);
 
-        $service = new N8GlobalUserService();
-
-        if(!empty($by) && $by == 'open_id'){
-            $info = $service->readByOpenId($productId,$openId);
-        }else{
-            $info = $service->read($guid);
-        }
-
+        $info = (new N8GlobalUserService())->readByOpenId($req['product_id'],$req['open_id']);
         return $this->success($info);
     }
 

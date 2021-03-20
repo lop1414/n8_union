@@ -126,12 +126,12 @@ $router->group([
 
     $router->group(['prefix' => 'n8_global_user'], function () use ($router) {
         $router->post('read', 'Front\N8GlobalUserController@read');
-        $router->post('make', 'Front\N8GlobalUserController@make');
+        $router->post('read_by_open_id', 'Front\N8GlobalUserController@readByOpenId');
     });
 
     $router->group(['prefix' => 'n8_global_order'], function () use ($router) {
         $router->post('read', 'Front\N8GlobalOrderController@read');
-        $router->post('make', 'Front\N8GlobalOrderController@make');
+        $router->post('read_by_order_id', 'Front\N8GlobalOrderController@readByOrderId');
     });
 
     // 联运用户

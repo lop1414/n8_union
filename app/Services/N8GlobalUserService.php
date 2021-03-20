@@ -21,14 +21,7 @@ class N8GlobalUserService extends BaseService
 
 
 
-    /**
-     * 生成guid 已存在则返回已有的
-     *
-     * @param $productId
-     * @param $openId
-     * @return mixed
-     */
-    public function make($productId,$openId){
+    public function readByOpenId($productId,$openId){
         $info = $this->tableCacheService->getByOpenId($productId,$openId);
 
         if(empty($info)){
@@ -46,18 +39,13 @@ class N8GlobalUserService extends BaseService
     }
 
 
+
+
     public function read($guid){
         $service = new N8GlobalUserTableCacheService();
 
         return $service->get($guid);
     }
 
-
-
-    public function readByOpenId($productId,$openId){
-        $service = new N8GlobalUserTableCacheService();
-
-        return $service->getByOpenId($productId,$openId);
-    }
 
 }

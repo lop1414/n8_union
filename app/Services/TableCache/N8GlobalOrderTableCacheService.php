@@ -21,7 +21,7 @@ class N8GlobalOrderTableCacheService extends BaseService
     }
 
 
-    public function getInfo($goid){
+    public function read($goid){
         return $this->tableCacheTool->get($goid);
 
     }
@@ -40,7 +40,7 @@ class N8GlobalOrderTableCacheService extends BaseService
     }
 
 
-    public function getInfoByOrderId($productId,$orderId){
+    public function readByOrderId($productId,$orderId){
         $key = $this->getKeyByOrderId([
             'product_id' => $productId,
             'order_id'   => $orderId
@@ -78,7 +78,7 @@ class N8GlobalOrderTableCacheService extends BaseService
      * @throws CustomException
      */
     public function isExistByOrderId($productId,$orderId){
-        $guidInfo = $this->getInfoByOrderId($productId,$orderId);
+        $guidInfo = $this->readByOrderId($productId,$orderId);
 
         if(empty($guidInfo)){
             throw new CustomException([

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Common\Services\BaseService;
-use App\Common\Tools\CustomException;
 use App\Models\N8GlobalOrderModel;
 use App\Services\TableCache\N8GlobalOrderTableCacheService;
 
@@ -11,7 +10,6 @@ class N8GlobalOrderService extends BaseService
 {
 
     protected $tableCacheService;
-
 
 
     public function __construct(){
@@ -26,26 +24,32 @@ class N8GlobalOrderService extends BaseService
 
 
 
-    /**
-     * @param $productId
-     * @param $orderId
-     * @return mixed
-     */
-    public function make($productId,$orderId){
-        $info = $this->tableCacheService->getInfoByOrderId($productId,$orderId);
-        if(empty($info)){
+    public function readByOrderId($productId,$orderId){
+        $info = $this->tableCacheService->readByOrderId($productId,$orderId);
 
+        if(empty($info)){
             $tmpInfo = $this->model->create([
+                'order_id' => $orderId,
                 'product_id' => $productId,
-                'order_id'   => $orderId
             ]);
 
             $info = $tmpInfo->toArray();
-
             // 设置缓存
             $this->tableCacheService->setAllTypeCache($info);
         }
+
         return $info;
     }
+
+
+
+
+    public function read($goid){
+        $info = $this->tableCacheService->read($goid);
+
+        return $info;
+    }
+
+
 
 }
