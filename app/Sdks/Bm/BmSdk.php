@@ -3,14 +3,14 @@
 namespace App\Sdks\Bm;
 
 
+use App\Sdks\Bm\Traits\CpChannel;
 use App\Sdks\Bm\Traits\Request;
-use App\Sdks\Bm\Traits\Order;
 
 class BmSdk
 {
 
     use Request;
-    use Order;
+    use CpChannel;
 
 
     /**

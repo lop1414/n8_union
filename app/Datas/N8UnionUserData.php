@@ -1,40 +1,76 @@
 <?php
 
-namespace App\Services;
 
-use App\Common\Services\BaseService;
+namespace App\Datas;
+
+
+use App\Common\Datas\BaseData;
 use App\Common\Tools\CustomException;
 use App\Models\ChannelModel;
+use App\Models\N8GlobalUserModel;
 use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
 use Illuminate\Support\Facades\DB;
 
-class N8UnionUserService extends BaseService
+class N8UnionUserData extends BaseData
 {
+
+
+    /**
+     * @var bool
+     * 缓存开关
+     */
+    protected $cacheSwitch = false;
+
+
+    /**
+     * @var array
+     * 字段
+     */
+    protected $fields = [];
+
+
+    /**
+     * @var array
+     * 唯一键数组
+     */
+    protected $uniqueKeys = [
+        ['n8_guid','channel_id']
+    ];
+
+
+    /**
+     * @var int
+     * 缓存有效期
+     */
+    protected $ttl = 60*60*24;
+
+
+    /**
+     * constructor.
+     */
+    public function __construct(){
+        parent::__construct(N8UnionUserModel::class);
+    }
 
 
 
     public function create($data){
 
         try{
-            DB::beginTransaction();
-
-            $channelInfo = (new ChannelModel())
-                ->where('id',$data['channel_id'])
-                ->first();
-            $channelInfo->cp_channel;
+            $channel = (new ChannelData())->setParams(['id' => $data['channel_id']])->read();
+            $cpChannel = (new CpChannelData())->setParams(['id' => $channel['n8_cp_channel_id']])->read();
 
             $ret = (new N8UnionUserModel())->create([
                 'n8_guid'       => $data['n8_guid'],
                 'channel_id'    => $data['channel_id'],
                 'created_time'  => $data['action_time'],
-                'book_id'    => $channelInfo->cp_channel->book_id,
-                'chapter_id' => $channelInfo->cp_channel->chapter_id,
-                'force_chapter_id' => $channelInfo->cp_channel->force_chapter_id,
-                'admin_id'      => $channelInfo->admin_id,
+                'book_id'       => $cpChannel['book_id'],
+                'chapter_id'    => $cpChannel['chapter_id'],
+                'force_chapter_id' => $cpChannel['force_chapter_id'],
+                'admin_id'      => $channel['admin_id'],
                 'created_at'    => date('Y-m-d H:i:s')
             ]);
-
 
             (new N8UnionUserExtendModel())->create([
                 'uuid'                  => $ret->id,
@@ -54,15 +90,11 @@ class N8UnionUserService extends BaseService
                 'request_id'            => $data['request_id'] ?? ''
             ]);
 
-
-            DB::commit();
-
             $ret->extend;
 
             return $ret;
 
         }catch (\Exception $e){
-            DB::rollBack();
 
             if($e->getCode() == 23000){
                 throw new CustomException([
@@ -75,8 +107,4 @@ class N8UnionUserService extends BaseService
         }
 
     }
-
-
-
-
 }

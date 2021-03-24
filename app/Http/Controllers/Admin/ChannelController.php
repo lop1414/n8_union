@@ -157,14 +157,14 @@ class ChannelController extends BaseController
             ->addValidEnum(AdvAliasEnum::class);
 
         $this->curdService->addField('product_id')->addValidRule('required');
-        $this->curdService->addField('gcid')->addValidRule('required');
+        $this->curdService->addField('n8_cp_channel_id')->addValidRule('required');
         $this->curdService->addField('status')
             ->addValidEnum(StatusEnum::class)
             ->addDefaultValue(StatusEnum::ENABLE);
 
         $this->curdService->saveBefore(function(){
 
-            if($this->curdService->getModel()->exist('gcid', $this->curdService->handleData['gcid'])){
+            if($this->curdService->getModel()->exist('n8_cp_channel_id', $this->curdService->handleData['n8_cp_channel_id'])){
                 throw new CustomException([
                     'code' => 'GCID_EXIST',
                     'message' => 'CP渠道已被绑定'
@@ -189,7 +189,7 @@ class ChannelController extends BaseController
             ->addValidRule('required')
             ->addValidEnum(AdvAliasEnum::class);
 
-        $this->curdService->addField('gcid')->addValidRule('required');
+        $this->curdService->addField('n8_cp_channel_id')->addValidRule('required');
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
 
 
@@ -209,10 +209,10 @@ class ChannelController extends BaseController
             }
 
             if(
-                $this->curdService->getModel()->gcid != $this->curdService->handleData['gcid']
+                $this->curdService->getModel()->gcid != $this->curdService->handleData['n8_cp_channel_id']
                 && $this->curdService->getModel()->uniqueExist([
                     'product_id' => $this->curdService->getModel()->product_id,
-                    'gcid' => $this->curdService->handleData['gcid']
+                    'n8_cp_channel_id' => $this->curdService->handleData['n8_cp_channel_id']
                 ])){
                 throw new CustomException([
                     'code' => 'GCID_EXIST',

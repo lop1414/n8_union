@@ -5,6 +5,7 @@ namespace App\Services\Yw;
 use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
+use App\Datas\ChapterData;
 use App\Models\ChapterModel;
 use App\Models\BookModel;
 use App\Sdks\Yw\YwSdk;
@@ -28,6 +29,7 @@ class ChapterService extends YwService
 
         $consoleEchoService = new ConsoleEchoService();
 
+        $chapterData = new ChapterData();
         foreach ($productList as $product){
             $consoleEchoService->echo($product['name']);
 
@@ -47,7 +49,12 @@ class ChapterService extends YwService
                     $list = $list['chapter_list'] ?? [];
 
                     foreach ($list as $chapter){
-                        $this->saveData($chapter,$book);
+                        $chapterData->save([
+                            'book_id'       => $book['id'],
+                            'cp_chapter_id' => $chapter['ccid'],
+                            'name'          => $chapter['chapter_title'],
+                            'seq'           => $chapter['chapter_seq']
+                        ]);
                     }
 
                 }catch (CustomException $e){
@@ -65,21 +72,5 @@ class ChapterService extends YwService
             }
         }
         $consoleEchoService->echo('');
-    }
-
-
-    public function saveData($data,$book){
-
-
-        $this->model->updateOrCreate(
-            [
-                'book_id'       => $book['id'],
-                'cp_chapter_id' => $data['ccid']
-            ],
-            [
-                'name'          => $data['chapter_title'],
-                'seq'           => $data['chapter_seq']
-            ]
-        );
     }
 }

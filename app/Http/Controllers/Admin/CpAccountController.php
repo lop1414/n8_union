@@ -8,7 +8,7 @@ use App\Common\Enums\StatusEnum;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
 use App\Models\CpAccountModel;
-use App\Services\YwSyncAccountService;
+use App\Services\SyncProductService;
 use Illuminate\Http\Request;
 
 class CpAccountController extends BaseController
@@ -93,7 +93,7 @@ class CpAccountController extends BaseController
 
 
         if($item->cp_type == CpTypeEnums::YW){
-            $service = new YwSyncAccountService();
+            $service = new SyncProductService();
             $service->h5($item);
             $service->kyy($item);
         }

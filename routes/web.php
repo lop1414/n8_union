@@ -15,7 +15,23 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+// 公开接口
+$router->group([
+    'prefix' => 'open',
+    'middleware' => ['access_control_allow_origin','open_api_sign_valid']
+], function () use ($router) {
 
+    //行为上报
+    $router->group(['prefix' => 'action_report'], function () use ($router) {
+        $router->post('read', 'Open\UserController@read');// 阅读行为
+        $router->post('login', 'Open\UserController@login');// 登陆行为
+        $router->post('add_shortcut', 'Open\UserController@addShortcut');// 加桌行为
+        $router->post('follow', 'Open\UserController@follow');// 关注行为
+        $router->post('reg', 'Open\UserController@reg');// 注册
+        $router->post('order', 'Open\OrderController@order');// 下单
+        $router->post('complete_order', 'Open\OrderController@complete');// 完成订单
+    });
+});
 
 // 后台
 $router->group([
@@ -119,30 +135,4 @@ $router->group([
         $router->post('read', 'Front\CpAccountController@read');
     });
 
-    // open api 签名验证
-    $router->group(['prefix' => 'auth'], function () use ($router) {
-        $router->post('signAuth', 'Front\OpenApiController@auth');
-    });
-
-    $router->group(['prefix' => 'n8_global_user'], function () use ($router) {
-        $router->post('read', 'Front\N8GlobalUserController@read');
-        $router->post('read_by_open_id', 'Front\N8GlobalUserController@readByOpenId');
-    });
-
-    $router->group(['prefix' => 'n8_global_order'], function () use ($router) {
-        $router->post('read', 'Front\N8GlobalOrderController@read');
-        $router->post('read_by_order_id', 'Front\N8GlobalOrderController@readByOrderId');
-    });
-
-    // 联运用户
-    $router->group(['prefix' => 'n8_union_user'], function () use ($router) {
-        $router->post('create', 'Front\N8UnionUserController@create');
-    });
-
-
-    // 渠道
-    $router->group(['prefix' => 'n8_channel'], function () use ($router) {
-        $router->post('read', 'Front\N8ChannelController@read');
-        $router->post('readByCpChannel', 'Front\N8ChannelController@readByCpChannel');
-    });
 });

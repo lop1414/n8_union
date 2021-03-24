@@ -9,7 +9,7 @@ use App\Common\Services\BaseService;
 use App\Models\ProductModel;
 use App\Sdks\Yw\YwSdk;
 
-class YwSyncAccountService extends BaseService
+class SyncProductService extends BaseService
 {
 
 

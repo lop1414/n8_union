@@ -6,6 +6,7 @@ namespace App\Services\Yw;
 use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
+use App\Datas\BookData;
 use App\Models\BookModel;
 use App\Sdks\Yw\YwSdk;
 
@@ -28,6 +29,8 @@ class BookService extends YwService
 
         $consoleEchoService = new ConsoleEchoService();
 
+        $bookData = new BookData();
+
         foreach ($productList as $product){
             $consoleEchoService->echo($product['name']);
             $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
@@ -40,7 +43,14 @@ class BookService extends YwService
                     $consoleEchoService->progress($count,$i,$cpBookId);
 
                     $info = $sdk->getBookInfo($cpBookId);
-                    $this->saveData($info,$product);
+                    $bookData->save([
+                        'cp_type'       => $product['cp_type'],
+                        'cp_book_id'    => $info['cbid'],
+                        'name'          => $info['title'],
+                        'author_name'   => $info['author_name'],
+                        'all_words'     => $info['all_words'],
+                        'update_time'   => $info['update_time']
+                    ]);
                 }catch (CustomException $e){
 
                     // 日志
@@ -56,22 +66,5 @@ class BookService extends YwService
             }
         }
         $consoleEchoService->echo('');
-    }
-
-
-    public function saveData($data,$product){
-
-        $this->model->updateOrCreate(
-            [
-                'cp_type'    => $product['cp_type'],
-                'cp_book_id' => $data['cbid']
-            ],
-            [
-                'name'       => $data['title'],
-                'author_name'   => $data['author_name'],
-                'all_words'     => $data['all_words'],
-                'update_time'   => $data['update_time']
-            ]
-        );
     }
 }

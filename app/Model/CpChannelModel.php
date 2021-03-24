@@ -14,11 +14,24 @@ class CpChannelModel extends BaseModel
     protected $table = 'cp_channels';
 
 
+
+    protected $fillable = [
+        'product_id',
+        'cp_channel_id',
+        'name',
+        'book_id',
+        'chapter_id',
+        'force_chapter_id',
+        'create_time',
+        'updated_time',
+    ];
+
+
     /**
      * 渠道
      */
     public function channel(){
-        return $this->hasOne('App\Models\ChannelModel', 'gcid', 'id');
+        return $this->hasOne('App\Models\ChannelModel', 'n8_cp_channel_id', 'id');
     }
 
 

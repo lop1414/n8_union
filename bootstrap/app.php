@@ -74,6 +74,7 @@ $app->singleton(
      'center_login_auth' => \App\Common\Middleware\CenterLoginAuth::class,
      'center_menu_auth' => \App\Common\Middleware\CenterMenuAuth::class,
      'admin_request_log' => \App\Common\Middleware\AdminRequestLog::class,
+     'open_api_sign_valid' => \App\Http\Middleware\OpenApiSignValid::class,
  ]);
 
 /*

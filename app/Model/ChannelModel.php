@@ -19,7 +19,7 @@ class ChannelModel extends BaseModel
      * CP渠道信息 一对一
      */
     public function cp_channel(){
-        return $this->hasOne('App\Models\CpChannelModel', 'id', 'gcid');
+        return $this->hasOne('App\Models\CpChannelModel', 'id', 'n8_cp_channel_id');
     }
 
 

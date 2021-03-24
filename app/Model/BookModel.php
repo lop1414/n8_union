@@ -16,11 +16,7 @@ class BookModel extends BaseModel
 
 
 
-    /**
-     * 可以被批量赋值的属性。
-     *
-     * @var array
-     */
+
     protected $fillable = [
         'cp_type',
         'cp_book_id',
@@ -28,17 +24,6 @@ class BookModel extends BaseModel
         'author_name',
         'all_words',
         'update_time'
-    ];
-
-
-    /**
-     * 隐藏字段
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'created_at',
-        'updated_at'
     ];
 
 
