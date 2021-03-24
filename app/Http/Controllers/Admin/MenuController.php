@@ -1,6 +1,4 @@
 <?php
-
-
 namespace App\Http\Controllers\Admin;
 
 
@@ -75,13 +73,6 @@ class MenuController extends BaseController
 
         $this->curdService->getQueryBefore(function(){
             $level = MenuLevelEnums::DEFAULT;
-            if(isset($this->curdService->requestData['cp_type']) && !empty($this->curdService->requestData['cp_type'])){
-                $level = MenuLevelEnums::CP_TYPE;
-            }
-
-            if(isset($this->curdService->requestData['product_type']) && !empty($this->curdService->requestData['product_type'])){
-                $level = MenuLevelEnums::PRODUCT_TYPE;
-            }
 
             if(isset($this->curdService->requestData['product_id']) && !empty($this->curdService->requestData['product_id'])){
                 $level = MenuLevelEnums::PRODUCT;
