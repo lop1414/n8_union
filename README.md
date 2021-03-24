@@ -51,7 +51,7 @@ $app->withFacades(true, [
 //开启ORM
 $app->withEloquent();
 // 请求时间戳
-defined('TIMESTAMP') || define('TIMESTAMP', time());
+defined('TIMESTAMP');
 ```
 #bootstrap/app.php 
 ```

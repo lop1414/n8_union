@@ -27,6 +27,7 @@ CREATE TABLE `menu_level` (
   `status` varchar(50) NOT NULL DEFAULT '',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`menu_id`),
   KEY `menu_id_level` (`menu_id`,`level`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单业务级别关联表';
 

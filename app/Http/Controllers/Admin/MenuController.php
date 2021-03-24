@@ -45,7 +45,7 @@ class MenuController extends BaseController
                 $model = new MenuLevelModel();
                 $model->menu_id = $menu['id'];
                 $model->level = MenuLevelEnums::DEFAULT;
-                $model->level = StatusEnum::ENABLE;
+                $model->status = StatusEnum::ENABLE;
                 $model->save();
             }
         }
