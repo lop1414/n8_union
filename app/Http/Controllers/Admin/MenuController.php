@@ -79,8 +79,8 @@ class MenuController extends BaseController
                 $level = MenuLevelEnums::CP_TYPE;
             }
 
-            if(isset($this->curdService->requestData['business']) && !empty($this->curdService->requestData['business'])){
-                $level = MenuLevelEnums::BUSINESS;
+            if(isset($this->curdService->requestData['product_type']) && !empty($this->curdService->requestData['product_type'])){
+                $level = MenuLevelEnums::PRODUCT_TYPE;
             }
 
             if(isset($this->curdService->requestData['product_id']) && !empty($this->curdService->requestData['product_id'])){
