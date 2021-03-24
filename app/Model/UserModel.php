@@ -46,7 +46,7 @@ class UserModel extends BaseModel
     /**
      * 关联用户扩展信息 一对一
      */
-    public function user_extend(){
+    public function extend(){
         return $this->hasOne('App\Models\UserExtendModel', 'n8_guid', 'n8_guid');
     }
 

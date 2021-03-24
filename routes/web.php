@@ -74,6 +74,18 @@ $router->group([
         $router->post('disable', 'Admin\ProductController@disable');
     });
 
+    // 用户
+    $router->group(['prefix' => 'user'], function () use ($router) {
+        $router->post('select', 'Admin\UserController@select');
+        $router->post('read', 'Admin\UserController@read');
+    });
+
+    // 订单
+    $router->group(['prefix' => 'order'], function () use ($router) {
+        $router->post('select', 'Admin\OrderController@select');
+        $router->post('read', 'Admin\OrderController@read');
+    });
+
 
     // union 用户
     $router->group(['prefix' => 'union_user'], function () use ($router) {

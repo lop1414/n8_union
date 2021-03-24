@@ -73,7 +73,7 @@ class OrderModel extends BaseModel
     /**
      * 关联订单扩展 一对一
      */
-    public function order_extend(){
+    public function extend(){
         return $this->hasOne('App\Models\OrderExtendModel', 'n8_goid', 'n8_goid');
     }
 
