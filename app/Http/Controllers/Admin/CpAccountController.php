@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\StatusEnum;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
+use App\Datas\ProductData;
 use App\Models\CpAccountModel;
 use App\Services\SyncProductService;
 use Illuminate\Http\Request;
@@ -83,7 +84,7 @@ class CpAccountController extends BaseController
     }
 
 
-    public function syncAccount(Request $request){
+    public function syncProduct(Request $request){
         $requestData = $request->all();
 
         $this->curdService->setRequestData($requestData);
@@ -97,6 +98,8 @@ class CpAccountController extends BaseController
             $service->h5($item);
             $service->kyy($item);
         }
+
+        (new ProductData())->clearAll();
 
         return $this->success();
 

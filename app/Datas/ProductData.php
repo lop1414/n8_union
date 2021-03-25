@@ -37,7 +37,7 @@ class ProductData extends BaseData
      * @var int
      * 缓存有效期
      */
-    protected $ttl = 60*60*24*3;
+    protected $ttl = 60*60*24;
 
 
     /**

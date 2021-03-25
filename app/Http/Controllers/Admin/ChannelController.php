@@ -9,6 +9,7 @@ use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
+use App\Datas\ChannelData;
 use App\Models\ChannelModel;
 use App\Models\N8UnionUserModel;
 
@@ -222,6 +223,14 @@ class ChannelController extends BaseController
 
             unset($this->curdService->handleData['product_id']);
             unset($this->curdService->handleData['admin_id']);
+        });
+
+
+        // 清缓存
+        $this->curdService->saveAfter(function (){
+            (new ChannelData)->setParams([
+                'id'    => $this->curdService->getModel()->id
+            ])->clear();
         });
     }
 }

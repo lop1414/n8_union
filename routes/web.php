@@ -41,7 +41,7 @@ $router->group([
     // 菜单
     $router->group(['prefix' => 'menu'], function () use ($router) {
         $router->post('create', 'Admin\MenuController@create');
-        $router->get('sync', 'Admin\MenuController@sync');
+        $router->post('sync', 'Admin\MenuController@sync');
         $router->post('update', 'Admin\MenuController@update');
         $router->post('select', 'Admin\MenuController@select');
         $router->post('get', 'Admin\MenuController@get');
@@ -60,7 +60,7 @@ $router->group([
         $router->post('read', 'Admin\CpAccountController@read');
         $router->post('enable', 'Admin\CpAccountController@enable');
         $router->post('disable', 'Admin\CpAccountController@disable');
-        $router->post('sync_account', 'Admin\CpAccountController@syncAccount');
+        $router->post('sync_product', 'Admin\CpAccountController@syncProduct');
     });
 
     // 产品
