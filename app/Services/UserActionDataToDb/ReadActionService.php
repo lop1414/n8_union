@@ -39,7 +39,8 @@ class ReadActionService extends UserActionDataToDbService
             'created_at'    => date('Y-m-d H:i:s')
         ]);
 
-        $this->getModel()->create($createData);
+        $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
+
     }
 
 }

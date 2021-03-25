@@ -22,7 +22,7 @@ class ChannelData extends BaseData
      * 唯一键数组
      */
     protected $uniqueKeys = [
-        ['product_id','n8_cp_channel_id']
+        ['product_id','cp_channel_id']
     ];
 
 

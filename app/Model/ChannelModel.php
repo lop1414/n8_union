@@ -15,11 +15,8 @@ class ChannelModel extends BaseModel
 
 
 
-    /**
-     * CP渠道信息 一对一
-     */
-    public function cp_channel(){
-        return $this->hasOne('App\Models\CpChannelModel', 'id', 'n8_cp_channel_id');
+    public function extend(){
+        return $this->hasOne('App\Models\ChannelExtendModel', 'channel_id', 'id');
     }
 
 
@@ -31,6 +28,28 @@ class ChannelModel extends BaseModel
     }
 
 
+    /**
+     * 书籍
+     */
+    public function book(){
+        return $this->hasOne('App\Models\BookModel', 'id', 'book_id');
+    }
+
+
+    /**
+     * 章节
+     */
+    public function chapter(){
+        return $this->hasOne('App\Models\ChapterModel', 'id', 'chapter_id');
+    }
+
+
+    /**
+     * 强制章节
+     */
+    public function force_chapter(){
+        return $this->hasOne('App\Models\ChapterModel', 'id', 'force_chapter_id');
+    }
 
 
 }

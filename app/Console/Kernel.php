@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\Yw\PullBookCommand;
 use App\Console\Commands\Yw\PullChapterCommand;
@@ -17,6 +18,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        // 创建table
+        CreateTableCommand::class,
+
         // 用户行为数据
         UserActionDataToDbCommand::class,
 
@@ -36,6 +40,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //
+        $schedule->command('create_table')->cron('0 0 1,15 * *');
+
     }
 }

@@ -4,18 +4,15 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Common\Enums\AdvAliasEnum;
-use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\SystemApi\CenterApiService;
-use App\Common\Tools\CustomException;
-use App\Datas\ChannelData;
 use App\Models\ChannelModel;
-use App\Models\N8UnionUserModel;
+use Illuminate\Support\Facades\DB;
 
 class ChannelController extends BaseController
 {
 
+    protected $defaultOrderBy = 'updated_time';
 
     public $adminUser;
 
@@ -57,15 +54,15 @@ class ChannelController extends BaseController
      * 根据权限过滤
      */
     public function dataFilter(){
-        if(!$this->isDataAuth()){
-            $this->curdService->addFiltering([
-                [
-                    'field'     => 'admin_id',
-                    'operator'  => 'EQUALS',
-                    'value'     => $this->adminUser['admin_user']['id']
-                ]
-            ]);
-        }
+        $this->curdService->customBuilder(function ($builder){
+            $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
+                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
+
+            if(!$this->isDataAuth()){
+                $builder->whereRaw(" (e.admin_id = {$this->adminUser['admin_user']['id']} OR e.admin_id IS NULL)");
+            }
+        });
+
     }
 
 
@@ -76,7 +73,10 @@ class ChannelController extends BaseController
      */
     public function selectPrepare(){
 
-        $this->dataFilter();
+        $this->curdService->selectQueryBefore(function (){
+            $this->dataFilter();
+        });
+
 
         $this->curdService->selectQueryAfter(function(){
 
@@ -84,11 +84,11 @@ class ChannelController extends BaseController
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->product;
-                $item->cp_channel;
-                $item->cp_channel->book;
-                $item->cp_channel->chapter;
-                $item->cp_channel->force_chapter;
-                $item->admin_name = $map[$item->admin_id];
+                $item->book;
+                $item->chapter;
+                $item->force_chapter;
+                $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
+                $item->has_extend = $item->admin_id ? true : false;
             }
         });
     }
@@ -99,25 +99,21 @@ class ChannelController extends BaseController
      * 列表预处理
      */
     public function getPrepare(){
+        $this->curdService->getQueryBefore(function (){
+            $this->dataFilter();
+        });
 
-        if(!$this->isDataAuth()){
-            $this->curdService->getQueryBefore(function (){
-                $this->curdService->customBuilder(function ($build){
-                    $build->where('admin_id',$this->adminUser['admin_user']['id']);
-                });
-            });
-        }
 
         $this->curdService->getQueryAfter(function(){
             $map = $this->getAdminUser();
 
             foreach ($this->curdService->responseData as $item){
                 $item->product;
-                $item->cp_channel;
-                $item->cp_channel->book;
-                $item->cp_channel->chapter;
-                $item->cp_channel->force_chapter;
-                $item->admin_name = $map[$item->admin_id];
+                $item->book;
+                $item->chapter;
+                $item->force_chapter;
+                $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
+                $item->has_extend = $item->admin_id ? true : false;
             }
         });
     }
@@ -132,10 +128,10 @@ class ChannelController extends BaseController
 
         $this->curdService->findAfter(function(){
             $this->curdService->responseData->product;
-            $this->curdService->responseData->cp_channel;
-            $this->curdService->responseData->cp_channel->book;
-            $this->curdService->responseData->cp_channel->chapter;
-            $this->curdService->responseData->cp_channel->force_chapter;
+            $this->curdService->responseData->extend;
+            $this->curdService->responseData->book;
+            $this->curdService->responseData->chapter;
+            $this->curdService->responseData->force_chapter;
 
             $map = $this->getAdminUser([
                 'id'  => $this->curdService->responseData->admin_id
@@ -145,92 +141,4 @@ class ChannelController extends BaseController
         });
     }
 
-
-
-
-    /**
-     * 创建预处理
-     */
-    public function createPrepare(){
-        $this->curdService->addField('name')->addValidRule('required');
-        $this->curdService->addField('adv_alias')
-            ->addValidRule('required')
-            ->addValidEnum(AdvAliasEnum::class);
-
-        $this->curdService->addField('product_id')->addValidRule('required');
-        $this->curdService->addField('n8_cp_channel_id')->addValidRule('required');
-        $this->curdService->addField('status')
-            ->addValidEnum(StatusEnum::class)
-            ->addDefaultValue(StatusEnum::ENABLE);
-
-        $this->curdService->saveBefore(function(){
-
-            if($this->curdService->getModel()->exist('n8_cp_channel_id', $this->curdService->handleData['n8_cp_channel_id'])){
-                throw new CustomException([
-                    'code' => 'GCID_EXIST',
-                    'message' => 'CP渠道已被绑定'
-                ]);
-            }
-
-            $this->curdService->handleData['admin_id'] = $this->adminUser['admin_user']['id'];
-        });
-
-
-    }
-
-
-
-    /**
-     * 更新预处理
-     */
-    public function updatePrepare(){
-
-        $this->curdService->addField('name')->addValidRule('required');
-        $this->curdService->addField('adv_alias')
-            ->addValidRule('required')
-            ->addValidEnum(AdvAliasEnum::class);
-
-        $this->curdService->addField('n8_cp_channel_id')->addValidRule('required');
-        $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
-
-
-        $this->curdService->saveBefore(function(){
-
-            // 有注册用户 不可修改
-            $tmp = (new N8UnionUserModel())
-                ->where('channel_id',$this->curdService->getModel()->id)
-                ->where('created_time',$this->curdService->getModel()->created_at)
-                ->first();
-
-            if(!empty($tmp)){
-                throw new CustomException([
-                    'code' => 'NO_EDITING',
-                    'message' => '渠道已产生数据,信息不可修改'
-                ]);
-            }
-
-            if(
-                $this->curdService->getModel()->gcid != $this->curdService->handleData['n8_cp_channel_id']
-                && $this->curdService->getModel()->uniqueExist([
-                    'product_id' => $this->curdService->getModel()->product_id,
-                    'n8_cp_channel_id' => $this->curdService->handleData['n8_cp_channel_id']
-                ])){
-                throw new CustomException([
-                    'code' => 'GCID_EXIST',
-                    'message' => 'CP渠道已被绑定'
-                ]);
-            }
-
-            unset($this->curdService->handleData['product_id']);
-            unset($this->curdService->handleData['admin_id']);
-        });
-
-
-        // 清缓存
-        $this->curdService->saveAfter(function (){
-            (new ChannelData)->setParams([
-                'id'    => $this->curdService->getModel()->id
-            ])->clear();
-        });
-    }
 }

@@ -103,19 +103,14 @@ $router->group([
         $router->post('select', 'Admin\ChannelController@select');
         $router->post('get', 'Admin\ChannelController@get');
         $router->post('read', 'Admin\ChannelController@read');
-        $router->post('create', 'Admin\ChannelController@create');
-        $router->post('update', 'Admin\ChannelController@update');
-        $router->post('enable', 'Admin\ProductController@enable');
-        $router->post('disable', 'Admin\ProductController@disable');
+    });
+    $router->group(['prefix' => 'channel_extend'], function () use ($router) {
+        $router->post('create', 'Admin\ChannelExtendController@create');
+        $router->post('update', 'Admin\ChannelExtendController@update');
+        $router->post('enable', 'Admin\ChannelExtendController@enable');
+        $router->post('disable', 'Admin\ChannelExtendController@disable');
     });
 
-
-    // CP渠道
-    $router->group(['prefix' => 'cp_channel'], function () use ($router) {
-        $router->post('select', 'Admin\CpChannelController@select');
-        $router->post('get', 'Admin\CpChannelController@get');
-        $router->post('read', 'Admin\CpChannelController@read');
-    });
 
 
 

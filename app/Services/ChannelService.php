@@ -6,7 +6,6 @@ use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
-use App\Datas\CpChannelData;
 use App\Models\UserLoginActionModel;
 use App\Models\UserReadActionModel;
 use App\Models\UserShortcutActionModel;
@@ -28,27 +27,11 @@ class ChannelService extends BaseService
      * 获取渠道ID
      */
     public function readByCpChannelId($productId,$cpChannelId){
-        $n8CpChannel = (new CpChannelData())
-            ->setParams([
-                'product_id'    => $productId,
-                'cp_channel_id' => $cpChannelId
-            ])
-            ->read();
-
-        if(empty($n8CpChannel)){
-
-            throw new CustomException([
-                'code'       => 'NO_CP_CHANNEL',
-                'message'    => "找不到CP渠道（产品ID:{$productId},CP渠道ID:{$cpChannelId}）",
-                '#admin_id#' => 0
-            ]);
-        }
-
 
         $channel = (new ChannelData())
             ->setParams([
                 'product_id'    => $productId,
-                'n8_cp_channel_id' => $n8CpChannel['id']
+                'cp_channel_id' => $cpChannelId
             ])
             ->read();
 
@@ -56,7 +39,7 @@ class ChannelService extends BaseService
 
             throw new CustomException([
                 'code'       => 'NO_CHANNEL',
-                'message'    => "找不到CP渠道对应的N8渠道（产品ID:{$productId},N8CP渠道ID:{$n8CpChannel['id']}）",
+                'message'    => "找不到渠道（产品ID:{$productId},N8CP渠道ID:{$cpChannelId}）",
                 '#admin_id#' => 0
             ]);
         }
