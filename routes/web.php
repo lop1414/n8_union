@@ -60,6 +60,8 @@ $router->group([
         $router->post('read', 'Admin\CpAccountController@read');
         $router->post('enable', 'Admin\CpAccountController@enable');
         $router->post('disable', 'Admin\CpAccountController@disable');
+        $router->post('batch_enable', 'Admin\CpAccountController@batchEnable');
+        $router->post('batch_disable', 'Admin\CpAccountController@batchDisable');
         $router->post('sync_product', 'Admin\CpAccountController@syncProduct');
     });
 
