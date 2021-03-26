@@ -5,23 +5,23 @@
  Source Server Type    : MySQL
  Source Server Version : 50731
  Source Host           : localhost:3306
- Source Schema         : n8_product_kyy
+ Source Schema         : n8_union
 
  Target Server Type    : MySQL
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 23/03/2021 16:03:42
+ Date: 26/03/2021 09:42:56
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for user_login_actions
+-- Table structure for tmp_user_login_actions
 -- ----------------------------
-DROP TABLE IF EXISTS `user_login_actions`;
-CREATE TABLE `user_login_actions` (
+DROP TABLE IF EXISTS `tmp_user_login_actions`;
+CREATE TABLE `tmp_user_login_actions` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `n8_guid` varchar(64) NOT NULL,
   `channel_id` int(11) DEFAULT NULL COMMENT '渠道ID',
