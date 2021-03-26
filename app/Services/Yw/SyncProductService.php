@@ -28,6 +28,7 @@ class SyncProductService extends BaseService
                 ->where('type',ProductTypeEnums::KYY)
                 ->where('cp_account_id',$item->id)
                 ->first();
+
             if(empty($pro)){
                 $pro = new ProductModel();
                 $pro->cp_account_id = $item->id;
