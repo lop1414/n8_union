@@ -144,6 +144,8 @@ class ChannelController extends BaseController
                 $this->curdService->responseData->admin_name = '';
             }
 
+            $this->curdService->responseData->has_extend = $this->curdService->responseData->extend ? true : false;
+
         });
     }
 
