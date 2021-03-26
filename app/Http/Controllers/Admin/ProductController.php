@@ -84,6 +84,7 @@ class ProductController extends BaseController
             ->addValidEnum(StatusEnum::class)
             ->addDefaultValue(StatusEnum::ENABLE);
         $this->curdService->addField('cp_account_id')
+            ->addValidRule('integer')
             ->addDefaultValue(0);
     }
 

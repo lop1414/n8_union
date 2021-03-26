@@ -43,8 +43,12 @@ class PullChannelCommand extends BaseCommand
         }else{
             $startDate = $endDate = null;
         }
+        $expire = env('APP_DEBUG') ? 1 : 60 * 60;
 
-        (new ChannelService())->sync($startDate,$endDate);
+        $this->lockRun(function () use ($startDate,$endDate){
+            (new ChannelService())->sync($startDate,$endDate);
+        },'bm_pull_channel',$expire,['log' => true]);
+
 
     }
 }

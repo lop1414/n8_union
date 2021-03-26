@@ -49,9 +49,8 @@ class ChannelController extends BaseController
     }
 
 
-
     /**
-     * 根据权限过滤
+     * 过滤
      */
     public function dataFilter(){
         $this->curdService->customBuilder(function ($builder){
@@ -61,6 +60,20 @@ class ChannelController extends BaseController
             if(!$this->isDataAuth()){
                 $builder->whereRaw(" (e.admin_id = {$this->adminUser['admin_user']['id']} OR e.admin_id IS NULL)");
             }
+
+            $req = $this->curdService->requestData;
+            if(!empty($req['admin_id'])){
+                $builder->where('e.admin_id',$req['admin_id']);
+            }
+
+            if(!empty($req['adv_alias'])){
+                $builder->where('e.adv_alias',$req['adv_alias']);
+            }
+
+            if(!empty($req['status'])){
+                $builder->where('e.status',$req['status']);
+            }
+
         });
 
     }
