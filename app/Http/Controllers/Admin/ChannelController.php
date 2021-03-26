@@ -32,7 +32,7 @@ class ChannelController extends BaseController
 
 
 
-    public function getAdminUser($filter = []){
+    public function getAdminUserName($filter = []){
         $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
         return array_column($adminUsers,'name','id');
     }
@@ -80,7 +80,7 @@ class ChannelController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
 
-            $map = $this->getAdminUser();
+            $map = $this->getAdminUserName();
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->product;
@@ -105,7 +105,7 @@ class ChannelController extends BaseController
 
 
         $this->curdService->getQueryAfter(function(){
-            $map = $this->getAdminUser();
+            $map = $this->getAdminUserName();
 
             foreach ($this->curdService->responseData as $item){
                 $item->product;
@@ -127,17 +127,23 @@ class ChannelController extends BaseController
     public function readPrepare(){
 
         $this->curdService->findAfter(function(){
-            $this->curdService->responseData->product;
             $this->curdService->responseData->extend;
+            $this->curdService->responseData->product;
             $this->curdService->responseData->book;
             $this->curdService->responseData->chapter;
             $this->curdService->responseData->force_chapter;
 
-            $map = $this->getAdminUser([
-                'id'  => $this->curdService->responseData->admin_id
-            ]);
+            $adminId = $this->curdService->responseData->admin_id;
+            if(!empty($adminId)){
+                $map = $this->getAdminUserName([
+                    'id'  => $adminId
+                ]);
 
-            $this->curdService->responseData->admin_name = $map[$this->curdService->responseData->admin_id];
+                $this->curdService->responseData->admin_name = $map[$adminId];
+            }else{
+                $this->curdService->responseData->admin_name = '';
+            }
+
         });
     }
 

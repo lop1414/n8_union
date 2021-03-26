@@ -8,7 +8,7 @@ use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
-use App\Datas\ChannelData;
+use App\Datas\ChannelExtendData;
 use App\Models\ChannelExtendModel;
 use App\Models\N8UnionUserModel;
 
@@ -47,11 +47,6 @@ class ChannelExtendController extends BaseController
             $adminUser = Functions::getGlobalData('admin_user_info');
             $this->curdService->handleData['admin_id'] = $adminUser['admin_user']['id'];
         });
-
-        // 清缓存
-        $this->curdService->saveAfter(function (){
-            $this->clearCache($this->curdService->getModel()->id);
-        });
     }
 
 
@@ -70,7 +65,6 @@ class ChannelExtendController extends BaseController
             unset($this->curdService->handleData['adv_alias']);
         });
 
-
         // 清缓存
         $this->curdService->saveAfter(function (){
             $this->clearCache($this->curdService->getModel()->id);
@@ -84,10 +78,11 @@ class ChannelExtendController extends BaseController
      * 清除缓存
      */
     public function clearCache($id){
-        (new ChannelData)->setParams([
+        (new ChannelExtendData())->setParams([
             'id'    => $id
         ])->clear();
     }
+
 
 
     /**

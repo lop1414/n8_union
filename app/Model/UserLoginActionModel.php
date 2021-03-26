@@ -53,7 +53,7 @@ class UserLoginActionModel extends BaseModel
 
     public function setTableNameWithMonth($dateTime){
 
-        $name =  $this->table. '_'. date('Y-m',strtotime($dateTime));
+        $name =  'user_login_actions_'. date('Ym',strtotime($dateTime));
         $this->table = $name;
         return $this;
     }
