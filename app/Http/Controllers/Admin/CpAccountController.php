@@ -99,6 +99,7 @@ class CpAccountController extends BaseController
             $service->kyy($item);
         }
 
+        // 清除所有产品缓存
         (new ProductData())->clearAll();
 
         return $this->success();

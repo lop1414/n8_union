@@ -64,24 +64,8 @@ class ChannelExtendController extends BaseController
             $this->extendData();
             unset($this->curdService->handleData['adv_alias']);
         });
-
-        // 清缓存
-        $this->curdService->saveAfter(function (){
-            $this->clearCache($this->curdService->getModel()->id);
-        });
     }
 
-
-    /**
-     * @param $id
-     * @throws \App\Common\Tools\CustomException
-     * 清除缓存
-     */
-    public function clearCache($id){
-        (new ChannelExtendData())->setParams([
-            'id'    => $id
-        ])->clear();
-    }
 
 
 

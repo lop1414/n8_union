@@ -9,7 +9,6 @@ use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
-use App\Datas\ProductData;
 use App\Models\ProductModel;
 
 class ProductController extends BaseController
@@ -81,8 +80,11 @@ class ProductController extends BaseController
             ->addValidEnum(ProductTypeEnums::class);
         $this->curdService->addField('cp_product_alias')->addValidRule('required');
         $this->curdService->addField('cp_account_id')->addDefaultValue(0);
-        $this->curdService->addField('status')->addValidEnum(StatusEnum::class)
+        $this->curdService->addField('status')
+            ->addValidEnum(StatusEnum::class)
             ->addDefaultValue(StatusEnum::ENABLE);
+        $this->curdService->addField('cp_account_id')
+            ->addDefaultValue(0);
     }
 
 
@@ -149,14 +151,6 @@ class ProductController extends BaseController
             }
 
             unset($this->curdService->handleData['secret']);
-        });
-
-
-        // 清缓存
-        $this->curdService->saveAfter(function (){
-            (new ProductData())->setParams([
-                'id'    => $this->curdService->getModel()->id
-            ])->clear();
         });
     }
 }
