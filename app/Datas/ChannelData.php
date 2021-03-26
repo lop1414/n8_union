@@ -41,4 +41,22 @@ class ChannelData extends BaseData
     }
 
 
+
+    public function save($data){
+        return $this->model->updateOrCreate(
+            [
+                'product_id'    => $data['product_id'],
+                'cp_channel_id' => $data['cp_channel_id']
+            ],
+            [
+                'name'           => $data['name'],
+                'book_id'        => $data['book_id'],
+                'chapter_id'     => $data['chapter_id'],
+                'force_chapter_id'   => $data['force_chapter_id'],
+                'create_time'    => $data['create_time'],
+                'updated_time'   => $data['updated_time'],
+            ]
+        );
+    }
+
 }

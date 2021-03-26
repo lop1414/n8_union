@@ -4,15 +4,15 @@ namespace App\Console\Commands\Bm;
 
 use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
-use App\Services\Bm\CpChannelService;
+use App\Services\Bm\ChannelService;
 
-class PullCpChannelCommand extends BaseCommand
+class PullChannelCommand extends BaseCommand
 {
     /**
      * 命令行执行命令
      * @var string
      */
-    protected $signature = 'bm:pull_cp_channel {--date=}';
+    protected $signature = 'bm:pull_channel {--date=}';
 
     /**
      * 命令描述
@@ -20,6 +20,7 @@ class PullCpChannelCommand extends BaseCommand
      * @var string
      */
     protected $description = '笔墨渠道';
+
 
     /**
      * Create a new command instance.
@@ -35,8 +36,15 @@ class PullCpChannelCommand extends BaseCommand
      */
     public function handle(){
 
-        list($startDate,$endDate) = Functions::getDateRange($this->option('date'));
-        (new CpChannelService())->sync($startDate,$endDate);
+        $date = $this->option('date');
+        if(!empty($date)){
+            list($startDate,$endDate) = Functions::getDateRange($this->option('date'));
+
+        }else{
+            $startDate = $endDate = null;
+        }
+
+        (new ChannelService())->sync($startDate,$endDate);
 
     }
 }

@@ -15,6 +15,19 @@ class ChannelModel extends BaseModel
 
 
 
+    protected $fillable = [
+        'product_id',
+        'cp_channel_id',
+        'name',
+        'book_id',
+        'chapter_id',
+        'force_chapter_id',
+        'create_time',
+        'updated_time',
+    ];
+
+
+
     public function extend(){
         return $this->hasOne('App\Models\ChannelExtendModel', 'channel_id', 'id');
     }

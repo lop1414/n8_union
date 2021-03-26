@@ -6,7 +6,7 @@ use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\Yw\PullBookCommand;
 use App\Console\Commands\Yw\PullChapterCommand;
-use App\Console\Commands\Bm\PullCpChannelCommand;
+use App\Console\Commands\Bm\PullChannelCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         PullChapterCommand::class,
 
         // 笔墨
-        PullCpChannelCommand::class
+        PullChannelCommand::class
     ];
 
     /**
@@ -41,6 +41,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('create_table')->cron('0 0 1,15 * *');
+
+        $schedule->command('bm:pull_cp_channel --date=today')->cron('55 23 * * *');
 
     }
 }
