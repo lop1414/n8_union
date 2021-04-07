@@ -30,6 +30,7 @@ CREATE TABLE `n8_union_users` (
   `chapter_id` bigint(20) DEFAULT NULL COMMENT '章节ID',
   `force_chapter_id` bigint(20) DEFAULT NULL COMMENT '强制章节ID',
   `admin_id` int(11) DEFAULT NULL,
+  `adv_alias` varchar(50) NOT NULL COMMENT '广告商标识',
   `click_id` bigint(20) DEFAULT '0' COMMENT '点击ID',
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,

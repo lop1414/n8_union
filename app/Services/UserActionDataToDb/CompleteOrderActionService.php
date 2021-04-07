@@ -25,10 +25,7 @@ class CompleteOrderActionService extends UserActionDataToDbService
     public function item($data,$globalUser){
 
         $globalOrder = (new N8GlobalOrderData())
-            ->setParams([
-                'product_id' => $data['product_id'],
-                'order_id'   => $data['order_id']
-            ])
+            ->setParams(['product_id' => $data['product_id'], 'order_id' => $data['order_id']])
             ->read();
 
         $order = $this->getModel()->where('n8_goid',$globalOrder['n8_goid'])->first();

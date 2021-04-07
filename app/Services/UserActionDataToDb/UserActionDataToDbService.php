@@ -3,15 +3,14 @@
 namespace App\Services\UserActionDataToDb;
 
 use App\Common\Services\BaseService;
+use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomQueue;
 use App\Datas\N8GlobalOrderData;
 use App\Datas\N8GlobalUserData;
-use App\Datas\N8UnionUserData;
 use App\Datas\UserData;
 use App\Models\OrderModel;
-use App\Services\ChannelService;
 use Illuminate\Support\Facades\DB;
 
 class UserActionDataToDbService extends BaseService
@@ -60,22 +59,21 @@ class UserActionDataToDbService extends BaseService
                 $queue->item['code'] = $e->getCode();
                 $rePushData[] = $queue->item;
 
-                var_dump($e->getErrorInfo());
+                // echo
+                (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
             }catch (\Exception $e){
 
                 DB::rollBack();
 
-
                 //日志
                 (new ErrorLogService())->catch($e);
 
-                //命中唯一索引
-                if($e->getCode() != 23000){
-                    $queue->item['exception'] = $e->getMessage();
-                    $rePushData[] = $queue->item;
-                }
+                $queue->item['exception'] = $e->getMessage();
+                $queue->item['code'] = $e->getCode();
+                $rePushData[] = $queue->item;
 
-                var_dump($e->getCode(),$e->getMessage());
+                // echo
+                (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
             }
         }
 
@@ -97,18 +95,6 @@ class UserActionDataToDbService extends BaseService
 
     public function item($data,$globalUser){}
 
-
-
-    /**
-     * @param $productId
-     * @param $cpChannelId
-     * @return mixed
-     * @throws CustomException
-     * 获取渠道ID
-     */
-    public function readChannelId($productId,$cpChannelId){
-        return (new ChannelService())->readByCpChannelId($productId,$cpChannelId);
-    }
 
 
 
@@ -137,70 +123,6 @@ class UserActionDataToDbService extends BaseService
     }
 
 
-
-    /**
-     * @param $user
-     * @param $channelId
-     * @param $actionData
-     * @param bool $verify 验证渠道有效变更
-     * @return false|null
-     * @throws CustomException
-     * 创建union用户 渠道ID无效变更则不创建
-     */
-    public function createUnionUser($user,$channelId,$actionData,$verify = true){
-
-        try{
-            $unionUser = false;
-
-            //无效变更渠道ID
-            $channelService = new ChannelService();
-            if( $verify && !$channelService->isValidChange($user,$channelId,$actionData['action_time'])){
-                return false;
-            }
-
-            $actionData['n8_guid'] = $user['n8_guid'];
-            $actionData['channel_id'] = $channelId;
-            $unionUser = (new N8UnionUserData())->create($actionData);
-        }catch (CustomException $e){
-            // 联运用户已存在
-            if($e->getCode() == 'UUID_EXIST'){
-                $unionUser = (new N8UnionUserData())
-                    ->setParams([
-                        'n8_guid'   => $user['n8_guid'],
-                        'channel_id'=> $channelId
-                    ])
-                    ->read();
-            }
-        }
-
-        return $unionUser;
-    }
-
-
-
-    /**
-     * @param $data
-     * @return array
-     * 过滤设备信息
-     */
-    public function filterDeviceInfo($data){
-        return [
-            'ip'                    => $data['ip'] ?? '',
-            'ua'                    => $data['ua'] ?? '',
-            'muid'                  => $data['muid'] ?? '',
-            'oaid'                  => $data['oaid'] ?? '',
-            'device_brand'          => $data['device_brand'] ?? '',
-            'device_manufacturer'   => $data['device_manufacturer'] ?? '',
-            'device_model'          => $data['device_model'] ?? '',
-            'device_product'        => $data['device_product'] ?? '',
-            'device_os_version_name'=> $data['device_os_version_name'] ?? '',
-            'device_os_version_code'=> $data['device_os_version_code'] ?? '',
-            'device_platform_version_name' => $data['device_platform_version_name'] ?? '',
-            'device_platform_version_code' => $data['device_platform_version_code'] ?? '',
-            'android_id'            => $data['android_id'] ?? '',
-            'request_id'            => $data['request_id'] ?? ''
-        ];
-    }
 
 
 

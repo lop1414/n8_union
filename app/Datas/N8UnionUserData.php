@@ -24,7 +24,7 @@ class N8UnionUserData extends BaseData
      * @var array
      * 字段
      */
-    protected $fields = [];
+    protected $fields = ['id','n8_guid','channel_id'];
 
 
     /**
@@ -40,7 +40,7 @@ class N8UnionUserData extends BaseData
      * @var int
      * 缓存有效期
      */
-    protected $ttl = 60*60*24;
+    protected $ttl = 60*60*24*3;
 
 
     /**
@@ -56,7 +56,24 @@ class N8UnionUserData extends BaseData
 
         try{
             $channel = (new ChannelData())->setParams(['id' => $data['channel_id']])->read();
+            if(empty($channel)){
+                throw new CustomException([
+                    'code'      => 'CHANNEL_NOT_EXIST',
+                    'message'   => '渠道信息不存在',
+                    'log'       => true,
+                    'data'      => $data
+                ]);
+            }
+
             $ChannelExtend = (new ChannelExtendData())->setParams(['channel_id' => $data['channel_id']])->read();
+            if(empty($ChannelExtend)){
+                throw new CustomException([
+                    'code'      => 'CHANNEL_EXTEND_NOT_EXIST',
+                    'message'   => '渠道扩展信息不存在',
+                    'log'       => true,
+                    'data'      => $data
+                ]);
+            }
 
             $ret = (new N8UnionUserModel())->create([
                 'n8_guid'       => $data['n8_guid'],
@@ -66,6 +83,7 @@ class N8UnionUserData extends BaseData
                 'chapter_id'    => $channel['chapter_id'],
                 'force_chapter_id' => $channel['force_chapter_id'],
                 'admin_id'      => $ChannelExtend['admin_id'],
+                'adv_alias'     => $ChannelExtend['adv_alias'],
                 'created_at'    => date('Y-m-d H:i:s')
             ]);
 
@@ -92,7 +110,6 @@ class N8UnionUserData extends BaseData
             return $ret;
 
         }catch (\Exception $e){
-
             if($e->getCode() == 23000){
                 throw new CustomException([
                     'code'      => 'UUID_EXIST',
@@ -100,6 +117,8 @@ class N8UnionUserData extends BaseData
                     'log'       => true,
                     'data'      => $data
                 ]);
+            }else{
+                throw $e;
             }
         }
 

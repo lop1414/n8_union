@@ -35,6 +35,7 @@ class N8UnionUserModel extends BaseModel
         'chapter_id',
         'force_chapter_id',
         'admin_id',
+        'adv_alias',
         'click_id',
         'created_at'
     ];

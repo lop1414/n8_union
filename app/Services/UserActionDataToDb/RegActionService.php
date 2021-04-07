@@ -7,6 +7,7 @@ use App\Enums\QueueEnums;
 use App\Models\UserExtendModel;
 use App\Models\UserInfoChangeLogModel;
 use App\Models\UserModel;
+use App\Services\UnionUserService;
 
 
 class RegActionService extends UserActionDataToDbService
@@ -55,33 +56,35 @@ class RegActionService extends UserActionDataToDbService
 
     public function saveUserItem($globalUser,$data){
 
+
+
+        $unionUserService  = new UnionUserService();
+        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+        $unionUserService->closeVerify(); //关闭验证
+
+
         $saveData = [
             'n8_guid'    => $globalUser['n8_guid'],
             'product_id' => $data['product_id'],
             'reg_time'   => $data['action_time'],
-            'channel_id' => 0,
+            'channel_id' => $unionUserService->getChannelId(),
             'phone'      => $data['phone'] ?? ''
         ];
 
         if(isset($data['cp_channel_id'])){
-            $channelId = $this->readChannelId($data['product_id'],$data['cp_channel_id']);
 
-            $saveData['channel_id'] = $channelId;
-
-            //创建union用户
-            $this->createUnionUser($saveData,$channelId,$data,false);
+            // 创建union用户
+            $unionUserService->setUser($saveData);
+            $unionUserService->create($data);
         }
 
 
         $userInfo = $this->getModel()->create($saveData);
 
-        $extendData = $this->filterDeviceInfo($data);
+        $extendData = $unionUserService->filterDeviceInfo($data);
         $extendData['n8_guid'] = $globalUser['n8_guid'];
 
         (new UserExtendModel())->create($extendData);
-
-        // 生成缓存
-        $this->readUser($globalUser['n8_guid']);
 
         return $userInfo;
     }
@@ -93,8 +96,12 @@ class RegActionService extends UserActionDataToDbService
 
         $changeLogData = $changeData = [];
 
-        $channelId = $this->readChannelId($data['product_id'],$data['cp_channel_id']);
-        $unionUser = $this->createUnionUser($user,$channelId,$data);
+
+        // 创建union用户
+        $unionUserService  = new UnionUserService();
+        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+        $unionUserService->setUser($user);
+        $unionUserService->create($data);
 
         if(!empty($unionUser)){
             $data['channel_id'] = $unionUser['channel_id'];

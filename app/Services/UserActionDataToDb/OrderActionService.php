@@ -7,6 +7,7 @@ use App\Common\Enums\OrderStatusEnums;
 use App\Enums\QueueEnums;
 use App\Models\OrderExtendModel;
 use App\Models\OrderModel;
+use App\Services\UnionUserService;
 
 
 class OrderActionService extends UserActionDataToDbService
@@ -31,21 +32,25 @@ class OrderActionService extends UserActionDataToDbService
         $globalOrder = $this->readGlobalOrder($data['product_id'],$data['order_id']);
         $this->orderIsNotExist($globalOrder['n8_goid']);
 
-        $channelId = $this->readChannelId($data['product_id'],$data['cp_channel_id']);
-        $this->createUnionUser($user,$channelId,$data);
+        // 创建union用户
+        $unionUserService  = new UnionUserService();
+        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+        $unionUserService->setUser($user);
+        $unionUserService->create($data);
+
 
         $this->getModel()->create([
             'n8_guid'       => $globalUser['n8_guid'],
             'n8_goid'       => $globalOrder['n8_goid'],
             'product_id'    => $data['product_id'],
-            'channel_id'    => $user['channel_id'],
+            'channel_id'    => $unionUserService->getValidChannelId(),
             'order_time'    => $data['action_time'],
             'amount'        => $data['amount'],
             'type'          => $data['type'],
             'status'        => OrderStatusEnums::UN_PAID
         ]);
 
-        $extendData = $this->filterDeviceInfo($data);
+        $extendData = $unionUserService->filterDeviceInfo($data);
         $extendData['n8_goid'] = $globalOrder['n8_goid'];
         (new OrderExtendModel())->create($extendData);
     }
