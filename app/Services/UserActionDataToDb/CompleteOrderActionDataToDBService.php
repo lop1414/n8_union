@@ -10,7 +10,7 @@ use App\Enums\QueueEnums;
 use App\Models\OrderModel;
 
 
-class CompleteOrderActionService extends UserActionDataToDbService
+class CompleteOrderActionDataToDBService extends UserActionDataToDbService
 {
 
     protected $queueEnum = QueueEnums::COMPLETE_ORDER;

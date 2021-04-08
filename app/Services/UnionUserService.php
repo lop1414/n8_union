@@ -6,7 +6,7 @@ use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\N8UnionUserData;
-use App\Services\UserActionDataToDb\RegActionService;
+use App\Services\UserActionDataToDb\RegActionDataToDbService;
 
 class UnionUserService extends BaseService
 {
@@ -158,7 +158,7 @@ class UnionUserService extends BaseService
                 'channel_id' => $actionData['channel_id'],
                 'action_time' => $actionData['action_time']
             ];
-            (new RegActionService())->changeUserItem($user,$userChangeData,false);
+            (new RegActionDataToDbService())->changeUserItem($user,$userChangeData,false);
 
             // 创建union user
             return (new N8UnionUserData())->create($actionData);

@@ -8,7 +8,7 @@ use App\Models\UserLoginActionModel;
 use App\Services\UnionUserService;
 
 
-class LoginActionService extends UserActionDataToDbService
+class LoginActionDataToDbService extends UserActionDataToDbService
 {
 
     protected $queueEnum = QueueEnums::USER_LOGIN_ACTION;

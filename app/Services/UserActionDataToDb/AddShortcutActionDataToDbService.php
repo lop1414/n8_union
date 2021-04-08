@@ -4,19 +4,19 @@ namespace App\Services\UserActionDataToDb;
 
 
 use App\Enums\QueueEnums;
-use App\Models\UserFollowActionModel;
+use App\Models\UserShortcutActionModel;
 use App\Services\UnionUserService;
 
 
-class FollowActionService extends UserActionDataToDbService
+class AddShortcutActionDataToDbService extends UserActionDataToDbService
 {
 
-    protected $queueEnum = QueueEnums::USER_FOLLOW_ACTION;
+    protected $queueEnum = QueueEnums::USER_ADD_SHORTCUT_ACTION;
 
 
     public function __construct(){
         parent::__construct();
-        $model = new UserFollowActionModel();
+        $model = new UserShortcutActionModel();
         $this->setModel($model);
     }
 

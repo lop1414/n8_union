@@ -45,7 +45,7 @@ class UserActionDataToDbCommand extends BaseCommand
 
 
         $action = Functions::camelize($action);
-        $class = "App\Services\UserActionDataToDb\\{$action}ActionService";
+        $class = "App\Services\UserActionDataToDb\\{$action}ActionDataToDbService";
 
         if(!class_exists($class)){
             $this->consoleEchoService->error("{$class} 类不存在");
@@ -60,9 +60,10 @@ class UserActionDataToDbCommand extends BaseCommand
 
         $expire = env('APP_DEBUG') ? 1 : 60 * 60;
 
+        $key = 'user_action_data_to_db|'.$action;
         $this->lockRun(function () use ($service,$action){
             $service->run();
-        },$action,$expire,['log' => true]);
+        },$key,$expire,['log' => true]);
     }
 
 

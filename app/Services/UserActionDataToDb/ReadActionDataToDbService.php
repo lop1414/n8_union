@@ -4,28 +4,27 @@ namespace App\Services\UserActionDataToDb;
 
 
 use App\Enums\QueueEnums;
-use App\Models\UserShortcutActionModel;
+use App\Models\UserReadActionModel;
 use App\Services\UnionUserService;
 
 
-class AddShortcutActionService extends UserActionDataToDbService
+class ReadActionDataToDbService extends UserActionDataToDbService
 {
 
-    protected $queueEnum = QueueEnums::USER_ADD_SHORTCUT_ACTION;
+
+    protected $queueEnum = QueueEnums::USER_READ_ACTION;
 
 
     public function __construct(){
         parent::__construct();
-        $model = new UserShortcutActionModel();
+        $model = new UserReadActionModel();
         $this->setModel($model);
     }
 
 
 
-
     public function item($data,$globalUser){
 
-        // 验证用户
         $user = $this->userIsExist($globalUser['n8_guid']);
 
         // 创建union用户
@@ -34,17 +33,18 @@ class AddShortcutActionService extends UserActionDataToDbService
         $unionUserService->setUser($user);
         $unionUserService->create($data);
 
-
         $deviceData = $unionUserService->filterDeviceInfo($data);
         $createData = array_merge($deviceData,[
             'n8_guid'       => $user['n8_guid'],
             'action_time'   => $data['action_time'],
             'channel_id'    => $unionUserService->getValidChannelId(),
+            'cp_book_id'    => $data['cp_book_id'] ?? '',
+            'cp_chapter_id' => $data['cp_chapter_id'] ?? '',
             'created_at'    => date('Y-m-d H:i:s')
         ]);
-        $this->getModel()->create($createData);
+
+        $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
+
     }
-
-
 
 }

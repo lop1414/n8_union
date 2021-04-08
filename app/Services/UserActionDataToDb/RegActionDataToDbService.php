@@ -10,7 +10,7 @@ use App\Models\UserModel;
 use App\Services\UnionUserService;
 
 
-class RegActionService extends UserActionDataToDbService
+class RegActionDataToDbService extends UserActionDataToDbService
 {
 
 

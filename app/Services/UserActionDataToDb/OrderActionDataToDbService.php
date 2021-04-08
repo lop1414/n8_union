@@ -10,7 +10,7 @@ use App\Models\OrderModel;
 use App\Services\UnionUserService;
 
 
-class OrderActionService extends UserActionDataToDbService
+class OrderActionDataToDbService extends UserActionDataToDbService
 {
 
 
