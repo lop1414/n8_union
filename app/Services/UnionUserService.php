@@ -6,6 +6,7 @@ use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\N8UnionUserData;
+use App\Services\UserActionDataToDb\RegActionService;
 
 class UnionUserService extends BaseService
 {
@@ -37,6 +38,7 @@ class UnionUserService extends BaseService
 
     public function __construct(){
         parent::__construct();
+
         // 默认开启验证
         $this->openVerify();
     }
@@ -132,7 +134,6 @@ class UnionUserService extends BaseService
 
             $user = $this->user;
 
-
             $channelService = new ChannelService();
             $channelService->setChannelId($this->channelId);
             $channelService->setUser($user);
@@ -140,6 +141,7 @@ class UnionUserService extends BaseService
             //无效变更渠道ID
             if( $this->verify && !$channelService->isValidChange($actionData['action_time'])){
                 $this->validChannelId = $user['channel_id'];
+
                 return false;
             }
 
@@ -150,12 +152,22 @@ class UnionUserService extends BaseService
             $actionData = array_merge($actionData,$this->filterDeviceInfo($actionData));
 
             $this->validChannelId = $actionData['channel_id'];
+
+            // 更改用户渠道ID
+            $userChangeData = [
+                'channel_id' => $actionData['channel_id'],
+                'action_time' => $actionData['action_time']
+            ];
+            (new RegActionService())->changeUserItem($user,$userChangeData,false);
+
+            // 创建union user
             return (new N8UnionUserData())->create($actionData);
+
         }catch (CustomException $e){
             // 联运用户已存在
             if($e->getCode() == 'UUID_EXIST'){
                 return (new N8UnionUserData())
-                    ->setParams(['n8_guid'=> $user['n8_guid'], 'channel_id'=> $this->channelId])
+                    ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->channelId])
                     ->read();
             }else{
                 throw $e;
@@ -189,12 +201,6 @@ class UnionUserService extends BaseService
             'request_id'            => $data['request_id'] ?? ''
         );
     }
-
-
-
-
-
-
 
 
 }

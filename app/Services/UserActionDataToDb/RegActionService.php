@@ -44,7 +44,7 @@ class RegActionService extends UserActionDataToDbService
         // 用户存在
         if(!empty($user)){
 
-            $this->changeUserItem($globalUser,$user,$data);
+            $this->changeUserItem($user,$data);
         }else{
 
             $this->saveUserItem($globalUser,$data);
@@ -56,12 +56,9 @@ class RegActionService extends UserActionDataToDbService
 
     public function saveUserItem($globalUser,$data){
 
-
-
         $unionUserService  = new UnionUserService();
         $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
         $unionUserService->closeVerify(); //关闭验证
-
 
         $saveData = [
             'n8_guid'    => $globalUser['n8_guid'],
@@ -92,26 +89,29 @@ class RegActionService extends UserActionDataToDbService
 
 
 
-    public function changeUserItem($globalUser,$user,$data){
+
+    public function changeUserItem($user,$data,$createUnionUser = true){
 
         $changeLogData = $changeData = [];
-
+        $n8Guid = $user['n8_guid'];
 
         // 创建union用户
-        $unionUserService  = new UnionUserService();
-        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
-        $unionUserService->setUser($user);
-        $unionUserService->create($data);
-
-        if(!empty($unionUser)){
-            $data['channel_id'] = $unionUser['channel_id'];
+        if($createUnionUser){
+            $unionUserService  = new UnionUserService();
+            $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+            $unionUserService->setUser($user);
+            $unionUser = $unionUserService->create($data);
+            if(!empty($unionUser)){
+                $data['channel_id'] = $unionUser['channel_id'];
+            }
         }
+
 
 
         foreach ($this->userAllowChangeField as $field){
             if(isset($data[$field]) && $user[$field] != $data[$field]){
                 $changeLogData[] = [
-                    'n8_guid'       => $globalUser['n8_guid'],
+                    'n8_guid'       => $n8Guid,
                     'field'         => $field,
                     'change_before' => $user[$field],
                     'change_after'  => $data[$field],
@@ -120,14 +120,14 @@ class RegActionService extends UserActionDataToDbService
                 $changeData[$field] = $data[$field];
             }
         }
-        $userInfo = $this->getModel()->where('n8_guid',$globalUser['n8_guid'])->update($changeData);
+        $userInfo = $this->getModel()->where('n8_guid',$n8Guid)->update($changeData);
 
 
         // 日志
         $this->saveChangeLog($changeLogData);
 
         // 更新缓存
-        $this->refreshUserData($globalUser['n8_guid']);
+        $this->refreshUserData($n8Guid);
 
         return $userInfo;
     }
@@ -147,6 +147,7 @@ class RegActionService extends UserActionDataToDbService
             $model->field           = $item['field'];
             $model->change_before   = $item['change_before'];
             $model->change_after    = $item['change_after'];
+            $model->change_time     = $item['change_time'];
             $model->created_at      = date('Y-m-d H:i:s');
             $model->save();
         }

@@ -111,13 +111,18 @@ class ChannelService extends BaseService
     public function isActiveUser($actionTime){
 
         $n8Guid = $this->user['n8_guid'];
-        $tmpTimestamp = strtotime($actionTime) - $this->protectTime;
+        $actionTimestamp = strtotime($actionTime);
+        $tmpTimestamp = $actionTimestamp  - $this->protectTime;
 
         $timeRange = [
             'startTime' => date('Y-m-d H:i:s',$tmpTimestamp),
             'endTime'   => $actionTime
         ];
-        //激活数据
+        $dateRange = [
+            date('Y-m-d',$tmpTimestamp),
+            date('Y-m-d',$actionTimestamp),
+        ];
+            //激活数据
         $unionUserInfo = (new N8UnionUserData())
             ->where('n8_guid',$n8Guid)
             ->whereBetween('created_time',$timeRange)
@@ -126,11 +131,11 @@ class ChannelService extends BaseService
 
 
         //阅读活跃
-        $readInfo = (new UserReadActionData())->readLastDataByRange($n8Guid,$timeRange);
+        $readInfo = (new UserReadActionData())->readLastDataByRange($n8Guid,$dateRange);
         if(!empty($readInfo)) return true;
 
         //登陆活跃
-        $loginInfo = (new UserLoginActionData())->readLastDataByRange($n8Guid,$timeRange);
+        $loginInfo = (new UserLoginActionData())->readLastDataByRange($n8Guid,$dateRange);
         if(!empty($loginInfo)) return true;
 
         //加桌活跃
