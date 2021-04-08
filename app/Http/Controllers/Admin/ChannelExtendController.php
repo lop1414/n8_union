@@ -22,6 +22,7 @@ class ChannelExtendController extends BaseController
     public function __construct()
     {
         $this->model = new ChannelExtendModel();
+        $this->modelData = new ChannelExtendData();
 
         parent::__construct();
 

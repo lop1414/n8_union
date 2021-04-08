@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Helpers\Functions;
 use App\Common\Services\SystemApi\CenterApiService;
+use App\Datas\ChannelData;
 use App\Models\ChannelModel;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +24,8 @@ class ChannelController extends BaseController
     public function __construct()
     {
         $this->model = new ChannelModel();
+        $this->modelData = new ChannelData();
+
 
         parent::__construct();
 

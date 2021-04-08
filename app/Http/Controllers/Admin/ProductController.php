@@ -9,6 +9,7 @@ use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
+use App\Datas\ProductData;
 use App\Models\ProductModel;
 
 class ProductController extends BaseController
@@ -20,6 +21,7 @@ class ProductController extends BaseController
     public function __construct()
     {
         $this->model = new ProductModel();
+        $this->modelData = new ProductData();
 
         parent::__construct();
     }

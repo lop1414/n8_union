@@ -11,13 +11,6 @@ class ProductData extends BaseData
 {
 
     /**
-     * @var bool
-     * 缓存开关
-     */
-    protected $cacheSwitch = false;
-
-
-    /**
      * @var array
      * 字段
      */
