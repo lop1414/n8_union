@@ -43,7 +43,10 @@ class OrderModel extends BaseModel
         'amount',
         'type',
         'status',
-        'complete_time'
+        'complete_time',
+        'adv_alias',
+        'click_id',
+        'complete_click_id',
     ];
 
 

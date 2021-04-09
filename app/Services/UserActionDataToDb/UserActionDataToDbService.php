@@ -7,10 +7,11 @@ use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomQueue;
+use App\Datas\ChannelExtendData;
 use App\Datas\N8GlobalOrderData;
 use App\Datas\N8GlobalUserData;
+use App\Datas\OrderData;
 use App\Datas\UserData;
-use App\Models\OrderModel;
 use Illuminate\Support\Facades\DB;
 
 class UserActionDataToDbService extends BaseService
@@ -97,7 +98,28 @@ class UserActionDataToDbService extends BaseService
 
 
 
+    /**
+     * @param $id
+     * @return mixed
+     * @throws CustomException
+     * 通过渠道 获取广告商标识
+     */
+    public function getAdvAliasByChannel($id){
+        $channel = (new ChannelExtendData())
+            ->setParams(['channel_id'=>$id])
+            ->read();
+        return $channel['adv_alias'];
+    }
 
+
+
+    /**
+     * @param $productId
+     * @param $openId
+     * @return mixed|null
+     * @throws CustomException
+     * 获取全局用户信息
+     */
     public function readGlobalUser($productId,$openId){
         $tmp = new N8GlobalUserData();
         $info = $tmp->setParams(['product_id' => $productId,'open_id' => $openId])->read();
@@ -110,7 +132,13 @@ class UserActionDataToDbService extends BaseService
     }
 
 
-
+    /**
+     * @param $productId
+     * @param $orderId
+     * @return mixed|null
+     * @throws CustomException
+     * 获取全局订单信息
+     */
     public function readGlobalOrder($productId,$orderId){
         $tmp = new N8GlobalOrderData();
         $info = $tmp->setParams(['product_id' => $productId,'order_id' => $orderId])->read();
@@ -121,8 +149,6 @@ class UserActionDataToDbService extends BaseService
 
         return $info;
     }
-
-
 
 
 
@@ -176,6 +202,7 @@ class UserActionDataToDbService extends BaseService
      * @param $n8Guid
      * @return array|null
      * @throws CustomException
+     * 获取用户信息
      */
     public function readUser($n8Guid){
 
@@ -201,17 +228,22 @@ class UserActionDataToDbService extends BaseService
 
     /**
      * @param $n8Goid
-     * @return mixed
+     * @return array|null
+     * @throws CustomException
+     * 获取订单信息
      */
     public function readOrder($n8Goid){
-        $info = (new OrderModel())
-            ->where('n8_goid',$n8Goid)
-            ->first();
-        if(!empty($info)) $info->toArray();
-        return $info;
+        return  (new OrderData())
+            ->setParams(['n8_goid'=>$n8Goid])
+            ->read();
     }
 
 
+
+    /**
+     * @return mixed
+     * 获取队列枚举
+     */
     public function getQueueEnum(){
         return $this->queueEnum;
     }

@@ -39,11 +39,14 @@ class OrderActionDataToDbService extends UserActionDataToDbService
         $unionUserService->create($data);
 
 
+        $channelId = $unionUserService->getValidChannelId();
+        $advAlias = $this->getAdvAliasByChannel($channelId);
         $this->getModel()->create([
             'n8_guid'       => $globalUser['n8_guid'],
             'n8_goid'       => $globalOrder['n8_goid'],
             'product_id'    => $data['product_id'],
-            'channel_id'    => $unionUserService->getValidChannelId(),
+            'channel_id'    => $channelId,
+            'adv_alias'     => $advAlias,
             'order_time'    => $data['action_time'],
             'amount'        => $data['amount'],
             'type'          => $data['type'],

@@ -31,6 +31,8 @@ class UserShortcutActionModel extends BaseModel
         'n8_guid',
         'channel_id',
         'action_time',
+        'adv_alias',
+        'click_id',
         'ip',
         'ua',
         'muid',

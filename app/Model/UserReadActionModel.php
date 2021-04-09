@@ -33,6 +33,7 @@ class UserReadActionModel extends BaseModel
         'action_time',
         'cp_book_id',
         'cp_chapter_id',
+        'adv_alias',
         'created_at'
     ];
 

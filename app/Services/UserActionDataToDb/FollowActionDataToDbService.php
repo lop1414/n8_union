@@ -36,10 +36,13 @@ class FollowActionDataToDbService extends UserActionDataToDbService
 
 
         $deviceData = $unionUserService->filterDeviceInfo($data);
+        $channelId = $unionUserService->getValidChannelId();
+        $advAlias = $this->getAdvAliasByChannel($channelId);
         $createData = array_merge($deviceData,[
             'n8_guid'       => $user['n8_guid'],
             'action_time'   => $data['action_time'],
-            'channel_id'    => $unionUserService->getValidChannelId(),
+            'channel_id'    => $channelId,
+            'adv_alias'     => $advAlias,
             'created_at'    => date('Y-m-d H:i:s')
         ]);
         $this->getModel()->create($createData);

@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 50731
  Source Host           : localhost:3306
- Source Schema         : n8_product_kyy
+ Source Schema         : n8_union
 
  Target Server Type    : MySQL
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 23/03/2021 16:03:18
+ Date: 09/04/2021 14:32:16
 */
 
 SET NAMES utf8mb4;
@@ -31,6 +31,9 @@ CREATE TABLE `orders` (
   `type` varchar(50) NOT NULL COMMENT '类型',
   `status` varchar(50) NOT NULL COMMENT '状态',
   `complete_time` datetime DEFAULT NULL COMMENT '完成时间',
+  `adv_alias` varchar(50) DEFAULT NULL COMMENT '广告商标识',
+  `click_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '下单点击ID',
+  `complete_click_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '完成点击ID',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`n8_goid`),

@@ -32,6 +32,7 @@ class UserLoginActionModel extends BaseModel
         'n8_guid',
         'channel_id',
         'action_time',
+        'adv_alias',
         'ip',
         'ua',
         'muid',

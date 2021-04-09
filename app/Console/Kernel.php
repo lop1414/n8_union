@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
+use App\Console\Commands\UserActionMatchCommand;
 use App\Console\Commands\Yw\PullBookCommand;
 use App\Console\Commands\Yw\PullChapterCommand;
 use App\Console\Commands\Bm\PullChannelCommand;
@@ -23,6 +24,10 @@ class Kernel extends ConsoleKernel
 
         // 用户行为数据
         UserActionDataToDbCommand::class,
+
+        // 用户行为匹配
+        UserActionMatchCommand::class,
+
 
         // 阅文快应用
         PullBookCommand::class,

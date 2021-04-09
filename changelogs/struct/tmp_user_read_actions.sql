@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 26/03/2021 09:43:04
+ Date: 09/04/2021 11:20:01
 */
 
 SET NAMES utf8mb4;
@@ -28,6 +28,7 @@ CREATE TABLE `tmp_user_read_actions` (
   `action_time` datetime NOT NULL COMMENT '行为时间',
   `cp_book_id` varchar(64) NOT NULL DEFAULT '0' COMMENT '平台书籍id',
   `cp_chapter_id` varchar(64) NOT NULL DEFAULT '0' COMMENT '平台章节id',
+  `adv_alias` varchar(50) DEFAULT NULL COMMENT '广告商标识',
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `n8_guid` (`n8_guid`,`action_time`) USING BTREE,

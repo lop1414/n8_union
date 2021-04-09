@@ -24,7 +24,7 @@ class N8UnionUserData extends BaseData
      * @var array
      * 字段
      */
-    protected $fields = ['id','n8_guid','channel_id'];
+    protected $fields = ['id','n8_guid','channel_id','created_time'];
 
 
     /**
