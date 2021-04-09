@@ -12,7 +12,7 @@ class UserActionMatchCommand extends BaseCommand
      * 命令行执行命令
      * @var string
      */
-    protected $signature = 'user_action_match {--adv_alias=} {--action=}';
+    protected $signature = 'user_action_match {--adv_alias=} {--action=} {--time=}';
 
     /**
      * 命令描述
@@ -48,6 +48,9 @@ class UserActionMatchCommand extends BaseCommand
             return ;
         }
 
+        $time = $this->option('time');
+        list($startTime,$endTime) = Functions::getTimeRange($time);
+
         $action = Functions::camelize($action);
         $class = "App\Services\UserActionMatch\\{$action}ActionMatchService";
 
@@ -58,12 +61,12 @@ class UserActionMatchCommand extends BaseCommand
 
         $service = new $class;
         $service->setAdvAlias($advAlias);
-        $service->setTimeRange('2021-01-01 00:00:00','2021-04-10 00:00:00');
+        $service->setTimeRange($startTime,$endTime);
 
-        $service->run();die;
-        $expire = env('APP_DEBUG') ? 1 : 60 * 60;
+        $expire = env('APP_DEBUG') ? 1 : 60 * 60 * 3;
 
         $key = "user_action_match|{$action}|{$advAlias}";
+
         $this->lockRun(function () use ($service,$action){
             $service->run();
         },$key,$expire,['log' => true]);

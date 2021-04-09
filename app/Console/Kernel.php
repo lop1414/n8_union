@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Common\Enums\AdvAliasEnum;
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\UserActionMatchCommand;
@@ -45,8 +46,34 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $time = time();
+        $hourRange24 = date('Y-m-d H:i:s',$time - 60*60*24).','.date('Y-m-d H:i:s',$time);
+
+
+        //创建分表
         $schedule->command('create_table')->cron('0 0 1,15 * *');
 
+
+        //行为数据入库
+        $userAction = ['reg','follow','add_shortcut','order','complete_order','login','read'];
+        foreach ($userAction as $action){
+            $matchCommand = "user_action_data_to_db --action={$action}";
+            $schedule->command($matchCommand)->cron('* * * * *');
+        }
+
+
+        //行为匹配
+        $matchAdv = [AdvAliasEnum::OCEAN];
+        $matchAction = ['reg','follow','add_shortcut','order','complete_order'];
+        foreach ($matchAdv as $advAlias){
+            foreach ($matchAction as $action){
+                $matchCommand = "user_action_match --adv_alias={$advAlias}  --time='{$hourRange24}' --action={$action}";
+                $schedule->command($matchCommand)->cron('* * * * *');
+            }
+        }
+
+
+        //拉取CP渠道
         $schedule->command('bm:pull_cp_channel --date=today')->cron('55 23 * * *');
 
     }
