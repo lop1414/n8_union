@@ -55,16 +55,19 @@ class RegActionMatchService extends UserActionMatchService
                 array_push($convert,array_merge($tmp,$extend));
             }
 
-            $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
+            if(!empty($convert)){
+                $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
-            // 保存click_id
-            foreach ($matchList as $match){
-                if($match['click_id'] > 0){
-                    (new N8UnionUserModel)
-                        ->where('id',$match['convert_id'])
-                        ->update(['click_id' => $match['click_id']]);
+                // 保存click_id
+                foreach ($matchList as $match){
+                    if($match['click_id'] > 0){
+                        (new N8UnionUserModel)
+                            ->where('id',$match['convert_id'])
+                            ->update(['click_id' => $match['click_id']]);
+                    }
                 }
             }
+
 
         });
     }

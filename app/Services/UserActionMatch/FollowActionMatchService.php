@@ -65,17 +65,18 @@ class FollowActionMatchService extends UserActionMatchService
             }
 
 
-            $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
+            if(!empty($convert)) {
+                $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
-            // 保存click_id
-            foreach ($matchList as $match){
-                if($match['click_id'] > 0){
-                    (new UserFollowActionModel)
-                        ->where('id',$match['convert_id'])
-                        ->update(['click_id' => $match['click_id']]);
+                // 保存click_id
+                foreach ($matchList as $match){
+                    if($match['click_id'] > 0){
+                        (new UserFollowActionModel)
+                            ->where('id',$match['convert_id'])
+                            ->update(['click_id' => $match['click_id']]);
+                    }
                 }
             }
-
         });
     }
 

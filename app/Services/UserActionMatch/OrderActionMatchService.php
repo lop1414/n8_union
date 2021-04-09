@@ -72,18 +72,18 @@ class OrderActionMatchService extends UserActionMatchService
                 array_push($convert,array_merge($tmp,$extend));
             }
 
+            if(!empty($convert)) {
+                $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
-            $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
-
-            // 保存click_id
-            foreach ($matchList as $match){
-                if($match['click_id'] > 0){
-                    (new OrderModel())
-                        ->where('n8_goid',$match['convert_id'])
-                        ->update(['click_id' => $match['click_id']]);
+                // 保存click_id
+                foreach ($matchList as $match){
+                    if($match['click_id'] > 0){
+                        (new OrderModel())
+                            ->where('n8_goid',$match['convert_id'])
+                            ->update(['click_id' => $match['click_id']]);
+                    }
                 }
             }
-
         });
     }
 
