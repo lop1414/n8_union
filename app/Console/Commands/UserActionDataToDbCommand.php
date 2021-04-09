@@ -44,7 +44,7 @@ class UserActionDataToDbCommand extends BaseCommand
         }
 
 
-        $action = Functions::camelize($action);
+        $action = ucfirst(Functions::camelize($action));
         $class = "App\Services\UserActionDataToDb\\{$action}ActionDataToDbService";
 
         if(!class_exists($class)){

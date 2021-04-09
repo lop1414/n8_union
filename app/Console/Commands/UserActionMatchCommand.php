@@ -51,7 +51,7 @@ class UserActionMatchCommand extends BaseCommand
         $time = $this->option('time');
         list($startTime,$endTime) = Functions::getTimeRange($time);
 
-        $action = Functions::camelize($action);
+        $action = ucfirst(Functions::camelize($action));
         $class = "App\Services\UserActionMatch\\{$action}ActionMatchService";
 
         if(!class_exists($class)){
