@@ -63,7 +63,7 @@ class OpenApiAuthService extends BaseService
 
         // 签名
         $sign = $this->makeSign($param,$secret);
-        if(!Functions::isProduction() && $sign != $param['sign']){
+        if(Functions::isProduction() && $sign != $param['sign']){
             $ret = [
                 'code' => 'SIGN_ERROR',
                 'message' => '签名错误',
