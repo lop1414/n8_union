@@ -90,12 +90,25 @@ $router->group([
     });
 
 
-    // union 用户
-    $router->group(['prefix' => 'union_user'], function () use ($router) {
-        $router->post('select', 'Admin\N8UnionUserController@select');
-        $router->post('get', 'Admin\N8UnionUserController@get');
-        $router->post('read', 'Admin\N8UnionUserController@read');
+    // 用户行为
+    $router->group(['prefix' => 'user_action'], function () use ($router) {
+        // union 用户
+        $router->group(['prefix' => 'union_user'], function () use ($router) {
+            $router->post('select', 'Admin\N8UnionUserController@select');
+            $router->post('read', 'Admin\N8UnionUserController@read');
+        });
+        // 加桌
+        $router->group(['prefix' => 'add_shortcut'], function () use ($router) {
+            $router->post('select', 'Admin\UserShortcutActionController@select');
+            $router->post('read', 'Admin\UserShortcutActionController@read');
+        });
+        // 关注
+        $router->group(['prefix' => 'follow'], function () use ($router) {
+            $router->post('select', 'Admin\UserFollowActionController@select');
+            $router->post('read', 'Admin\UserFollowActionController@read');
+        });
     });
+
 
 
     // 渠道

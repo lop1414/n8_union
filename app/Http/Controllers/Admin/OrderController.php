@@ -4,6 +4,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\ConvertTypeEnum;
+use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Datas\N8GlobalOrderData;
 use App\Models\OrderModel;
 
@@ -50,11 +52,40 @@ class OrderController extends BaseController
         });
 
         $this->curdService->selectQueryAfter(function(){
-            foreach ($this->curdService->responseData['list'] as $item){
-                $item->user;
-//                $item->user_extend;
-                $item->extend;
+
+            if(!empty($this->curdService->responseData['list'])){
+                $convert = [];
+                $payConvert = [];
+                foreach ($this->curdService->responseData['list'] as $item){
+                    array_push($convert,[
+                        'convert_type' => ConvertTypeEnum::ORDER,
+                        'convert_id'   => $item['n8_goid']
+                    ]);
+
+                    array_push($payConvert,[
+                        'convert_type' => ConvertTypeEnum::PAY,
+                        'convert_id'   => $item['n8_goid']
+                    ]);
+                }
+
+                $tmp = (new AdvOceanApiService())->apiGetConvertCallbacks($convert);
+                $convertList = array_column($tmp,null,'convert_id');
+
+                $payTmp = (new AdvOceanApiService())->apiGetConvertCallbacks($payConvert);
+                $payConvertList = array_column($payTmp,null,'convert_id');
+
+                foreach ($this->curdService->responseData['list'] as $item){
+                    $item->convert_callback = [
+                        'order'            => $convertList[$item['n8_goid']]['convert_callback'],
+                        'complete_order'   => $payConvertList[$item['n8_goid']]['convert_callback']
+                    ];
+
+                    $item->user;
+                    $item->extend;
+                }
             }
+
+
         });
     }
 
@@ -62,9 +93,16 @@ class OrderController extends BaseController
     public function readPrepare(){
 
         $this->curdService->findAfter(function(){
+            $tmp = (new AdvOceanApiService())->apiGetConvertCallbacks([
+                [
+                    'convert_type' => ConvertTypeEnum::ORDER,
+                    'convert_id'   => $this->curdService->responseData->n8_goid
+                ]
+            ]);
+
+            $this->curdService->responseData->convert_callback = $tmp[0]['convert_callback'];
 
             $this->curdService->responseData->user;
-//            $this->curdService->responseData->user_extend;
             $this->curdService->responseData->extend;
         });
     }

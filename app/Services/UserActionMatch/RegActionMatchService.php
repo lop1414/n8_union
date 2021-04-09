@@ -11,7 +11,7 @@ use App\Models\N8UnionUserModel;
 class RegActionMatchService extends UserActionMatchService
 {
 
-    protected $convertType = ConvertTypeEnum::ACTIVATION;
+    protected $convertType = ConvertTypeEnum::REGISTER;
 
 
     public function __construct(){
