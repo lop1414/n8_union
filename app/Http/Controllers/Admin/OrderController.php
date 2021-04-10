@@ -59,11 +59,6 @@ class OrderController extends UserActionBaseController
 
         $this->selectCommonPrepare(ConvertTypeEnum::ORDER);
         $this->selectCommonPrepare(ConvertTypeEnum::PAY);
-        $this->curdService->selectQueryAfter(function() {
-            foreach ($this->curdService->responseData['list'] as $item){
-                $item->amount /=  100;
-            }
-        });
 
     }
 
