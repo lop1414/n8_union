@@ -14,6 +14,7 @@ class OrderController extends UserActionBaseController
 
     public $isConvertCallbackKey = true;
 
+    public $convertId = 'n8_goid';
 
 
     /**

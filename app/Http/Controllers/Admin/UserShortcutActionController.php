@@ -13,8 +13,6 @@ class UserShortcutActionController extends UserActionBaseController
 
     public $convertType = ConvertTypeEnum::ADD_DESKTOP;
 
-    public $convertId = 'n8_guid';
-
 
 
     /**
