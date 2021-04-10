@@ -67,7 +67,7 @@ class OrderModel extends UserActionBaseModel
      */
     public function getAmountAttribute($value)
     {
-        return round($value/100,2);
+        return sprintf("%.2f", round($value/100,2));
     }
 
 
