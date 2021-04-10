@@ -58,4 +58,9 @@ class UserModel extends BaseModel
         return $this->hasOne('App\Models\ChannelModel', 'id', 'channel_id');
     }
 
+
+    public function global_user(){
+        return $this->hasOne('App\Models\N8GlobalUserModel', 'n8_guid', 'n8_guid');
+    }
+
 }

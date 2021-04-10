@@ -16,6 +16,10 @@ class UserActionModel extends BaseModel
     }
 
 
+    public function global_user(){
+        return $this->hasOne('App\Models\N8GlobalUserModel', 'n8_guid', 'n8_guid');
+    }
+
 
 
     /**

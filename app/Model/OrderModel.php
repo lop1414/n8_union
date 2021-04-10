@@ -71,6 +71,10 @@ class OrderModel extends UserActionModel
     }
 
 
+    public function global_order(){
+        return $this->hasOne('App\Models\N8GlobalOrderModel', 'n8_goid', 'n8_goid');
+    }
+
 
     /**
      * 关联订单扩展 一对一

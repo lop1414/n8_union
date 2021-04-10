@@ -50,6 +50,7 @@ class UserController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
             foreach ($this->curdService->responseData['list'] as $item){
+                $item->global_user;
                 $item->channel;
                 $item->extend;
             }
@@ -62,6 +63,7 @@ class UserController extends BaseController
 
     public function readPrepare(){
         $this->curdService->findAfter(function(){
+            $this->curdService->responseData->global_user;
             $this->curdService->responseData->channel;
             $this->curdService->responseData->extend;
         });

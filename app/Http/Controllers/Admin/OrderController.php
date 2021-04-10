@@ -68,6 +68,8 @@ class OrderController extends BaseController
                     ];
 
                     $item->user;
+                    $item->global_user;
+                    $item->global_order;
                     $item->union_user = $this->model->union_user($item->n8_guid,$item->channel_id);
                     $item->channel;
                     $item->extend;
@@ -96,6 +98,8 @@ class OrderController extends BaseController
             ];
 
             $this->curdService->responseData->user;
+            $this->curdService->responseData->global_user;
+            $this->curdService->responseData->global_order;
             $this->curdService->responseData->union_user = $this->model->union_user($this->curdService->responseData->n8_guid,$this->curdService->responseData->channel_id);
 
             $this->curdService->responseData->channel;
