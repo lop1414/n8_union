@@ -51,4 +51,11 @@ class UserModel extends BaseModel
     }
 
 
+    /**
+     * 渠道信息 一对一
+     */
+    public function channel(){
+        return $this->hasOne('App\Models\ChannelModel', 'id', 'channel_id');
+    }
+
 }

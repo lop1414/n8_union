@@ -81,6 +81,7 @@ class OrderController extends BaseController
                     ];
 
                     $item->user;
+                    $item->channel;
                     $item->extend;
                 }
             }
@@ -103,6 +104,7 @@ class OrderController extends BaseController
             $this->curdService->responseData->convert_callback = $tmp[0]['convert_callback'];
 
             $this->curdService->responseData->user;
+            $this->curdService->responseData->channel;
             $this->curdService->responseData->extend;
         });
     }

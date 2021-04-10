@@ -56,6 +56,7 @@ class UserFollowActionController extends BaseController
                 foreach ($this->curdService->responseData['list'] as $item){
                     $item->convert_callback = $convertList[$item['id']]['convert_callback'];
                     $item->user;
+                    $item->channel;
                 }
             }
 
@@ -79,6 +80,7 @@ class UserFollowActionController extends BaseController
 
             $this->curdService->responseData->convert_callback = $tmp[0]['convert_callback'];
             $this->curdService->responseData->user;
+            $this->curdService->responseData->channel;
         });
     }
 

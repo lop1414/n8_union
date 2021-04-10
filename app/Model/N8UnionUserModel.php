@@ -74,4 +74,12 @@ class N8UnionUserModel extends BaseModel
         return $this->hasOne('App\Models\ChapterModel', 'id', 'force_chapter_id');
     }
 
+
+    /**
+     * 渠道信息 一对一
+     */
+    public function channel(){
+        return $this->hasOne('App\Models\ChannelModel', 'id', 'channel_id');
+    }
+
 }

@@ -95,4 +95,11 @@ class OrderModel extends BaseModel
         return $this->belongsTo('App\Models\UserExtendModel', 'n8_guid', 'n8_guid');
     }
 
+
+    /**
+     * 渠道信息 一对一
+     */
+    public function channel(){
+        return $this->hasOne('App\Models\ChannelModel', 'id', 'channel_id');
+    }
 }

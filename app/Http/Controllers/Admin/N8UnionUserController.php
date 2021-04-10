@@ -56,6 +56,7 @@ class N8UnionUserController extends BaseController
 
                 foreach ($this->curdService->responseData['list'] as $item){
                     $item->convert_callback = $convertList[$item['id']]['convert_callback'];
+                    $item->channel;
                     $item->extend;
                     $item->book;
                     $item->chapter;
@@ -84,6 +85,7 @@ class N8UnionUserController extends BaseController
             ]);
 
             $this->curdService->responseData->convert_callback = $tmp[0]['convert_callback'];
+            $this->curdService->responseData->channel;
             $this->curdService->responseData->extend;
             $this->curdService->responseData->book;
             $this->curdService->responseData->chapter;
