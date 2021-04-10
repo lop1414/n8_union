@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\ConvertTypeEnum;
-use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Datas\N8GlobalOrderData;
 use App\Models\OrderModel;
-use App\Services\ConvertCallbackMapService;
 
-class OrderController extends BaseController
+class OrderController extends UserActionBaseController
 {
+
+
+    public $isConvertCallbackKey = true;
+
+
 
     /**
      * constructor.
@@ -52,57 +55,25 @@ class OrderController extends BaseController
             });
         });
 
-        $this->curdService->selectQueryAfter(function(){
-
-            if(!empty($this->curdService->responseData['list'])){
-
-                $convertList = (new ConvertCallbackMapService())
-                    ->listMap($this->curdService->responseData['list'],ConvertTypeEnum::ORDER,'n8_goid');
-                $payConvertList = (new ConvertCallbackMapService())
-                    ->listMap($this->curdService->responseData['list'],ConvertTypeEnum::PAY,'n8_goid');
-
-                foreach ($this->curdService->responseData['list'] as $item){
-                    $item->convert_callback = [
-                        'order'            => $convertList[$item['n8_goid']]['convert_callback'],
-                        'complete_order'   => $payConvertList[$item['n8_goid']]['convert_callback']
-                    ];
-
-                    $item->user;
-                    $item->global_user;
-                    $item->global_order;
-                    $item->union_user = $this->model->union_user($item->n8_guid,$item->channel_id);
-                    $item->channel;
-                    $item->extend;
-                }
-            }
-
-
-        });
+        $this->selectCommonPrepare(ConvertTypeEnum::ORDER);
+        $this->selectCommonPrepare(ConvertTypeEnum::PAY);
     }
 
 
+    public function itemPrepare($item){
+        $item->global_order;
+        $item->extend;
+    }
+
+
+
+
     public function readPrepare(){
+        $this->readCommonPrepare(ConvertTypeEnum::ORDER);
+        $this->readCommonPrepare(ConvertTypeEnum::PAY);
 
         $this->curdService->findAfter(function(){
-
-            $n8Goid = $this->curdService->responseData->n8_goid;
-
-            $convertList = (new ConvertCallbackMapService())
-                ->listMap([$this->curdService->responseData],ConvertTypeEnum::ORDER,'n8_goid');
-            $payConvertList = (new ConvertCallbackMapService())
-                ->listMap([$this->curdService->responseData],ConvertTypeEnum::PAY,'n8_goid');
-
-            $this->curdService->responseData->convert_callback = [
-                'order'            => $convertList[$n8Goid]['convert_callback'],
-                'complete_order'   => $payConvertList[$n8Goid]['convert_callback']
-            ];
-
-            $this->curdService->responseData->user;
-            $this->curdService->responseData->global_user;
             $this->curdService->responseData->global_order;
-            $this->curdService->responseData->union_user = $this->model->union_user($this->curdService->responseData->n8_guid,$this->curdService->responseData->channel_id);
-
-            $this->curdService->responseData->channel;
             $this->curdService->responseData->extend;
         });
     }

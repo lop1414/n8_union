@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\ConvertTypeEnum;
-use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Models\UserShortcutActionModel;
-use App\Services\ConvertCallbackMapService;
 
-class UserShortcutActionController extends BaseController
+class UserShortcutActionController extends UserActionBaseController
 {
+
+
+    public $convertType = ConvertTypeEnum::ADD_DESKTOP;
+
+    public $convertId = 'n8_guid';
 
 
 
@@ -38,23 +41,7 @@ class UserShortcutActionController extends BaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
-        $this->curdService->selectQueryAfter(function(){
-
-
-            if(!empty($this->curdService->responseData['list'])){
-                $convertList = (new ConvertCallbackMapService())
-                    ->listMap($this->curdService->responseData['list'],ConvertTypeEnum::ADD_DESKTOP);
-
-                foreach ($this->curdService->responseData['list'] as $item){
-                    $item->convert_callback = $convertList[$item['id']]['convert_callback'];
-                    $item->user;
-                    $item->global_user;
-                    $item->channel;
-                    $item->union_user = $this->model->union_user($item->n8_guid,$item->channel_id);
-                }
-            }
-
-        });
+        $this->selectCommonPrepare();
     }
 
 
@@ -63,19 +50,7 @@ class UserShortcutActionController extends BaseController
      * 详情预处理
      */
     public function readPrepare(){
-
-        $this->curdService->findAfter(function(){
-
-            $convertList = (new ConvertCallbackMapService())
-                ->listMap([$this->curdService->responseData],ConvertTypeEnum::ADD_DESKTOP);
-
-            $this->curdService->responseData->convert_callback = $convertList[$this->curdService->responseData->id]['convert_callback'];
-            $this->curdService->responseData->user;
-            $this->curdService->responseData->global_user;
-            $this->curdService->responseData->channel;
-            $this->curdService->responseData->union_user = $this->model->union_user($this->curdService->responseData->n8_guid,$this->curdService->responseData->channel_id);
-
-        });
+        $this->readCommonPrepare();
     }
 
 
