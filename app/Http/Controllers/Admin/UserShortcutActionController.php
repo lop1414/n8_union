@@ -57,6 +57,7 @@ class UserShortcutActionController extends BaseController
                     $item->convert_callback = $convertList[$item['id']]['convert_callback'];
                     $item->user;
                     $item->channel;
+                    $item->union_user = $this->model->union_user($item->n8_guid,$item->channel_id);
                 }
             }
 
@@ -71,16 +72,21 @@ class UserShortcutActionController extends BaseController
     public function readPrepare(){
 
         $this->curdService->findAfter(function(){
+
+            $responseData = $this->curdService->responseData;
             $tmp = (new AdvOceanApiService())->apiGetConvertCallbacks([
                 [
                     'convert_type' => ConvertTypeEnum::ADD_DESKTOP,
-                    'convert_id'   => $this->curdService->responseData->id
+                    'convert_id'   => $responseData->id
                 ]
             ]);
+
 
             $this->curdService->responseData->convert_callback = $tmp[0]['convert_callback'];
             $this->curdService->responseData->user;
             $this->curdService->responseData->channel;
+            $this->curdService->responseData->union_user = $this->model->union_user($responseData->n8_guid,$responseData->channel_id);
+
         });
     }
 

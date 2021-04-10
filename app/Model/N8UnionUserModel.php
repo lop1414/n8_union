@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Common\Models\BaseModel;
 
-class N8UnionUserModel extends BaseModel
+class N8UnionUserModel extends UserActionModel
 {
     /**
      * 关联到模型的数据表
@@ -75,11 +74,6 @@ class N8UnionUserModel extends BaseModel
     }
 
 
-    /**
-     * 渠道信息 一对一
-     */
-    public function channel(){
-        return $this->hasOne('App\Models\ChannelModel', 'id', 'channel_id');
-    }
+
 
 }

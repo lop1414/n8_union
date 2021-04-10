@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Common\Models\BaseModel;
 
-class OrderModel extends BaseModel
+class OrderModel extends UserActionModel
 {
     /**
      * 关联到模型的数据表
@@ -78,28 +77,5 @@ class OrderModel extends BaseModel
      */
     public function extend(){
         return $this->hasOne('App\Models\OrderExtendModel', 'n8_goid', 'n8_goid');
-    }
-
-
-
-    /**
-     * 关联快应用用户模型
-     */
-    public function user(){
-        return $this->belongsTo('App\Models\UserModel', 'n8_guid', 'n8_guid');
-
-    }
-
-
-    public function user_extend(){
-        return $this->belongsTo('App\Models\UserExtendModel', 'n8_guid', 'n8_guid');
-    }
-
-
-    /**
-     * 渠道信息 一对一
-     */
-    public function channel(){
-        return $this->hasOne('App\Models\ChannelModel', 'id', 'channel_id');
     }
 }
