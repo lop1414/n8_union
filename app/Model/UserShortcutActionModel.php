@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-class UserShortcutActionModel extends UserActionModel
+class UserShortcutActionModel extends UserActionBaseModel
 {
     /**
      * 关联到模型的数据表

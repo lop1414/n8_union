@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Common\Models\BaseModel;
 
-class UserActionModel extends BaseModel
+class UserActionBaseModel extends BaseModel
 {
 
 

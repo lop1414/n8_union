@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-class UserReadActionModel extends UserActionModel
+class UserReadActionModel extends UserActionBaseModel
 {
     /**
      * 关联到模型的数据表

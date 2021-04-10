@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-class UserFollowActionModel extends UserActionModel
+class UserFollowActionModel extends UserActionBaseModel
 {
     /**
      * 关联到模型的数据表

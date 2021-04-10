@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-class N8UnionUserModel extends UserActionModel
+class N8UnionUserModel extends UserActionBaseModel
 {
     /**
      * 关联到模型的数据表

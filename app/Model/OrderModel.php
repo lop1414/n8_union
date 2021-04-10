@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-class OrderModel extends UserActionModel
+class OrderModel extends UserActionBaseModel
 {
     /**
      * 关联到模型的数据表
