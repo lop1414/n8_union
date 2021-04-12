@@ -63,4 +63,12 @@ class UserModel extends BaseModel
         return $this->hasOne('App\Models\N8GlobalUserModel', 'n8_guid', 'n8_guid');
     }
 
+
+
+    /**
+     * 关联产品模型 一对一
+     */
+    public function product(){
+        return $this->hasOne('App\Models\ProductModel', 'id', 'product_id');
+    }
 }

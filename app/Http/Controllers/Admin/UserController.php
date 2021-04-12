@@ -78,6 +78,7 @@ class UserController extends BaseController
             $this->curdService->responseData->global_user;
             $this->curdService->responseData->channel;
             $this->curdService->responseData->extend;
+            $this->curdService->responseData->product;
         });
     }
 
