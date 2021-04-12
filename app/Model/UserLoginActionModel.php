@@ -29,6 +29,7 @@ class UserLoginActionModel extends UserActionBaseModel
      */
     protected $fillable = [
         'n8_guid',
+        'product_id',
         'channel_id',
         'action_time',
         'adv_alias',

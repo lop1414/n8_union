@@ -62,7 +62,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
         $saveData = [
             'n8_guid'    => $globalUser['n8_guid'],
-            'product_id' => $data['product_id'],
+            'product_id' => $globalUser['product_id'],
             'reg_time'   => $data['action_time'],
             'channel_id' => $unionUserService->getChannelId(),
             'phone'      => $data['phone'] ?? ''

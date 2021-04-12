@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 11/03/2021 17:20:04
+ Date: 12/04/2021 11:29:51
 */
 
 SET NAMES utf8mb4;
@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `n8_union_users`;
 CREATE TABLE `n8_union_users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `n8_guid` varchar(64) NOT NULL,
+  `product_id` int(11) NOT NULL COMMENT '产品ID',
   `channel_id` int(11) NOT NULL COMMENT '渠道ID',
   `created_time` datetime NOT NULL COMMENT '创建时间',
   `book_id` bigint(20) DEFAULT NULL COMMENT '书籍ID',

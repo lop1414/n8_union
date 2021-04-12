@@ -19,6 +19,7 @@ class UserFollowActionModel extends UserActionBaseModel
      */
     protected $fillable = [
         'n8_guid',
+        'product_id',
         'action_time',
         'adv_alias',
         'click_id',

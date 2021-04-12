@@ -40,6 +40,7 @@ class N8UnionUserController extends UserActionBaseController
      */
     public function selectPrepare(){
 
+        $this->selectUserCommonFilter();
         $this->selectCommonPrepare();
     }
 

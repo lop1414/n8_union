@@ -27,6 +27,6 @@ CREATE TABLE `n8_global_users` (
   `product_id` int(11) NOT NULL COMMENT '产品ID',
   PRIMARY KEY (`n8_guid`) USING BTREE,
   UNIQUE KEY `user` (`product_id`,`open_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='n8全局用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8 COMMENT='n8全局用户表';
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -28,6 +28,7 @@ class UserReadActionModel extends UserActionBaseModel
      */
     protected $fillable = [
         'n8_guid',
+        'product_id',
         'channel_id',
         'action_time',
         'cp_book_id',

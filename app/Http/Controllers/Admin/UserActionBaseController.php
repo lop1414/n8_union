@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Datas\N8GlobalUserData;
 use App\Services\ConvertCallbackMapService;
 
 class UserActionBaseController extends BaseController

@@ -27,6 +27,6 @@ CREATE TABLE `n8_global_orders` (
   `order_id` varchar(64) NOT NULL COMMENT '订单号',
   PRIMARY KEY (`n8_goid`) USING BTREE,
   UNIQUE KEY `order` (`product_id`,`order_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='n8全局订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8 COMMENT='n8全局订单表';
 
 SET FOREIGN_KEY_CHECKS = 1;

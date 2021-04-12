@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 09/04/2021 11:38:32
+ Date: 12/04/2021 11:30:24
 */
 
 SET NAMES utf8mb4;
@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `tmp_user_login_actions`;
 CREATE TABLE `tmp_user_login_actions` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `n8_guid` varchar(64) NOT NULL,
+  `product_id` int(11) NOT NULL COMMENT '产品ID',
   `channel_id` int(11) DEFAULT NULL COMMENT '渠道ID',
   `action_time` datetime NOT NULL COMMENT '行为时间',
   `adv_alias` varchar(50) DEFAULT NULL COMMENT '广告商标识',

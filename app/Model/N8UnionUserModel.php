@@ -28,6 +28,7 @@ class N8UnionUserModel extends UserActionBaseModel
      */
     protected $fillable = [
         'n8_guid',
+        'product_id',
         'channel_id',
         'created_time',
         'book_id',

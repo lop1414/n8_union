@@ -37,7 +37,8 @@ class ReadActionDataToDbService extends UserActionDataToDbService
         $channelId = $unionUserService->getValidChannelId();
         $advAlias = $this->getAdvAliasByChannel($channelId);
         $createData = array_merge($deviceData,[
-            'n8_guid'       => $user['n8_guid'],
+            'n8_guid'       => $globalUser['n8_guid'],
+            'product_id'    => $globalUser['product_id'],
             'action_time'   => $data['action_time'],
             'channel_id'    => $channelId,
             'adv_alias'     => $advAlias,

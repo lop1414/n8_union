@@ -77,6 +77,7 @@ class N8UnionUserData extends BaseData
 
             $ret = (new N8UnionUserModel())->create([
                 'n8_guid'       => $data['n8_guid'],
+                'product_id'    => $data['product_id'],
                 'channel_id'    => $data['channel_id'],
                 'created_time'  => $data['action_time'],
                 'book_id'       => $channel['book_id'],

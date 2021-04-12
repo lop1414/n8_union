@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\ConvertTypeEnum;
 use App\Datas\N8GlobalOrderData;
+use App\Datas\N8GlobalUserData;
 use App\Models\OrderModel;
 
 class OrderController extends UserActionBaseController
@@ -33,27 +34,21 @@ class OrderController extends UserActionBaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
-        $this->curdService->addField('product_id')->addValidRule('required');
 
-        $this->curdService->selectQueryBefore(function(){
-            $this->curdService->customBuilder(function ($builder){
-                $builder->where('product_id',$this->curdService->requestData['product_id']);
+        $this->selectUserCommonFilter(function($builder){
+            $openId = $this->curdService->requestData['open_id'] ?? '';
+            if(!empty($openId)){
+                $globalUser = (new N8GlobalUserData())
+                    ->setParams([
+                        'product_id' => $this->curdService->requestData['product_id'],
+                        'open_id'  => $openId
+                    ])
+                    ->read();
+                if(!empty($globalUser)){
+                    $builder->where('n8_guid',$globalUser['n8_guid']);
 
-                $orderId = $this->curdService->requestData['order_id'] ?? '';
-
-                if(!empty($orderId)){
-                    $globalOrder = (new N8GlobalOrderData())
-                        ->setParams([
-                            'product_id' => $this->curdService->requestData['product_id'],
-                            'order_id'  => $orderId
-                        ])
-                        ->read();
-                    if(!empty($globalOrder)){
-                        $builder->where('n8_goid',$globalOrder['n8_goid']);
-
-                    }
                 }
-            });
+            }
         });
 
 
