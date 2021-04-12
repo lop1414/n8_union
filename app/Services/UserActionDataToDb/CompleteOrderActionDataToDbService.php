@@ -41,8 +41,16 @@ class CompleteOrderActionDataToDbService extends UserActionDataToDbService
             ]);
         }
 
+        $completeTimes = (new OrderModel())
+            ->where('n8_guid',$order['n8_guid'])
+            ->where('channel_id',$order['channel_id'])
+            ->where('status',OrderStatusEnums::COMPLETE)
+            ->where('order_time','<',$order['order_time'])
+            ->count();
+
         $order->complete_time = $data['complete_time'];
         $order->status = OrderStatusEnums::COMPLETE;
+        $order->complete_times = $completeTimes + 1;
         $order->save();
     }
 }

@@ -52,18 +52,12 @@ class CompleteOrderActionMatchService extends UserActionMatchService
                     'channel_id'=> $item['channel_id']
                 ])->read();
 
-                $convertTimes = (new OrderModel())
-                    ->where('n8_guid',$item['n8_guid'])
-                    ->where('channel_id',$item['channel_id'])
-                    ->where('status',OrderStatusEnums::COMPLETE)
-                    ->where('order_time','<',$item['order_time'])
-                    ->count();
 
                 $tmp = [
                     'convert_type' => $this->convertType,
                     'convert_id'   => $item['n8_goid'],
                     'convert_at'   => $item['order_time'],
-                    'convert_times'=> $convertTimes + 1,
+                    'convert_times'=> $item['complete_times'],
                     'n8_union_user'=> [
                         'guid'          => $unionUser['n8_guid'],
                         'channel_id'    => $unionUser['channel_id'],

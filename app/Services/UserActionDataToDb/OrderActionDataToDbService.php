@@ -38,9 +38,21 @@ class OrderActionDataToDbService extends UserActionDataToDbService
         $unionUserService->setUser($user);
         $unionUserService->create($data);
 
-
+        // 入库
         $channelId = $unionUserService->getValidChannelId();
         $advAlias = $this->getAdvAliasByChannel($channelId);
+        $orderTimes = (new OrderModel())
+            ->where('n8_guid',$globalUser['n8_guid'])
+            ->where('channel_id',$channelId)
+            ->where('order_time','<',$data['action_time'])
+            ->count();
+        $completeTimes = (new OrderModel())
+            ->where('n8_guid',$globalUser['n8_guid'])
+            ->where('channel_id',$channelId)
+            ->where('status',OrderStatusEnums::COMPLETE)
+            ->where('order_time','<',$data['action_time'])
+            ->count();
+
         $this->getModel()->create([
             'n8_guid'       => $globalUser['n8_guid'],
             'n8_goid'       => $globalOrder['n8_goid'],
@@ -50,7 +62,9 @@ class OrderActionDataToDbService extends UserActionDataToDbService
             'order_time'    => $data['action_time'],
             'amount'        => $data['amount'],
             'type'          => $data['type'],
-            'status'        => OrderStatusEnums::UN_PAID
+            'status'        => OrderStatusEnums::UN_PAID,
+            'order_times'   => $orderTimes + 1,
+            'complete_times'=> $completeTimes
         ]);
 
         $extendData = $unionUserService->filterDeviceInfo($data);
