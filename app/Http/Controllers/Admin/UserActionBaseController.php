@@ -74,9 +74,10 @@ class UserActionBaseController extends BaseController
     public function readCommonPrepare($convertType = null){
         $this->curdService->findAfter(function() use ($convertType){
             $convertType = $convertType ? : $this->convertType;
+            $convertId = $this->convertId;
 
             $convertList = (new ConvertCallbackMapService())
-                ->listMap([$this->curdService->responseData],$convertType,$this->convertId);
+                ->listMap([$this->curdService->responseData],$convertType,$convertId);
 
             $convertCallback = $convertList[$this->curdService->responseData->$convertId]['convert_callback'];
 
