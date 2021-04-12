@@ -158,4 +158,24 @@ $router->group([
         $router->post('read', 'Front\CpAccountController@read');
     });
 
+    //用户行为
+    $router->group(['prefix' => 'user_action'], function () use ($router) {
+        //订单
+        $router->group(['prefix' => 'order'], function () use ($router) {
+            $router->post('get', 'Front\UserAction\OrderActionController@get');
+        });
+        //加桌
+        $router->group(['prefix' => 'add_shortcut'], function () use ($router) {
+            $router->post('get', 'Front\UserAction\AddShortcutActionController@get');
+        });
+        //关注
+        $router->group(['prefix' => 'follow'], function () use ($router) {
+            $router->post('get', 'Front\UserAction\FollowActionController@get');
+        });
+        //注册
+        $router->group(['prefix' => 'reg'], function () use ($router) {
+            $router->post('get', 'Front\UserAction\RegActionController@get');
+        });
+    });
+
 });
