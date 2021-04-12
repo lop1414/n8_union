@@ -76,7 +76,7 @@ class UserActionBaseController extends BaseController
             $convertType = $convertType ? : $this->convertType;
 
             $convertList = (new ConvertCallbackMapService())
-                ->listMap([$this->curdService->responseData],$convertType);
+                ->listMap([$this->curdService->responseData],$convertType,$this->convertId);
 
             $convertCallback = $convertList[$this->curdService->responseData->$convertId]['convert_callback'];
 
