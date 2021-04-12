@@ -46,6 +46,8 @@ class OrderModel extends UserActionBaseModel
         'adv_alias',
         'click_id',
         'complete_click_id',
+        'order_times',
+        'complete_times'
     ];
 
 
