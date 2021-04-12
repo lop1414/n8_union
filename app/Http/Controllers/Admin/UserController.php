@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Datas\N8GlobalUserData;
+use App\Models\UserFollowActionModel;
 use App\Models\UserModel;
+use App\Models\UserShortcutActionModel;
 
 class UserController extends BaseController
 {
@@ -63,6 +65,16 @@ class UserController extends BaseController
 
     public function readPrepare(){
         $this->curdService->findAfter(function(){
+            $tmpShortcut = (new UserShortcutActionModel())
+                ->where('n8_guid',$this->curdService->responseData->n8_guid)
+                ->count();
+
+            $tmpFollow = (new UserFollowActionModel())
+                ->where('n8_guid',$this->curdService->responseData->n8_guid)
+                ->count();
+
+            $this->curdService->responseData->isShortcut = !!$tmpShortcut;
+            $this->curdService->responseData->isFollow = !!$tmpFollow;
             $this->curdService->responseData->global_user;
             $this->curdService->responseData->channel;
             $this->curdService->responseData->extend;
