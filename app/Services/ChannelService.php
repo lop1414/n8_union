@@ -43,7 +43,7 @@ class ChannelService extends BaseService
 
 
     public function setProtectTime(){
-        $day = Functions::getProtectPeriod();
+        $day = env('PROTECT_DATE');
         $this->protectTime =  60*60*24*$day;
     }
 
