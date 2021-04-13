@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
@@ -101,7 +102,13 @@ class ChannelController extends BaseController
 
             $map = $this->getAdminUserName();
 
+            $advFeedBack = Advs::getFeedbackUrlMap();
             foreach ($this->curdService->responseData['list'] as $item){
+                $feedbackUrl = [];
+                foreach ($advFeedBack as $adv => $url){
+                    $feedbackUrl[$adv] = str_replace('__CHANNEL_ID__',$item['id'],$url);
+                }
+                $item->feedback_url = $feedbackUrl;
                 $item->product;
                 $item->book;
                 $item->chapter;
