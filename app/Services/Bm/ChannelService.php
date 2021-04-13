@@ -23,9 +23,9 @@ class ChannelService extends BmService
     }
 
 
-    public function sync($startDate,$endDate){
-
-        $productList = $this->getProductList();
+    public function sync($startDate,$endDate,$productId = null){
+        $where = $productId ? ['id'=>$productId] : [];
+        $productList = $this->getProductList($where);
 
         $bookData = new BookData();
         $chapterData = new ChapterData();
@@ -38,7 +38,7 @@ class ChannelService extends BmService
             ];
             if(!empty($startDate) && !empty($endDate)){
                 $parameter['createTimeStart'] = strtotime($startDate.' 00:00:00');
-                $parameter['createTimeEnd'] = strtotime($endDate.' 00:00:00');
+                $parameter['createTimeEnd'] = strtotime($endDate.' 23:59:59');
             }
 
             do{

@@ -116,6 +116,7 @@ $router->group([
         $router->post('select', 'Admin\ChannelController@select');
         $router->post('get', 'Admin\ChannelController@get');
         $router->post('read', 'Admin\ChannelController@read');
+        $router->post('sync', 'Admin\ChannelController@sync');
     });
     $router->group(['prefix' => 'channel_extend'], function () use ($router) {
         $router->post('create', 'Admin\ChannelExtendController@create');

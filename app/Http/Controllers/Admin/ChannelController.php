@@ -6,8 +6,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Helpers\Functions;
 use App\Common\Services\SystemApi\CenterApiService;
+use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
+use App\Datas\ProductData;
 use App\Models\ChannelModel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ChannelController extends BaseController
@@ -164,5 +167,39 @@ class ChannelController extends BaseController
 
         });
     }
+
+
+
+
+    public function sync(Request $request){
+        $req = $request->all();
+        $this->validRule($req,[
+            'product_id'    =>  'required',
+        ]);
+
+        $productId = $req['product_id'];
+        $productInfo = (new ProductData())
+            ->setParams(['id' => $productId])
+            ->read();
+
+        if(empty($productInfo)){
+            throw new CustomException([
+                'code' => 'PRODUCT_NOT_EXIST',
+                'message' => '产品不存在',
+            ]);
+        }
+        $cpType = ucfirst(Functions::camelize($productInfo['cp_type']));
+        $class = "App\Services\\{$cpType}\ChannelService";
+        if(!class_exists($class)){
+            return $this->fail('FAIL','该产品暂无此功能');
+        }
+
+        $startDate = $endDate = date('Y-m-d');
+        $startDate = '2021-01-01';
+        (new $class)->sync($startDate,$endDate,$productId);
+
+        return $this->success();
+    }
+
 
 }
