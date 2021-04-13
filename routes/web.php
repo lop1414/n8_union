@@ -159,6 +159,11 @@ $router->group([
         $router->post('read', 'Front\CpAccountController@read');
     });
 
+    // 渠道
+    $router->group(['prefix' => 'channel_extend'], function () use ($router) {
+        $router->post('create', 'Front\ChannelExtendController@create');
+    });
+
     //用户行为
     $router->group(['prefix' => 'user_action'], function () use ($router) {
         //订单

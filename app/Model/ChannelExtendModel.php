@@ -24,5 +24,13 @@ class ChannelExtendModel extends BaseModel
     public $incrementing = false;
 
 
+    protected $fillable = [
+        'channel_id',
+        'adv_alias',
+        'status',
+        'admin_id'
+    ];
+
+
 
 }
