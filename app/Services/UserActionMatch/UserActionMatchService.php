@@ -66,8 +66,8 @@ class UserActionMatchService extends BaseService
 
     public function run(){
 
-//        try{
-//            DB::beginTransaction();
+        try{
+            DB::beginTransaction();
 
             $advAlias = strtolower($this->advAlias);
             if(!method_exists($this,$advAlias)){
@@ -76,29 +76,29 @@ class UserActionMatchService extends BaseService
 
             $this->$advAlias();
 
-//            DB::commit();
-//
-//        }catch (CustomException $e){
-//
-//            DB::rollBack();
-//
-//
-//            //日志
-//            (new ErrorLogService())->catch($e);
-//
-//
-//            // echo
-//            (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
-//        }catch (\Exception $e){
-//
-//            DB::rollBack();
-//
-//            //日志
-//            (new ErrorLogService())->catch($e);
-//
-//            // echo
-//            (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
-//        }
+            DB::commit();
+
+        }catch (CustomException $e){
+
+            DB::rollBack();
+
+
+            //日志
+            (new ErrorLogService())->catch($e);
+
+
+            // echo
+            (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
+        }catch (\Exception $e){
+
+            DB::rollBack();
+
+            //日志
+            (new ErrorLogService())->catch($e);
+
+            // echo
+            (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
+        }
     }
 
 
