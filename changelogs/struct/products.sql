@@ -33,7 +33,7 @@ CREATE TABLE `products` (
   `keyword` varchar(50) DEFAULT NULL COMMENT '关键字',
   `logo` varchar(255) DEFAULT NULL COMMENT '图标',
   `status` varchar(50) NOT NULL COMMENT '状态',
-  `matcher` varchar(50) NOT NULL DEFAULT '' COMMENT '匹配者',
+  `matcher` varchar(50) NOT NULL DEFAULT '' COMMENT '归因方',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
