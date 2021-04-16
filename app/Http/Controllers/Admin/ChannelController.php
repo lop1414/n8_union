@@ -4,8 +4,10 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\OSEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
+use App\Common\Helpers\OS;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -79,6 +81,17 @@ class ChannelController extends BaseController
 
             if(!empty($req['status'])){
                 $builder->where('e.status',$req['status']);
+            }
+
+            if(!empty($req['os'])){
+                Functions::hasEnum(OSEnum::class,$req['os']);
+
+                $productIds = (new ProductData())
+                    ->whereIn('type',OS::getOSProductType($req['os']))
+                    ->get('id')
+                    ->toArray();
+
+                return $builder->whereIn('product_id',array_column($productIds,'id'));
             }
 
         });

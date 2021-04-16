@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
-use App\Common\Helpers\PlatForm;
+use App\Common\Helpers\OS;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -65,20 +65,18 @@ class MultiPlatFormChannelController extends BaseController
 
 
             if(!$this->isDataAuth()){
-                $builder->where('e.admin_id',$this->adminUser['admin_user']['id']);
+                $builder->where('admin_id',$this->adminUser['admin_user']['id']);
             }
 
             $req = $this->curdService->requestData;
-            if(!empty($req['admin_id'])){
-                $builder->where('admin_id',$req['admin_id']);
+            if(!empty($req['product_id'])){
+                $sql = 'SELECT id FROM channels WHERE product_id = '.$req['product_id'];
+                $builder->whereRaw("(android_channel_id IN ({$sql}) OR ios_channel_id IN ({$sql}))");
             }
 
-            if(!empty($req['adv_alias'])){
-                $builder->where('adv_alias',$req['adv_alias']);
-            }
-
-            if(!empty($req['status'])){
-                $builder->where('status',$req['status']);
+            if(!empty($req['channel_name'])){
+                $sql = "SELECT id FROM channels WHERE `name` LIKE '%{$req['channel_name']}%'";
+                $builder->whereRaw("(android_channel_id IN ({$sql}) OR ios_channel_id IN ({$sql}))");
             }
 
         });
@@ -104,8 +102,14 @@ class MultiPlatFormChannelController extends BaseController
 
             foreach ($this->curdService->responseData['list'] as $item){
 
-                $item->android_channel;
-                $item->ios_channel;
+                $item->android_channel->product;
+                $item->android_channel->book;
+                $item->android_channel->chapter;
+                $item->android_channel->force_chapter;
+                $item->ios_channel->product;
+                $item->ios_channel->book;
+                $item->ios_channel->chapter;
+                $item->ios_channel->force_chapter;
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
             }
         });
@@ -126,8 +130,6 @@ class MultiPlatFormChannelController extends BaseController
             $map = $this->getAdminUserName();
 
             foreach ($this->curdService->responseData as $item){
-                $item->android_channel;
-                $item->ios_channel;
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
             }
         });
@@ -142,9 +144,15 @@ class MultiPlatFormChannelController extends BaseController
     public function readPrepare(){
 
         $this->curdService->findAfter(function(){
-            $this->curdService->responseData->android_channel;
-            $this->curdService->responseData->ios_channel;
+            $this->curdService->responseData->android_channel->product;
+            $this->curdService->responseData->android_channel->book;
+            $this->curdService->responseData->android_channel->chapter;
+            $this->curdService->responseData->android_channel->force_chapter;
 
+            $this->curdService->responseData->ios_channel->product;
+            $this->curdService->responseData->ios_channel->book;
+            $this->curdService->responseData->ios_channel->chapter;
+            $this->curdService->responseData->ios_channel->force_chapter;
             $adminId = $this->curdService->responseData->admin_id;
             if(!empty($adminId)){
                 $map = $this->getAdminUserName([
@@ -198,7 +206,7 @@ class MultiPlatFormChannelController extends BaseController
 
     public function isAndroidChannel($channelId){
         $product = $this->getProductInfo($channelId);
-        $productType = PlatForm::getAndroidProductType();
+        $productType = OS::getAndroidProductType();
         if(!in_array($product['type'],$productType)){
             throw new CustomException([
                 'code' => 'NOT_ANDROID_CHANNEL',
@@ -210,7 +218,7 @@ class MultiPlatFormChannelController extends BaseController
 
     public function isIOSChannel($channelId){
         $product = $this->getProductInfo($channelId);
-        $productType = PlatForm::getIOSProductType();
+        $productType = OS::getIosProductType();
         if(!in_array($product['type'],$productType)){
             throw new CustomException([
                 'code' => 'NOT_IOS_CHANNEL',

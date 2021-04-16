@@ -37,6 +37,7 @@ class ProductController extends BaseController
         $this->curdService->selectQueryAfter(function(){
 
             foreach ($this->curdService->responseData['list'] as $item){
+                $item->makeVisible(['cp_secret','secret']);
                 $item->cp_account;
             }
         });
@@ -65,6 +66,8 @@ class ProductController extends BaseController
      */
     public function readPrepare(){
         $this->curdService->findAfter(function(){
+            $this->curdService->responseData->makeVisible(['cp_secret','secret']);
+
             $this->curdService->responseData->cp_account;
         });
     }

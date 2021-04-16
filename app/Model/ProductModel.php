@@ -26,7 +26,7 @@ class ProductModel extends BaseModel
      * @var array
      */
     protected $hidden = [
-        'logo'
+        'logo','cp_secret','secret'
     ];
 
 
