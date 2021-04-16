@@ -18,7 +18,6 @@ use App\Models\MultiPlatFormChannelModel;
 class MultiPlatFormChannelController extends BaseController
 {
 
-    protected $defaultOrderBy = 'updated_at';
 
     public $adminUser;
 

@@ -11,6 +11,12 @@ use App\Datas\N8GlobalUserData;
 class BaseController extends AdminController
 {
 
+    /**
+     * @var string
+     * 默认排序字段
+     */
+    protected $defaultOrderBy = 'created_at';
+
 
     /**
      * @param null $fn

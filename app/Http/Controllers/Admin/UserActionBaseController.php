@@ -10,6 +10,13 @@ use App\Services\ConvertCallbackMapService;
 class UserActionBaseController extends BaseController
 {
 
+    /**
+     * @var string
+     * 默认排序字段
+     */
+    protected $defaultOrderBy = 'action_time';
+
+
     public $mapUnionUser = true;
 
     public $convertId = 'id';

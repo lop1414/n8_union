@@ -13,6 +13,13 @@ class OrderController extends UserActionBaseController
 {
 
 
+    /**
+     * @var string
+     * 默认排序字段
+     */
+    protected $defaultOrderBy = 'order_time';
+
+
     public $isConvertCallbackKey = true;
 
     public $convertId = 'n8_goid';
