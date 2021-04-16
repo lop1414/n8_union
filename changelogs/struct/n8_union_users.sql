@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 12/04/2021 11:29:51
+ Date: 16/04/2021 18:37:27
 */
 
 SET NAMES utf8mb4;
@@ -33,10 +33,11 @@ CREATE TABLE `n8_union_users` (
   `admin_id` int(11) DEFAULT NULL,
   `adv_alias` varchar(50) NOT NULL COMMENT '广告商标识',
   `click_id` bigint(20) DEFAULT '0' COMMENT '点击ID',
+  `matcher` varchar(50) NOT NULL DEFAULT '' COMMENT '归因方',
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `n8_guid` (`n8_guid`,`channel_id`) USING BTREE,
   KEY `created_time` (`created_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='联运用户';
+) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8 COMMENT='联运用户';
 
 SET FOREIGN_KEY_CHECKS = 1;

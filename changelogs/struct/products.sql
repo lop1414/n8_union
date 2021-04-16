@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 20/02/2021 19:02:38
+ Date: 16/04/2021 18:37:56
 */
 
 SET NAMES utf8mb4;
@@ -33,10 +33,11 @@ CREATE TABLE `products` (
   `keyword` varchar(50) DEFAULT NULL COMMENT '关键字',
   `logo` varchar(255) DEFAULT NULL COMMENT '图标',
   `status` varchar(50) NOT NULL COMMENT '状态',
+  `matcher` varchar(50) NOT NULL DEFAULT '' COMMENT '匹配者',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `cp_product_alias` (`cp_product_alias`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8 COMMENT='产品';
+  UNIQUE KEY `cp_product_alias` (`cp_product_alias`,`cp_type`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品';
 
 SET FOREIGN_KEY_CHECKS = 1;
