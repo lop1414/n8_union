@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
@@ -37,7 +38,6 @@ class ProductController extends BaseController
         $this->curdService->selectQueryAfter(function(){
 
             foreach ($this->curdService->responseData['list'] as $item){
-                $item->makeVisible(['cp_secret','secret']);
                 $item->cp_account;
             }
         });
@@ -66,7 +66,7 @@ class ProductController extends BaseController
      */
     public function readPrepare(){
         $this->curdService->findAfter(function(){
-            $this->curdService->responseData->makeVisible(['cp_secret','secret']);
+            $this->curdService->responseData;
 
             $this->curdService->responseData->cp_account;
         });
@@ -88,6 +88,9 @@ class ProductController extends BaseController
         $this->curdService->addField('status')
             ->addValidEnum(StatusEnum::class)
             ->addDefaultValue(StatusEnum::ENABLE);
+        $this->curdService->addField('matcher')
+            ->addValidEnum(MatcherEnum::class)
+            ->addDefaultValue(MatcherEnum::SYS);
         $this->curdService->addField('cp_account_id')
             ->addValidRule('integer')
             ->addDefaultValue(0);

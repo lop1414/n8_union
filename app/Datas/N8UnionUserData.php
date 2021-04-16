@@ -75,6 +75,16 @@ class N8UnionUserData extends BaseData
                 ]);
             }
 
+            $product = (new ProductData())->setParams(['id' => $data['product_id']])->read();
+            if(empty($product)){
+                throw new CustomException([
+                    'code'      => 'PRODUCT_NOT_EXIST',
+                    'message'   => '产品不存在',
+                    'log'       => true,
+                    'data'      => $data
+                ]);
+            }
+
             $ret = (new N8UnionUserModel())->create([
                 'n8_guid'       => $data['n8_guid'],
                 'product_id'    => $data['product_id'],
@@ -85,6 +95,7 @@ class N8UnionUserData extends BaseData
                 'force_chapter_id' => $channel['force_chapter_id'],
                 'admin_id'      => $ChannelExtend['admin_id'],
                 'adv_alias'     => $ChannelExtend['adv_alias'],
+                'matcher'       => $product['matcher'],
                 'created_at'    => date('Y-m-d H:i:s')
             ]);
 

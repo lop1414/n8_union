@@ -37,6 +37,7 @@ class N8UnionUserModel extends UserActionBaseModel
         'admin_id',
         'adv_alias',
         'click_id',
+        'matcher',
         'created_at'
     ];
 

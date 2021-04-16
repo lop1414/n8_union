@@ -4,11 +4,13 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
 use App\Datas\ProductData;
 use App\Models\CpAccountModel;
+use App\Models\ProductModel;
 use App\Services\SyncProductService;
 use Illuminate\Http\Request;
 
@@ -92,11 +94,33 @@ class CpAccountController extends BaseController
         // 查找
         $item = $this->curdService->read();
 
-
+        $list = [];
         if($item->cp_type == CpTypeEnums::YW){
             $service = new SyncProductService();
-            $service->h5($item);
-            $service->kyy($item);
+            $list = array_merge($list,$service->h5($item));
+            $list = array_merge($list,$service->kyy($item));
+        }
+
+        // 保存
+        foreach($list as $item){
+            $pro = (new ProductModel())
+                ->where('cp_account_id',$item['cp_account_id'])
+                ->where('cp_product_alias',$item['cp_product_alias'])
+                ->where('type',$item['type'])
+                ->first();
+
+            if(empty($pro)){
+                $pro = new ProductModel();
+                $pro->cp_account_id = $item['cp_account_id'];
+                $pro->cp_product_alias = $item['cp_product_alias'];
+                $pro->cp_type = $item['cp_type'];
+                $pro->type = $item['type'];
+                $pro->secret = md5(uniqid());
+                $pro->status = StatusEnum::DISABLE;
+                $pro->matcher = MatcherEnum::SYS;
+            }
+            $pro->name = $item['name'];
+            $pro->save();
         }
 
         // 清除所有产品缓存
