@@ -47,7 +47,8 @@ class RegActionMatchService extends UserActionMatchService
                     'n8_union_user'=> [
                         'guid'  => $item['n8_guid'],
                         'channel_id' => $item['channel_id'],
-                        'created_at' => $item['created_time']
+                        'created_at' => $item['created_time'],
+                        'click_source'  => $this->getAdvClickSourceEnum($item['matcher'])
                     ]
                 ];
 

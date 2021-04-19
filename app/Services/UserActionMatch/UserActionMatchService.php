@@ -3,6 +3,8 @@
 namespace App\Services\UserActionMatch;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\AdvClickSourceEnum;
+use App\Common\Enums\MatcherEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Services\ConsoleEchoService;
@@ -38,11 +40,26 @@ class UserActionMatchService extends BaseService
     protected $convertType;
 
 
+    protected $advClickSourceMap;
+
+
 
     public function __construct(){
         parent::__construct();
+        $this->setAdvClickSource();
     }
 
+
+    /**
+     * 归因方 映射点击数据来源
+     */
+    public function setAdvClickSource(){
+        $this->advClickSourceMap = array(
+            MatcherEnum::SYS => AdvClickSourceEnum::ADV_CLICK_API,
+            MatcherEnum::SECOND_VERSION => AdvClickSourceEnum::N8_TRANSFER,
+            MatcherEnum::CP => AdvClickSourceEnum::N8_TRANSFER,
+        );
+    }
 
 
     public function setAdvAlias($alias){
@@ -154,6 +171,16 @@ class UserActionMatchService extends BaseService
             'android_id'            => $data['android_id'] ?? '',
             'request_id'            => $data['request_id'] ?? ''
         );
+    }
+
+
+    /**
+     * @param $matcherEnum
+     * @return mixed|string
+     * 获取归因方 对应的 点击数据来源枚举
+     */
+    public function getAdvClickSourceEnum($matcherEnum){
+        return $this->advClickSourceMap[$matcherEnum] ?? '';
     }
 
 }

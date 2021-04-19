@@ -57,7 +57,8 @@ class FollowActionMatchService extends UserActionMatchService
                     'n8_union_user'=> [
                         'guid'          => $unionUser['n8_guid'],
                         'channel_id'    => $unionUser['channel_id'],
-                        'created_at'    => $unionUser['created_time']
+                        'created_at'    => $unionUser['created_time'],
+                        'click_source'  => $this->getAdvClickSourceEnum($unionUser['matcher'])
                     ]
                 ];
 
