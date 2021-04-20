@@ -46,6 +46,8 @@ class UserActionBaseController extends BaseController
 
                 foreach ($this->curdService->responseData['list'] as $item){
                     $convertCallback = $convertList[$item[$this->convertId]]['convert_callback'];
+                    $convertCallback['convert_type'] = $convertType;
+                    $convertCallback['convert_id'] = $item[$this->convertId];
                     // 映射回传信息
                     if($this->isConvertCallbackKey){
 
