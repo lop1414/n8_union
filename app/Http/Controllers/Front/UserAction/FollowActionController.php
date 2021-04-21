@@ -20,6 +20,10 @@ class FollowActionController extends UserActionController
         $this->setModel(new UserFollowActionModel());
     }
 
+    public function item($item){
+        $item->union_user = $item->union_user($item['n8_guid'],$item['channel_id']);
+        return $item;
+    }
 
 
 }

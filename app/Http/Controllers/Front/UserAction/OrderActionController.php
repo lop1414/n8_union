@@ -23,8 +23,9 @@ class OrderActionController extends UserActionController
 
     public function item($item){
         $item->extend;
-        return $this->model->expandFields($item);
+        $item = $this->model->expandFields($item);
+        $item->union_user = $item->union_user($item['n8_guid'],$item['channel_id']);
+        return $item;
     }
-
 
 }
