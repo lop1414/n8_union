@@ -29,6 +29,7 @@ class UserLoginActionModel extends UserActionBaseModel
      */
     protected $fillable = [
         'n8_guid',
+        'uuid',
         'product_id',
         'channel_id',
         'action_time',
@@ -47,6 +48,7 @@ class UserLoginActionModel extends UserActionBaseModel
         'device_platform_version_code',
         'android_id',
         'request_id',
+        'last_match_time',
         'created_at'
     ];
 

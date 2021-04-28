@@ -36,7 +36,7 @@ class OrderActionDataToDbService extends UserActionDataToDbService
         $unionUserService  = new UnionUserService();
         $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
         $unionUserService->setUser($user);
-        $unionUserService->create($data);
+        $unionUser = $unionUserService->create($data);
 
         // 入库
         $channelId = $unionUserService->getValidChannelId();
@@ -56,6 +56,7 @@ class OrderActionDataToDbService extends UserActionDataToDbService
         $this->getModel()->create([
             'n8_guid'       => $globalUser['n8_guid'],
             'n8_goid'       => $globalOrder['n8_goid'],
+            'uuid'          => $unionUser['id'],
             'product_id'    => $data['product_id'],
             'channel_id'    => $channelId,
             'adv_alias'     => $advAlias,

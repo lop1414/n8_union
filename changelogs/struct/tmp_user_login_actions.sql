@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 12/04/2021 11:30:24
+ Date: 23/04/2021 11:42:19
 */
 
 SET NAMES utf8mb4;
@@ -23,9 +23,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `tmp_user_login_actions`;
 CREATE TABLE `tmp_user_login_actions` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `n8_guid` varchar(64) NOT NULL,
+  `n8_guid` bigint(20) NOT NULL,
+  `uuid` bigint(20) NOT NULL COMMENT '联运用户ID',
   `product_id` int(11) NOT NULL COMMENT '产品ID',
-  `channel_id` int(11) DEFAULT NULL COMMENT '渠道ID',
+  `channel_id` bigint(20) DEFAULT NULL COMMENT '渠道ID',
   `action_time` datetime NOT NULL COMMENT '行为时间',
   `adv_alias` varchar(50) DEFAULT NULL COMMENT '广告商标识',
   `ip` varchar(50) DEFAULT NULL,
@@ -42,10 +43,12 @@ CREATE TABLE `tmp_user_login_actions` (
   `device_platform_version_code` varchar(255) DEFAULT NULL COMMENT '运行平台版本号',
   `android_id` varchar(255) DEFAULT NULL COMMENT '安卓ID',
   `request_id` varchar(255) DEFAULT NULL COMMENT '广告商的请求ID',
+  `last_match_time` datetime DEFAULT NULL COMMENT '最后匹配时间',
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `n8_guid` (`n8_guid`,`action_time`) USING BTREE,
-  KEY `action_time` (`action_time`)
+  KEY `action_time` (`action_time`),
+  KEY `uuid` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户登陆行为表';
 
 SET FOREIGN_KEY_CHECKS = 1;

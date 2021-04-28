@@ -32,7 +32,7 @@ class AddShortcutActionDataToDbService extends UserActionDataToDbService
         $unionUserService  = new UnionUserService();
         $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
         $unionUserService->setUser($user);
-        $unionUserService->create($data);
+        $unionUser = $unionUserService->create($data);
 
 
         $deviceData = $unionUserService->filterDeviceInfo($data);
@@ -40,6 +40,7 @@ class AddShortcutActionDataToDbService extends UserActionDataToDbService
         $advAlias = $this->getAdvAliasByChannel($channelId);
         $createData = array_merge($deviceData,[
             'n8_guid'       => $globalUser['n8_guid'],
+            'uuid'          => $unionUser['id'],
             'product_id'    => $globalUser['product_id'],
             'action_time'   => $data['action_time'],
             'channel_id'    => $channelId,

@@ -10,12 +10,6 @@ use App\Models\N8GlobalOrderModel;
 class N8GlobalOrderData extends BaseData
 {
 
-    /**
-     * @var bool
-     * 缓存开关
-     */
-    protected $cacheSwitch = false;
-
 
     /**
      * @var array

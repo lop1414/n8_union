@@ -38,6 +38,7 @@ class N8UnionUserModel extends UserActionBaseModel
         'adv_alias',
         'click_id',
         'matcher',
+        'last_match_time',
         'created_at'
     ];
 

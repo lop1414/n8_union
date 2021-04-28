@@ -35,6 +35,7 @@ class OrderModel extends UserActionBaseModel
     protected $fillable = [
         'n8_guid',
         'n8_goid',
+        'uuid',
         'product_id',
         'channel_id',
         'order_id',
@@ -47,7 +48,9 @@ class OrderModel extends UserActionBaseModel
         'click_id',
         'complete_click_id',
         'order_times',
-        'complete_times'
+        'complete_times',
+        'order_last_match_time',
+        'complete_last_match_time',
     ];
 
 

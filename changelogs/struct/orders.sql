@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 12/04/2021 14:20:19
+ Date: 23/04/2021 11:37:41
 */
 
 SET NAMES utf8mb4;
@@ -24,8 +24,9 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `n8_goid` bigint(20) NOT NULL,
   `n8_guid` bigint(20) NOT NULL,
+  `uuid` bigint(20) NOT NULL COMMENT '联运用户id',
   `product_id` int(11) NOT NULL COMMENT '产品id',
-  `channel_id` int(11) DEFAULT NULL COMMENT '渠道id',
+  `channel_id` bigint(20) DEFAULT NULL COMMENT '渠道id',
   `order_time` datetime NOT NULL COMMENT '订单时间',
   `amount` int(11) NOT NULL DEFAULT '0' COMMENT '金额 单位/分',
   `type` varchar(50) NOT NULL COMMENT '类型',
@@ -36,11 +37,14 @@ CREATE TABLE `orders` (
   `complete_click_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '完成点击ID',
   `order_times` int(11) NOT NULL COMMENT '第几次下单',
   `complete_times` int(11) NOT NULL COMMENT '第几次充值',
+  `order_last_match_time` datetime DEFAULT NULL COMMENT '最后匹配时间（下单）',
+  `complete_last_match_time` datetime DEFAULT NULL COMMENT '最后匹配时间（完成）',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`n8_goid`),
   UNIQUE KEY `n8_guid` (`n8_guid`) USING BTREE,
-  KEY `order_time` (`order_time`) USING BTREE
+  KEY `order_time` (`order_time`) USING BTREE,
+  KEY `uuid` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值订单';
 
 SET FOREIGN_KEY_CHECKS = 1;

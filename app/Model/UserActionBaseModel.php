@@ -8,11 +8,8 @@ class UserActionBaseModel extends BaseModel
 {
 
 
-    public function union_user($n8Guid,$channelId){
-        return (new N8UnionUserModel())
-            ->where('n8_guid',$n8Guid)
-            ->where('channel_id',$channelId)
-            ->first();
+    public function union_user(){
+        return $this->hasOne('App\Models\N8UnionUserModel', 'uuid', 'id');
     }
 
 

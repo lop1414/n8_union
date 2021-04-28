@@ -17,14 +17,14 @@ class N8UnionUserData extends BaseData
      * @var bool
      * 缓存开关
      */
-    protected $cacheSwitch = false;
+    protected $cacheSwitch = true;
 
 
     /**
      * @var array
      * 字段
      */
-    protected $fields = ['id','n8_guid','channel_id','created_time','matcher'];
+    protected $fields = [];
 
 
     /**

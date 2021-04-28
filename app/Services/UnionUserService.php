@@ -142,7 +142,9 @@ class UnionUserService extends BaseService
             if( $this->verify && !$channelService->isValidChange($actionData['action_time'])){
                 $this->validChannelId = $user['channel_id'];
 
-                return false;
+                return (new N8UnionUserData())
+                    ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->validChannelId])
+                    ->read();
             }
 
             $actionData['n8_guid'] = $user['n8_guid'];
@@ -168,7 +170,7 @@ class UnionUserService extends BaseService
             // 联运用户已存在
             if($e->getCode() == 'UUID_EXIST'){
                 return (new N8UnionUserData())
-                    ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->channelId])
+                    ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->validChannelId])
                     ->read();
             }else{
                 throw $e;
