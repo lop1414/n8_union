@@ -51,7 +51,7 @@ class UserActionMatchService extends BaseService
 
 
     /**
-     * 归因方 映射点击数据来源
+     * 归因方 映射 点击数据来源
      */
     public function setAdvClickSource(){
         $this->advClickSourceMap = array(

@@ -54,6 +54,7 @@ class FollowActionMatchService extends UserActionMatchService
                     'convert_id'   => $item['id'],
                     'convert_at'   => $item['action_time'],
                     'convert_times'=> 1,
+                    'click_id'     => $unionUser['click_id'],
                     'n8_union_user'=> [
                         'guid'          => $unionUser['n8_guid'],
                         'channel_id'    => $unionUser['channel_id'],

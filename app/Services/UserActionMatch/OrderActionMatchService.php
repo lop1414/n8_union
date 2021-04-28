@@ -56,6 +56,7 @@ class OrderActionMatchService extends UserActionMatchService
                     'convert_id'   => $item['n8_goid'],
                     'convert_at'   => $item['order_time'],
                     'convert_times'=> $item['order_times'],
+                    'click_id'     => $unionUser['click_id'],
                     'n8_union_user'=> [
                         'guid'          => $unionUser['n8_guid'],
                         'channel_id'    => $unionUser['channel_id'],
