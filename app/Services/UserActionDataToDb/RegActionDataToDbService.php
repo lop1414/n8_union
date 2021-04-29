@@ -56,6 +56,9 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
     public function saveUserItem($globalUser,$data){
 
+        $unionUserService  = new UnionUserService();
+        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+        $unionUserService->closeVerify(); //关闭验证
 
         $saveData = [
             'n8_guid'    => $globalUser['n8_guid'],
@@ -71,16 +74,15 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
         (new UserExtendModel())->create($extendData);
 
-
-        if(!empty($data['cp_channel_id'])){
+        if(isset($data['cp_channel_id'])){
 
             // 创建union用户
-            $unionUserService  = new UnionUserService();
-            $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
-            $unionUserService->closeVerify(); //关闭验证
             $unionUserService->setUser($saveData);
             $unionUserService->create($data);
         }
+
+
+
 
 
         return $userInfo;

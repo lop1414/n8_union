@@ -55,25 +55,39 @@ class N8UnionUserData extends BaseData
     public function create($data){
 
         try{
-            $channel = (new ChannelData())->setParams(['id' => $data['channel_id']])->read();
-            if(empty($channel)){
-                throw new CustomException([
-                    'code'      => 'CHANNEL_NOT_EXIST',
-                    'message'   => '渠道信息不存在',
-                    'log'       => true,
-                    'data'      => $data
-                ]);
+            //默认值
+            $channel = [
+                'book_id'    => 0,
+                'chapter_id' => 0,
+                'force_chapter_id' => 0,
+            ];
+            $ChannelExtend = [
+                'admin_id'  => 0,
+                'adv_alias' => ''
+            ];
+
+            if(!empty($data['channel_id'])){
+                $channel = (new ChannelData())->setParams(['id' => $data['channel_id']])->read();
+                if(empty($channel)){
+                    throw new CustomException([
+                        'code'      => 'CHANNEL_NOT_EXIST',
+                        'message'   => '渠道信息不存在',
+                        'log'       => true,
+                        'data'      => $data
+                    ]);
+                }
+
+                $ChannelExtend = (new ChannelExtendData())->setParams(['channel_id' => $data['channel_id']])->read();
+                if(empty($ChannelExtend)){
+                    throw new CustomException([
+                        'code'      => 'CHANNEL_EXTEND_NOT_EXIST',
+                        'message'   => '渠道扩展信息不存在',
+                        'log'       => true,
+                        'data'      => $data
+                    ]);
+                }
             }
 
-            $ChannelExtend = (new ChannelExtendData())->setParams(['channel_id' => $data['channel_id']])->read();
-            if(empty($ChannelExtend)){
-                throw new CustomException([
-                    'code'      => 'CHANNEL_EXTEND_NOT_EXIST',
-                    'message'   => '渠道扩展信息不存在',
-                    'log'       => true,
-                    'data'      => $data
-                ]);
-            }
 
             $product = (new ProductData())->setParams(['id' => $data['product_id']])->read();
             if(empty($product)){
