@@ -18,8 +18,10 @@ class ConvertCallbackMapService extends BaseService
         }
         $result = [];
         foreach ($convertList as $adv => $convert){
-            $adv = strtolower($adv);
-            $result += $this->$adv($convert);
+            if(!empty($adv)){
+                $adv = strtolower($adv);
+                $result += $this->$adv($convert);
+            }
         }
         return $result;
     }
