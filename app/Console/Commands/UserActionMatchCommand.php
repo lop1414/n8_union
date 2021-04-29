@@ -63,13 +63,11 @@ class UserActionMatchCommand extends BaseCommand
         $service->setAdvAlias($advAlias);
         $service->setTimeRange($startTime,$endTime);
 
-        $expire = env('APP_DEBUG') ? 1 : 60 * 60 * 3;
-
         $key = "user_action_match|{$action}|{$advAlias}";
 
         $this->lockRun(function () use ($service,$action){
             $service->run();
-        },$key,$expire,['log' => true]);
+        },$key, 60*60*3,['log' => true]);
     }
 
 

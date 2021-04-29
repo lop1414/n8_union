@@ -135,4 +135,16 @@ class N8UnionUserData extends BaseData
         }
 
     }
+
+
+    public function update($where = [],$update = []){
+        if(empty($update)) return;
+
+        $this->model
+            ->where($where)
+            ->update($update);
+
+        // 删除缓存
+        $this->setParams($where)->clear();
+    }
 }

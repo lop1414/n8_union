@@ -7,6 +7,7 @@ use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Enums\OrderStatusEnums;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Datas\N8UnionUserData;
+use App\Datas\OrderData;
 use App\Models\OrderModel;
 
 
@@ -29,14 +30,17 @@ class CompleteOrderActionMatchService extends UserActionMatchService
 
 
     public function getQuery(){
+        $before = $this->getMatchCycleTime();
+
         return $this->model
             ->where('adv_alias',$this->advAlias)
             ->where('status',OrderStatusEnums::COMPLETE)
             ->when($this->timeRange,function ($query){
-                $query->whereBetween('created_at',$this->timeRange);
+                $query->whereBetween('complete_time',$this->timeRange);
             })
             ->where('complete_click_id',0)
-            ->orderBy('order_time');
+            ->whereRaw(" (complete_last_match_time IS NULL OR complete_last_match_time <= '{$before}')")
+            ->orderBy('complete_time');
     }
 
 
@@ -76,12 +80,19 @@ class CompleteOrderActionMatchService extends UserActionMatchService
                 $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
                 // 保存click_id
+                $lastMatchTime = date('Y-m-d H:i:s');
                 foreach ($matchList as $match){
+
+                    $updateData = [
+                        'complete_last_match_time'  => $lastMatchTime
+                    ];
+
                     if($match['click_id'] > 0){
-                        (new OrderModel())
-                            ->where('n8_goid',$match['convert_id'])
-                            ->update(['complete_click_id' => $match['click_id']]);
+                        $updateData['complete_click_id'] = $match['click_id'];
                     }
+
+                    $where = ['n8_goid'=> $match['convert_id']];
+                    (new OrderData())->update($where,$updateData);
                 }
             }
 

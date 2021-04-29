@@ -5,6 +5,7 @@ namespace App\Services\UserActionMatch;
 
 use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Services\SystemApi\AdvOceanApiService;
+use App\Datas\N8UnionUserData;
 use App\Models\N8UnionUserModel;
 
 
@@ -23,12 +24,15 @@ class RegActionMatchService extends UserActionMatchService
 
 
     public function getQuery(){
+        $before = $this->getMatchCycleTime();
+
         return $this->model
             ->where('adv_alias',$this->advAlias)
             ->when($this->timeRange,function ($query){
-                $query->whereBetween('created_at',$this->timeRange);
+                $query->whereBetween('created_time',$this->timeRange);
             })
             ->where('click_id',0)
+            ->whereRaw(" (last_match_time IS NULL OR last_match_time <= '{$before}')")
             ->orderBy('created_time');
     }
 
@@ -60,12 +64,17 @@ class RegActionMatchService extends UserActionMatchService
                 $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
                 // 保存click_id
+                $lastMatchTime = date('Y-m-d H:i:s');
                 foreach ($matchList as $match){
+                    $updateData = [
+                        'last_match_time'  => $lastMatchTime
+                    ];
                     if($match['click_id'] > 0){
-                        (new N8UnionUserModel)
-                            ->where('id',$match['convert_id'])
-                            ->update(['click_id' => $match['click_id']]);
+                        $updateData['click_id'] = $match['click_id'];
                     }
+
+                    $where = ['id' => $match['convert_id']];
+                    (new N8UnionUserData())->update($where,$updateData);
                 }
             }
 

@@ -43,6 +43,14 @@ class UserActionMatchService extends BaseService
     protected $advClickSourceMap;
 
 
+    /**
+     * @var
+     * 匹配周期
+     * 5分钟匹配一次
+     */
+    protected $matchCycle = 60 * 5;
+
+
 
     public function __construct(){
         parent::__construct();
@@ -126,8 +134,10 @@ class UserActionMatchService extends BaseService
     public function ocean(){}
 
 
-
-
+    /**
+     * @param $fn
+     * 数据分页执行
+     */
     public function modelListPage($fn){
 
         $query = $this->getQuery();
@@ -181,6 +191,15 @@ class UserActionMatchService extends BaseService
      */
     public function getAdvClickSourceEnum($matcherEnum){
         return $this->advClickSourceMap[$matcherEnum] ?? '';
+    }
+
+
+    /**
+     * @return false|string
+     * 获取匹配周期时间
+     */
+    public function getMatchCycleTime(){
+        return  date('Y-m-d H:i:s',TIMESTAMP - $this->matchCycle);
     }
 
 }

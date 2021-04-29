@@ -5,9 +5,9 @@ namespace App\Datas;
 
 
 use App\Common\Datas\BaseData;
-use App\Models\UserShortcutActionModel;
+use App\Models\UserFollowActionModel;
 
-class UserShortcutActionData extends BaseData
+class UserFollowActionData extends BaseData
 {
 
     /**
@@ -41,7 +41,7 @@ class UserShortcutActionData extends BaseData
      * constructor.
      */
     public function __construct(){
-        parent::__construct(UserShortcutActionModel::class);
+        parent::__construct(UserFollowActionModel::class);
     }
 
 

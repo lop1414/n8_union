@@ -58,12 +58,10 @@ class UserActionDataToDbCommand extends BaseCommand
         $description = Functions::getEnumMapName(QueueEnums::class,$service->getQueueEnum());
         $this->consoleEchoService->echo($description);
 
-        $expire = env('APP_DEBUG') ? 1 : 60 * 60;
-
         $key = 'user_action_data_to_db|'.$action;
         $this->lockRun(function () use ($service,$action){
             $service->run();
-        },$key,$expire,['log' => true]);
+        },$key,60*60,['log' => true]);
     }
 
 
