@@ -77,14 +77,9 @@ class N8UnionUserData extends BaseData
                     ]);
                 }
 
-                $ChannelExtend = (new ChannelExtendData())->setParams(['channel_id' => $data['channel_id']])->read();
-                if(empty($ChannelExtend)){
-                    throw new CustomException([
-                        'code'      => 'CHANNEL_EXTEND_NOT_EXIST',
-                        'message'   => '渠道扩展信息不存在',
-                        'log'       => true,
-                        'data'      => $data
-                    ]);
+                $ChannelExtendTmp = (new ChannelExtendData())->setParams(['channel_id' => $data['channel_id']])->read();
+                if(!empty($ChannelExtendTmp)){
+                    $ChannelExtend = $ChannelExtendTmp;
                 }
             }
 
