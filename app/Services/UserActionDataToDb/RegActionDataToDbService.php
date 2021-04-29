@@ -68,6 +68,13 @@ class RegActionDataToDbService extends UserActionDataToDbService
             'phone'      => $data['phone'] ?? ''
         ];
 
+        $userInfo = $this->getModel()->create($saveData);
+        $extendData = $unionUserService->filterDeviceInfo($data);
+        $extendData['n8_guid'] = $globalUser['n8_guid'];
+
+        (new UserExtendModel())->create($extendData);
+
+
         if(isset($data['cp_channel_id'])){
 
             // 创建union用户
@@ -76,12 +83,8 @@ class RegActionDataToDbService extends UserActionDataToDbService
         }
 
 
-        $userInfo = $this->getModel()->create($saveData);
 
-        $extendData = $unionUserService->filterDeviceInfo($data);
-        $extendData['n8_guid'] = $globalUser['n8_guid'];
 
-        (new UserExtendModel())->create($extendData);
 
         return $userInfo;
     }
