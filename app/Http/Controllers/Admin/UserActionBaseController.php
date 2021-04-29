@@ -45,7 +45,13 @@ class UserActionBaseController extends BaseController
                     ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
 
                 foreach ($this->curdService->responseData['list'] as $item){
-                    $convertCallback = $convertList[$item[$this->convertId]]['convert_callback'];
+                    if(isset($convertList[$item[$this->convertId]])){
+                        $convertCallback = $convertList[$item[$this->convertId]]['convert_callback'];
+
+                    }else{
+                        $convertCallback = [];
+                    }
+
                     // 映射回传信息
                     if($this->isConvertCallbackKey){
 
