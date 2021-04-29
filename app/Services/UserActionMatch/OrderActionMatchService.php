@@ -38,6 +38,7 @@ class OrderActionMatchService extends UserActionMatchService
                 $query->whereBetween('order_time',$this->timeRange);
             })
             ->where('click_id',0)
+            ->where('channel_Id','>',0)
             ->whereRaw(" (order_last_match_time IS NULL OR order_last_match_time <= '{$before}')")
             ->orderBy('order_time');
     }

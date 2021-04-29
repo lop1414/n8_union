@@ -36,6 +36,7 @@ class AddShortcutActionMatchService extends UserActionMatchService
                 $query->whereBetween('action_time',$this->timeRange);
             })
             ->where('click_id',0)
+            ->where('channel_Id','>',0)
             ->whereRaw(" (last_match_time IS NULL OR last_match_time <= '{$before}')")
             ->orderBy('action_time');
     }

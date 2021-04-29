@@ -32,6 +32,7 @@ class RegActionMatchService extends UserActionMatchService
                 $query->whereBetween('created_time',$this->timeRange);
             })
             ->where('click_id',0)
+            ->where('channel_Id','>',0)
             ->whereRaw(" (last_match_time IS NULL OR last_match_time <= '{$before}')")
             ->orderBy('created_time');
     }
