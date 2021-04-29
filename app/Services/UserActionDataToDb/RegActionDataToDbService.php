@@ -74,16 +74,11 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
         (new UserExtendModel())->create($extendData);
 
-        if(isset($data['cp_channel_id'])){
-
-            // 创建union用户
-            $unionUserService->setUser($saveData);
-            $unionUserService->create($data);
-        }
 
 
-
-
+        // 创建union用户
+        $unionUserService->setUser($saveData);
+        $unionUserService->create($data);
 
         return $userInfo;
     }
