@@ -46,7 +46,7 @@ class UserActionBaseController extends BaseController
 
                 foreach ($this->curdService->responseData['list'] as $item){
                     if(isset($convertList[$item[$this->convertId]])){
-                        $convertCallback = $convertList[$item[$this->convertId]]['convert_callback'];
+                        $convertCallback = $convertList[$item[$this->convertId]]['convert_callback'] ?? [];
 
                     }else{
                         $convertCallback = [];
