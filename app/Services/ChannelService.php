@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\N8UnionUserData;
@@ -87,6 +86,11 @@ class ChannelService extends BaseService
                 'code' => 'NOT_SET_USER',
                 'message' => '未设置用户信息',
             ]);
+        }
+
+        //自然渠道不受保护
+        if(empty($this->user['channel_id']) && $this->user['channel_id'] != $this->channelId){
+            return true;
         }
 
         // 变更渠 且 保护期内不活跃

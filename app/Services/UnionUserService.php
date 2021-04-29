@@ -15,7 +15,7 @@ class UnionUserService extends BaseService
      * @var
      * 渠道ID
      */
-    protected $channelId;
+    protected $channelId = 0;
 
 
     /**
@@ -84,6 +84,11 @@ class UnionUserService extends BaseService
      * 通过cp渠道ID设置 联运渠道ID
      */
     public function setChannelIdByCpChannelId($productId,$cpChannelId){
+
+        if(empty($cpChannelId)){
+            return;
+        }
+
         $channel = (new ChannelData())
             ->setParams([
                 'product_id'    => $productId,
@@ -118,13 +123,6 @@ class UnionUserService extends BaseService
 
     public function create($actionData){
         try{
-            if (empty($this->channelId)){
-                throw new CustomException([
-                    'code' => 'NOT_SET_CHANNEL_ID',
-                    'message' => '未设置渠道ID',
-                ]);
-            }
-
             if (empty($this->user)){
                 throw new CustomException([
                     'code' => 'NOT_SET_USER',
