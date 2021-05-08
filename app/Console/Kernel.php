@@ -8,7 +8,7 @@ use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\UserActionMatchCommand;
 use App\Console\Commands\Yw\PullBookCommand;
 use App\Console\Commands\Yw\PullChapterCommand;
-use App\Console\Commands\Bm\PullChannelCommand;
+use App\Console\Commands\PullCpChannelCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -34,8 +34,8 @@ class Kernel extends ConsoleKernel
         PullBookCommand::class,
         PullChapterCommand::class,
 
-        // 笔墨
-        PullChannelCommand::class
+        // 同步渠道
+        PullCpChannelCommand::class
     ];
 
     /**
@@ -52,6 +52,9 @@ class Kernel extends ConsoleKernel
 
         //创建分表
         $schedule->command('create_table')->cron('0 0 1,15 * *');
+
+        //拉取CP渠道
+        $schedule->command('pull_cp_channel --date=today')->cron('50 23 * * *');
 
 
         //行为数据入库
@@ -73,8 +76,7 @@ class Kernel extends ConsoleKernel
         }
 
 
-        //拉取CP渠道
-        $schedule->command('bm:pull_cp_channel --date=today')->cron('55 23 * * *');
+
 
     }
 }

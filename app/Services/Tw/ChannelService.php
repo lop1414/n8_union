@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Services\Bm;
+namespace App\Services\Tw;
 
 
 use App\Datas\BookData;
 use App\Datas\ChannelData;
 use App\Datas\ChapterData;
 use App\Models\ChannelModel;
-use App\Sdks\Bm\BmSdk;
+use App\Sdks\Tw\TwSdk;
 
 
-class ChannelService extends BmService
+class ChannelService extends TwService
 {
 
     /**
@@ -31,26 +31,27 @@ class ChannelService extends BmService
         $chapterData = new ChapterData();
         $channelData = new ChannelData();
         foreach ($productList as $product){
-            $sdk = new BmSdk($product['cp_product_alias'],$product['cp_secret']);
+            $sdk = new TwSdk($product['cp_product_alias'],$product['cp_secret']);
 
             $parameter = [
-                'page'  => 1
+                'time'  => TIMESTAMP,
             ];
-            if(!empty($startDate) && !empty($endDate)){
-                $parameter['createTimeStart'] = strtotime($startDate.' 00:00:00');
-                $parameter['createTimeEnd'] = strtotime($endDate.' 23:59:59');
-            }
+
+            $date = $startDate = date('Ymd',strtotime($startDate));
+            $endDate = date('Ymd',strtotime($endDate));
 
             do{
+                $parameter['adate'] = $date;
+
                 $channels = $sdk->getCpChannel($parameter);
 
-                foreach ($channels['list'] as $i => $channel){
+                foreach ($channels as $i => $channel){
 
                     // 书籍
                     $book = $bookData->save([
                         'cp_type'       => $product['cp_type'],
-                        'cp_book_id'    => $channel['novelid'],
-                        'name'          => $channel['novelName'],
+                        'cp_book_id'    => $channel['bid'],
+                        'name'          => $channel['book_name'],
                         'author_name'   => '',
                         'all_words'     => 0,
                         'update_time'   => null
@@ -58,33 +59,33 @@ class ChannelService extends BmService
                     // 打开章节
                     $openChapter = $chapterData->save([
                         'book_id'       => $book['id'],
-                        'cp_chapter_id' => $channel['openChapterid'],
-                        'name'          => $channel['openChapterName'],
-                        'seq'           => $channel['openChapterNumber']
+                        'cp_chapter_id' => 0,
+                        'name'          => $channel['num_name'],
+                        'seq'           => $channel['num']
                     ]);
                     //强制章节
                     $installChapter = $chapterData->save([
                         'book_id'       => $book['id'],
-                        'cp_chapter_id' => $channel['installChapterid'],
-                        'name'          => $channel['installChapterName'],
-                        'seq'           => $channel['installChapterNumber']
+                        'cp_chapter_id' => 0,
+                        'name'          => $channel['follow_num_name'],
+                        'seq'           => $channel['follow_num']
                     ]);
                     //渠道
                     $channelData->save([
                         'product_id'     => $product['id'],
-                        'cp_channel_id'  => $channel['channelid'],
-                        'name'           => $channel['channelName'],
+                        'cp_channel_id'  => $channel['id'],
+                        'name'           => $channel['name'],
                         'book_id'        => $book['id'],
                         'chapter_id'     => $openChapter['id'],
                         'force_chapter_id'   => $installChapter['id'],
-                        'create_time'    => $channel['createTime'],
-                        'updated_time'   => $channel['updateTime'],
+                        'create_time'    => $channel['created_at'],
+                        'updated_time'   => $channel['created_at'],
                     ]);
 
                 }
+                $date = date('Ymd',strtotime('+1 day',strtotime($date)));
+            }while($date <= $endDate);
 
-                $parameter['page'] += 1;
-            }while($channels['totalPage'] >= $parameter['page']);
         }
     }
 }

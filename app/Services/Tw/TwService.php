@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Services\Bm;
+namespace App\Services\Tw;
 
 use App\Common\Services\BaseService;
 use App\Common\Enums\CpTypeEnums;
 use App\Models\ProductModel;
 
-class BmService extends BaseService
+class TwService extends BaseService
 {
 
     /**
      * @var string
      * 平台类型
      */
-    protected $cpType = CpTypeEnums::BM;
+    protected $cpType = CpTypeEnums::TW;
 
 
     /**
@@ -34,9 +34,10 @@ class BmService extends BaseService
      */
     public function getProductList($data = []){
 
-        return (new ProductModel())
+        return  (new ProductModel())
             ->where('cp_type',$this->cpType)
             ->where($data)
             ->get();
+
     }
 }
