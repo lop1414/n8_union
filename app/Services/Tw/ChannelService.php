@@ -60,14 +60,14 @@ class ChannelService extends TwService
                     $openChapter = $chapterData->save([
                         'book_id'       => $book['id'],
                         'cp_chapter_id' => 0,
-                        'name'          => $channel['num_name'],
+                        'name'          => $channel['num_name'] ?? '',
                         'seq'           => $channel['num']
                     ]);
                     //强制章节
                     $installChapter = $chapterData->save([
                         'book_id'       => $book['id'],
                         'cp_chapter_id' => 0,
-                        'name'          => $channel['follow_num_name'],
+                        'name'          => $channel['follow_num_name'] ?? '',
                         'seq'           => $channel['follow_num']
                     ]);
                     //渠道
