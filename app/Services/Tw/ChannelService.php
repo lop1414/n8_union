@@ -41,6 +41,7 @@ class ChannelService extends TwService
             $endDate = date('Ymd',strtotime($endDate));
 
             do{
+                echo "  {$date}\n";
                 $parameter['adate'] = $date;
 
                 $channels = $sdk->getCpChannel($parameter);
