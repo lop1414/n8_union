@@ -85,7 +85,7 @@ class ChannelService extends TwService
 
                 }
                 $date = date('Ymd',strtotime('+1 day',strtotime($date)));
-            }while($date <= $endDate);
+            }while($date < $endDate);
 
         }
     }
