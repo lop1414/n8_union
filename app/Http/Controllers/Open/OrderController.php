@@ -54,7 +54,7 @@ class OrderController extends BaseController
         ]);
 
 
-        $service = new DataToQueueService(QueueEnums::COMPLETE_ORDER);
+        $service = new DataToQueueService(QueueEnums::USER_COMPLETE_ORDER_ACTION);
         $service->push($requestData);
         return $this->success();
     }

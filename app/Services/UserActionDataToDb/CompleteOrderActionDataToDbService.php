@@ -13,7 +13,7 @@ use App\Models\OrderModel;
 class CompleteOrderActionDataToDbService extends UserActionDataToDbService
 {
 
-    protected $queueEnum = QueueEnums::COMPLETE_ORDER;
+    protected $queueEnum = QueueEnums::USER_COMPLETE_ORDER_ACTION;
 
 
     public function __construct(){
