@@ -4,6 +4,7 @@ namespace App\Services\UserActionMatch;
 
 
 use App\Common\Enums\ConvertTypeEnum;
+use App\Common\Enums\MatcherEnum;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Datas\N8UnionUserData;
 use App\Models\N8UnionUserModel;
@@ -58,6 +59,13 @@ class RegActionMatchService extends UserActionMatchService
                 ];
 
                 $extend = $item->extend ? $item->extend->toArray() : [];
+
+                // CP方归因 且 没有request id 不进行匹配
+                $requestId = $extend['request_id'] ?? '';
+                if($item['matcher'] == MatcherEnum::CP && empty($requestId)){
+                    continue;
+                }
+
                 array_push($convert,array_merge($tmp,$extend));
             }
 

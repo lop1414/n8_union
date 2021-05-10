@@ -4,6 +4,7 @@ namespace App\Services\UserActionMatch;
 
 
 use App\Common\Enums\ConvertTypeEnum;
+use App\Common\Enums\MatcherEnum;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Datas\N8UnionUserData;
 use App\Datas\OrderData;
@@ -55,6 +56,11 @@ class OrderActionMatchService extends UserActionMatchService
                     'n8_guid'   => $item['n8_guid'],
                     'channel_id'=> $item['channel_id']
                 ])->read();
+
+                // CP方归因 且 没有click id 不进行匹配
+                if($unionUser['matcher'] == MatcherEnum::CP && empty($unionUser['click_id'])){
+                    continue;
+                }
 
 
                 $tmp = [
