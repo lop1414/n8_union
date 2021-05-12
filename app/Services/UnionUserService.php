@@ -6,6 +6,7 @@ use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\N8UnionUserData;
+use App\Datas\ProductData;
 use App\Services\UserActionDataToDb\RegActionDataToDbService;
 
 class UnionUserService extends BaseService
@@ -148,7 +149,9 @@ class UnionUserService extends BaseService
             $actionData['n8_guid'] = $user['n8_guid'];
             $actionData['product_id'] = $user['product_id'];
             $actionData['channel_id'] = $this->channelId;
-            $actionData['matcher'] = $user['matcher'];
+
+            $product = (new ProductData())->setParams(['id' => $actionData['product_id']])->read();
+            $actionData['matcher'] = $product['matcher'];
 
             // 设备信息过滤
             $actionData = array_merge($actionData,$this->filterDeviceInfo($actionData));
