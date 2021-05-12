@@ -70,21 +70,27 @@ class RegActionMatchService extends UserActionMatchService
             }
 
             if(!empty($convert)){
-                $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
-                // 保存click_id
-                $lastMatchTime = date('Y-m-d H:i:s');
-                foreach ($matchList as $match){
-                    $updateData = [
-                        'last_match_time'  => $lastMatchTime
-                    ];
-                    if($match['click_id'] > 0){
-                        $updateData['click_id'] = $match['click_id'];
+                $convertChunks = array_chunk($convert,20);
+                foreach ($convertChunks as $convertChunk){
+                    $matchList = (new AdvOceanApiService())->apiConvertMatch($convertChunk);
+
+                    // 保存click_id
+                    $lastMatchTime = date('Y-m-d H:i:s');
+                    foreach ($matchList as $match){
+                        $updateData = [
+                            'last_match_time'  => $lastMatchTime
+                        ];
+                        if($match['click_id'] > 0){
+                            $updateData['click_id'] = $match['click_id'];
+                        }
+
+                        $where = ['id' => $match['convert_id']];
+                        (new N8UnionUserData())->update($where,$updateData);
                     }
-
-                    $where = ['id' => $match['convert_id']];
-                    (new N8UnionUserData())->update($where,$updateData);
                 }
+
+
             }
 
 

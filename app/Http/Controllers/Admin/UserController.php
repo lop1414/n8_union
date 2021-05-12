@@ -12,6 +12,12 @@ class UserController extends BaseController
 {
 
     /**
+     * @var string
+     * 默认排序字段
+     */
+    protected $defaultOrderBy = 'created_time';
+
+    /**
      * constructor.
      */
     public function __construct()
