@@ -25,9 +25,9 @@ class UserController extends BaseController
         // 必传参数
         $this->validRule($requestData,[
             'open_id'       =>  'required',
-            'action_time'   =>  'required',
-            'cp_channel_id' =>  'required'
+            'action_time'   =>  'required'
         ]);
+        $requestData['cp_channel_id'] = $requestData['cp_channel_id'] ?? 0;
 
 
         $service = new DataToQueueService(QueueEnums::USER_REG_ACTION);
@@ -50,9 +50,9 @@ class UserController extends BaseController
         // 必传参数
         $this->validRule($requestData,[
             'open_id'       =>  'required',
-            'action_time'   =>  'required',
-            'cp_channel_id' =>  'required'
+            'action_time'   =>  'required'
         ]);
+        $requestData['cp_channel_id'] = $requestData['cp_channel_id'] ?? 0;
 
         $service = new DataToQueueService(QueueEnums::USER_READ_ACTION);
         $service->push($requestData);
@@ -75,9 +75,9 @@ class UserController extends BaseController
         // 必传参数
         $this->validRule($requestData,[
             'open_id'           =>  'required',
-            'action_time'       =>  'required',
-            'cp_channel_id'     =>  'required'
+            'action_time'       =>  'required'
         ]);
+        $requestData['cp_channel_id'] = $requestData['cp_channel_id'] ?? 0;
 
 
         $service = new DataToQueueService(QueueEnums::USER_LOGIN_ACTION);
@@ -99,9 +99,9 @@ class UserController extends BaseController
         // 必传参数
         $this->validRule($requestData,[
             'open_id'           =>  'required',
-            'action_time'       =>  'required',
-            'cp_channel_id'     =>  'required'
+            'action_time'       =>  'required'
         ]);
+        $requestData['cp_channel_id'] = $requestData['cp_channel_id'] ?? 0;
 
         $service = new DataToQueueService(QueueEnums::USER_ADD_SHORTCUT_ACTION);
         $service->push($requestData);
@@ -123,11 +123,11 @@ class UserController extends BaseController
         // 必传参数
         $this->validRule($requestData,[
             'open_id'           =>  'required',
-            'action_time'       =>  'required',
-            'cp_channel_id'     =>  'required'
+            'action_time'       =>  'required'
         ]);
 
         $service = new DataToQueueService(QueueEnums::USER_FOLLOW_ACTION);
+        $requestData['cp_channel_id'] = $requestData['cp_channel_id'] ?? 0;
         $service->push($requestData);
         return $this->success();
     }

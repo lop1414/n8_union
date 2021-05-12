@@ -19,7 +19,6 @@ class OrderController extends BaseController
 
         // 必传参数
         $this->validRule($requestData,[
-            'cp_channel_id'     =>  'required',
             'order_id'          =>  'required',
             'open_id'           =>  'required',
             'action_time'       =>  'required',
@@ -29,6 +28,8 @@ class OrderController extends BaseController
 
         //验证枚举
         Functions::hasEnum(OrderTypeEnums::class, $requestData['type']);
+
+        $requestData['cp_channel_id'] = $requestData['cp_channel_id'] ?? 0;
 
         $service = new DataToQueueService(QueueEnums::USER_ORDER_ACTION);
         $service->push($requestData);
