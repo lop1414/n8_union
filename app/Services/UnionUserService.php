@@ -148,6 +148,7 @@ class UnionUserService extends BaseService
             $actionData['n8_guid'] = $user['n8_guid'];
             $actionData['product_id'] = $user['product_id'];
             $actionData['channel_id'] = $this->channelId;
+            $actionData['matcher'] = $user['matcher'];
 
             // 设备信息过滤
             $actionData = array_merge($actionData,$this->filterDeviceInfo($actionData));
