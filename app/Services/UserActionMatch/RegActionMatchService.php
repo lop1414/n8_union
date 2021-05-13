@@ -70,6 +70,7 @@ class RegActionMatchService extends UserActionMatchService
             }
 
             if(!empty($convert)){
+                echo "   匹配数:".count($convert)."\n";
                 $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
                 // 保存click_id
