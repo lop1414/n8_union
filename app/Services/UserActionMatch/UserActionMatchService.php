@@ -143,7 +143,7 @@ class UserActionMatchService extends BaseService
         $query = $this->getQuery();
         $total = $query->count();
         $totalPage = ceil($total / $this->pageSize);
-        echo $totalPage."\n\n\n";
+        echo "总数:".$total."\n\n\n";
         $page = 1;
 
         do{
