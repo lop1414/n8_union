@@ -92,7 +92,6 @@ class UserActionMatchService extends BaseService
     public function run(){
 
         try{
-            DB::beginTransaction();
 
             $advAlias = strtolower($this->advAlias);
             if(!method_exists($this,$advAlias)){
@@ -101,12 +100,7 @@ class UserActionMatchService extends BaseService
 
             $this->$advAlias();
 
-            DB::commit();
-
         }catch (CustomException $e){
-
-            DB::rollBack();
-
 
             //日志
             (new ErrorLogService())->catch($e);
@@ -115,8 +109,6 @@ class UserActionMatchService extends BaseService
             // echo
             (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
         }catch (\Exception $e){
-
-            DB::rollBack();
 
             //日志
             (new ErrorLogService())->catch($e);
@@ -134,19 +126,37 @@ class UserActionMatchService extends BaseService
     public function ocean(){}
 
 
+
     /**
      * @param $fn
+     * @throws CustomException
      * 数据分页执行
      */
     public function modelListPage($fn){
 
         $query = $this->getQuery();
         do{
+            try {
 
-            $list = $query->skip(0)->take($this->pageSize)->get();
+                DB::beginTransaction();
 
-            //执行fn
-            $fn($list);
+                $list = $query->skip(0)->take($this->pageSize)->get();
+                //执行fn
+                $fn($list);
+
+                DB::commit();
+
+            }catch (CustomException $e){
+
+                DB::rollBack();
+
+                throw $e;
+            }catch (\Exception $e){
+
+                DB::rollBack();
+
+                throw $e;
+            }
 
         }while(!$list->isEmpty());
     }
