@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Common\Enums\MatcherEnum;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -137,8 +138,10 @@ class UnionUserService extends BaseService
             $channelService->setChannelId($this->channelId);
             $channelService->setUser($user);
 
-            //无效变更渠道ID
-            if( $this->verify && !$channelService->isValidChange($actionData['action_time'])){
+            $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
+
+            //无效变更渠道ID 开启验证且系统归因才进行验证
+            if( $this->verify && $product['matcher'] == MatcherEnum::SYS && !$channelService->isValidChange($actionData['action_time'])){
                 $this->validChannelId = $user['channel_id'];
 
                 return (new N8UnionUserData())
@@ -149,8 +152,6 @@ class UnionUserService extends BaseService
             $actionData['n8_guid'] = $user['n8_guid'];
             $actionData['product_id'] = $user['product_id'];
             $actionData['channel_id'] = $this->channelId;
-
-            $product = (new ProductData())->setParams(['id' => $actionData['product_id']])->read();
             $actionData['matcher'] = $product['matcher'];
 
             // 设备信息过滤
