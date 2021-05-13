@@ -141,21 +141,14 @@ class UserActionMatchService extends BaseService
     public function modelListPage($fn){
 
         $query = $this->getQuery();
-        $total = $query->count();
-        $totalPage = ceil($total / $this->pageSize);
-        echo "总数:".$total."\n\n\n";
-        $page = 1;
-
         do{
-            $offset = ($page - 1) * $this->pageSize;
 
-            $list = $query->skip($offset)->take($this->pageSize)->get();
+            $list = $query->skip(0)->take($this->pageSize)->get();
 
             //执行fn
             $fn($list);
 
-            $page += 1;
-        }while($page <= $totalPage);
+        }while(!$list->isEmpty());
     }
 
 

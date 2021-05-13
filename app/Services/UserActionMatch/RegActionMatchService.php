@@ -60,9 +60,10 @@ class RegActionMatchService extends UserActionMatchService
 
                 $extend = $item->extend ? $item->extend->toArray() : [];
 
-                // CP方归因 且 没有request id 不进行匹配
+
                 $requestId = $extend['request_id'] ?? '';
                 if($item['matcher'] == MatcherEnum::CP && empty($requestId)){
+                    echo "  CP方归因且没有request id不进行匹配\n";
                     continue;
                 }
 
