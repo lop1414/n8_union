@@ -67,10 +67,16 @@ class ChannelController extends BaseController
                 ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
 
             if(!$this->isDataAuth()){
-                $builder->whereRaw(" (e.admin_id = {$this->adminUser['admin_user']['id']} OR e.admin_id IS NULL)");
+                $builder->where('e.admin_id',$this->adminUser['admin_user']['id']);
             }
 
             $req = $this->curdService->requestData;
+            if($req['is_bind'] == 1){
+                $builder->where('e.admin_id','>',0);
+            }else{
+                $builder->whereNull('e.admin_id');
+            }
+
             if(!empty($req['admin_id'])){
                 $builder->where('e.admin_id',$req['admin_id']);
             }
