@@ -63,6 +63,8 @@ class ChannelController extends BaseController
      */
     public function dataFilter(){
         $this->curdService->customBuilder(function ($builder){
+            $this->curdService->addField('is_bind')->addValidRule('required');
+
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
                 ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
 
