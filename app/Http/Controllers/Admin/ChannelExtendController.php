@@ -9,7 +9,6 @@ use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
-use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Models\ChannelExtendModel;
 use App\Models\ChannelModel;

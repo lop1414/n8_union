@@ -73,7 +73,7 @@ class ChannelController extends BaseController
             }
 
             $req = $this->curdService->requestData;
-            if($req['is_bind'] == 1){
+            if(!isset($req['is_bind']) || $req['is_bind'] == 1){
                 $builder->where('e.admin_id','>',0);
             }else{
                 $builder->whereNull('e.admin_id');
@@ -113,7 +113,6 @@ class ChannelController extends BaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
-        $this->curdService->addField('is_bind')->addValidRule('required');
 
         $this->curdService->selectQueryBefore(function (){
             $this->dataFilter();
@@ -147,8 +146,6 @@ class ChannelController extends BaseController
      * 列表预处理
      */
     public function getPrepare(){
-        $this->curdService->addField('is_bind')->addValidRule('required');
-
         $this->curdService->getQueryBefore(function (){
             $this->dataFilter();
         });
