@@ -224,7 +224,6 @@ class ChannelController extends BaseController
         }
 
         $startDate = $endDate = date('Y-m-d');
-        $startDate = '2021-01-01';
         (new $class)->sync($startDate,$endDate,$productId);
 
         return $this->success();
