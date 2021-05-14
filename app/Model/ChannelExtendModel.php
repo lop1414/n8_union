@@ -33,4 +33,9 @@ class ChannelExtendModel extends BaseModel
 
 
 
+    public function channel(){
+        return $this->hasOne('App\Models\ChannelModel', 'id', 'channel_id');
+    }
+
+
 }
