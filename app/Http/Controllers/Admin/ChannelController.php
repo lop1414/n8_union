@@ -62,7 +62,6 @@ class ChannelController extends BaseController
      * 过滤
      */
     public function dataFilter(){
-        $this->curdService->addField('is_bind')->addValidRule('required');
 
         $this->curdService->customBuilder(function ($builder){
 
@@ -114,6 +113,7 @@ class ChannelController extends BaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
+        $this->curdService->addField('is_bind')->addValidRule('required');
 
         $this->curdService->selectQueryBefore(function (){
             $this->dataFilter();
@@ -147,6 +147,8 @@ class ChannelController extends BaseController
      * 列表预处理
      */
     public function getPrepare(){
+        $this->curdService->addField('is_bind')->addValidRule('required');
+
         $this->curdService->getQueryBefore(function (){
             $this->dataFilter();
         });
