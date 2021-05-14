@@ -35,7 +35,7 @@ class ChannelExtendController extends FrontController
             ])
             ->read();
         if(empty($channelInfo)){
-            return $this->fail('FAIL','渠道不存在');
+            return $this->fail('FAIL',"渠道不存在 cp_channel_id:{$cpChannelId}");
         }
 
         $modelData = new ChannelExtendData();
