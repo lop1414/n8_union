@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 class ChannelController extends BaseController
 {
 
-    protected $defaultOrderBy = 'create_time';
+    protected $defaultOrderBy = 'updated_time';
 
     public $adminUser;
 
