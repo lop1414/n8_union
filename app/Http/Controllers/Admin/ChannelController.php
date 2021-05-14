@@ -180,7 +180,7 @@ class ChannelController extends BaseController
             $this->curdService->responseData->chapter;
             $this->curdService->responseData->force_chapter;
 
-            if(isset($this->curdService->responseData->extend['admin_id']) && !empty($adminId)){
+            if(isset($this->curdService->responseData->extend['admin_id'])){
                 $adminId = $this->curdService->responseData->extend['admin_id'];
 
                 $map = $this->getAdminUserName([
