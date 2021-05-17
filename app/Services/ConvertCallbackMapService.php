@@ -11,6 +11,7 @@ class ConvertCallbackMapService extends BaseService
     public function listMap($list,$convertType,$convertId = 'id'){
         $convertList = [];
         foreach ($list as $item){
+            if(empty($item['click_id'])) continue;
             $convertList[$item['adv_alias']][] = array(
                 'convert_type' => $convertType,
                 'convert_id'   => $item[$convertId]
