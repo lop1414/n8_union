@@ -82,13 +82,6 @@ class UserActionDataToDbService extends BaseService
             }
         }
 
-        $queue->rePushFailed(function () use ($queue){
-            if($queue->item['code'] == 'NO_CHANNEL'){
-                // TODO 消息提示
-                echo "NO_CHANNEL 消息提示\n";
-            }
-        });
-
         // 数据重回队列
         foreach ($rePushData as $item){
             $queue->setItem($item);
