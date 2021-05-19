@@ -6,6 +6,7 @@ use App\Common\Enums\MatcherEnum;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
+use App\Datas\ChannelExtendData;
 use App\Datas\N8UnionUserData;
 use App\Datas\ProductData;
 use App\Services\UserActionDataToDb\RegActionDataToDbService;
@@ -103,6 +104,15 @@ class UnionUserService extends BaseService
             throw new CustomException([
                 'code'       => 'NO_CHANNEL',
                 'message'    => "找不到渠道（产品ID:{$productId},N8CP渠道ID:{$cpChannelId}）",
+                '#admin_id#' => 0
+            ]);
+        }
+        $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $channel['id']])->read();
+        if(empty($channelExtend)){
+
+            throw new CustomException([
+                'code'       => 'NO_CHANNEL_EXTEND',
+                'message'    => "渠道待认领（产品ID:{$productId},N8CP渠道ID:{$cpChannelId}）",
                 '#admin_id#' => 0
             ]);
         }

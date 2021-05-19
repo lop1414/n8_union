@@ -61,7 +61,7 @@ class N8UnionUserData extends BaseData
                 'chapter_id' => 0,
                 'force_chapter_id' => 0,
             ];
-            $ChannelExtend = [
+            $channelExtend = [
                 'admin_id'  => 0,
                 'adv_alias' => ''
             ];
@@ -77,9 +77,9 @@ class N8UnionUserData extends BaseData
                     ]);
                 }
 
-                $ChannelExtendTmp = (new ChannelExtendData())->setParams(['channel_id' => $data['channel_id']])->read();
-                if(!empty($ChannelExtendTmp)){
-                    $ChannelExtend = $ChannelExtendTmp;
+                $channelExtendTmp = (new ChannelExtendData())->setParams(['channel_id' => $data['channel_id']])->read();
+                if(!empty($channelExtendTmp)){
+                    $channelExtend = $channelExtendTmp;
                 }
             }
 
@@ -102,8 +102,8 @@ class N8UnionUserData extends BaseData
                 'book_id'       => $channel['book_id'],
                 'chapter_id'    => $channel['chapter_id'],
                 'force_chapter_id' => $channel['force_chapter_id'],
-                'admin_id'      => $ChannelExtend['admin_id'],
-                'adv_alias'     => $ChannelExtend['adv_alias'],
+                'admin_id'      => $channelExtend['admin_id'],
+                'adv_alias'     => $channelExtend['adv_alias'],
                 'matcher'       => $product['matcher'],
                 'created_at'    => date('Y-m-d H:i:s')
             ]);
