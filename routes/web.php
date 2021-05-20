@@ -144,6 +144,7 @@ $router->group([
         $router->post('select', '\App\Common\Controllers\Admin\FailedQueueController@select');
         $router->post('read', '\App\Common\Controllers\Admin\FailedQueueController@read');
         $router->post('re_push', '\App\Common\Controllers\Admin\FailedQueueController@rePush');
+        $router->post('re_push_by_type', '\App\Common\Controllers\Admin\FailedQueueController@rePushAllByType');
     });
 
 });
