@@ -151,7 +151,12 @@ class UnionUserService extends BaseService
             $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
 
             //无效变更渠道ID 开启验证且系统归因才进行验证
-            if( $this->verify && $product['matcher'] == MatcherEnum::SYS && !$channelService->isValidChange($actionData['action_time'])){
+            if(
+                $this->verify
+                && !empty($actionData['channel_id'])
+                && $product['matcher'] == MatcherEnum::SYS
+                && !$channelService->isValidChange($actionData['action_time'])
+            ){
                 $this->validChannelId = $user['channel_id'];
 
                 return (new N8UnionUserData())
