@@ -64,6 +64,8 @@ class RegActionMatchService extends UserActionMatchService
                 $requestId = $extend['request_id'] ?? '';
                 if($item['matcher'] == MatcherEnum::CP && empty($requestId)){
                     echo "  CP方归因且没有request id不进行匹配\n";
+                    $item->last_match_time = date('Y-m-d H:i:s');
+                    $item->save();
                     continue;
                 }
 
