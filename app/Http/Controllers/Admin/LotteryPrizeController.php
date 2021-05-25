@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Common\Enums\StatusEnum;
 use App\Enums\PrizeTypeEnum;
 use App\Model\LotteryPrizeModel;
 use Illuminate\Http\Request;
@@ -19,9 +20,30 @@ class LotteryPrizeController extends BaseController
     }
 
     /**
+     * 列表预处理
+     */
+    public function selectPrepare(){
+        $this->curdService->selectQueryAfter(function(){
+            foreach($this->curdService->responseData['list'] as $k => $v){
+                $this->curdService->responseData['list'][$k] = $this->curdService->getModel()->expandExtendsField($v);
+            }
+        });
+    }
+
+    /**
+     * 详情预处理
+     */
+    public function readPrepare(){
+        $this->curdService->findAfter(function(){
+            $this->curdService->findData = $this->curdService->getModel()->expandExtendsField($this->curdService->findData);
+        });
+    }
+
+    /**
      * 创建预处理
      */
     public function createPrepare(){
+        $this->curdService->addField('status')->addDefaultValue(StatusEnum::ENABLE);
         $this->saveHandle();
     }
 

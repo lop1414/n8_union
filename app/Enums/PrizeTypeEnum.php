@@ -4,6 +4,7 @@ namespace App\Enums;
 
 class PrizeTypeEnum
 {
+    const NOTHING = 'NOTHING';
     const IN_KIND = 'IN_KIND';
     const BOOK_COIN = 'BOOK_COIN';
 
@@ -18,6 +19,7 @@ class PrizeTypeEnum
      * 列表
      */
     static public $list = [
+        ['id' => self::NOTHING, 'name' => '谢谢参与'],
         ['id' => self::IN_KIND, 'name' => '实物'],
         ['id' => self::BOOK_COIN, 'name' => '书币'],
     ];

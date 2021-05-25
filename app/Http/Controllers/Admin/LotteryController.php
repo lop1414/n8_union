@@ -6,6 +6,7 @@ use App\Common\Enums\CycleTypeEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Model\LotteryModel;
+use App\Services\LotteryService;
 use Illuminate\Http\Request;
 
 class LotteryController extends BaseController
@@ -69,6 +70,21 @@ class LotteryController extends BaseController
                     'message' => '开始时间不能大于结束时间',
                 ]);
             }
+
+            $this->curdService->handleData['extends'] = [];
         });
+    }
+
+    public function release(Request $request){
+        $this->validRule($request->post(), [
+            'lottery_id' => 'required|integer',
+        ]);
+
+        $lotteryId = $request->post('lottery_id');
+
+        $lotteryService = new LotteryService();
+        $ret = $lotteryService->release($lotteryId);
+
+        return $this->ret($ret);
     }
 }

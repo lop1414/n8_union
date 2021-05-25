@@ -145,6 +145,7 @@ $router->group([
         $router->post('update', 'Admin\LotteryController@update');
         $router->post('enable', 'Admin\LotteryController@enable');
         $router->post('disable', 'Admin\LotteryController@disable');
+        $router->post('release', 'Admin\LotteryController@release');
     });
 
 
@@ -230,4 +231,10 @@ $router->group([
             $router->post('get', 'Front\UserAction\RegActionController@get');
         });
     });
+});
+
+// 前台无签名接口
+$router->group(['prefix' => 'front'], function () use ($router) {
+    $router->post('lottery/read', 'Front\LotteryController@read');
+    $router->post('lottery/draw', 'Front\LotteryController@draw');
 });
