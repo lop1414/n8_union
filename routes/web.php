@@ -137,6 +137,27 @@ $router->group([
     });
 
 
+    // 抽奖
+    $router->group(['prefix' => 'lottery'], function () use ($router) {
+        $router->post('select', 'Admin\LotteryController@select');
+        $router->post('read', 'Admin\LotteryController@read');
+        $router->post('create', 'Admin\LotteryController@create');
+        $router->post('update', 'Admin\LotteryController@update');
+        $router->post('enable', 'Admin\LotteryController@enable');
+        $router->post('disable', 'Admin\LotteryController@disable');
+        $router->post('release', 'Admin\LotteryController@release');
+    });
+
+
+    // 抽奖奖品
+    $router->group(['prefix' => 'lottery_prize'], function () use ($router) {
+        $router->post('select', 'Admin\LotteryPrizeController@select');
+        $router->post('read', 'Admin\LotteryPrizeController@read');
+        $router->post('create', 'Admin\LotteryPrizeController@create');
+        $router->post('update', 'Admin\LotteryPrizeController@update');
+        $router->post('enable', 'Admin\LotteryController@enable');
+        $router->post('disable', 'Admin\LotteryController@disable');
+    });
 
 
     // 队列数据
@@ -210,5 +231,10 @@ $router->group([
             $router->post('get', 'Front\UserAction\RegActionController@get');
         });
     });
+});
 
+// 前台无签名接口
+$router->group(['prefix' => 'front'], function () use ($router) {
+    $router->post('lottery/read', 'Front\LotteryController@read');
+    $router->post('lottery/draw', 'Front\LotteryController@draw');
 });
