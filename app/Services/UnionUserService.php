@@ -148,8 +148,9 @@ class UnionUserService extends BaseService
             $channelService->setChannelId($this->channelId);
             $channelService->setUser($user);
 
-            $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
+            $actionData['channel_id'] = $this->channelId;
 
+            $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
 
             //没有渠道不创建
             if(empty($actionData['channel_id']) && !empty($user['channel_id'])){
@@ -175,7 +176,6 @@ class UnionUserService extends BaseService
 
             $actionData['n8_guid'] = $user['n8_guid'];
             $actionData['product_id'] = $user['product_id'];
-            $actionData['channel_id'] = $this->channelId;
             $actionData['matcher'] = $product['matcher'];
 
             // 设备信息过滤
