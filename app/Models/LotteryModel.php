@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 use App\Common\Models\BaseModel;
 
@@ -56,6 +56,6 @@ class LotteryModel extends BaseModel
      * 关联抽奖奖品模型
      */
     public function lottery_prizes(){
-        return $this->hasMany('App\Model\LotteryPrizeModel', 'lottery_id', 'id')->enable();
+        return $this->hasMany('App\Models\LotteryPrizeModel', 'lottery_id', 'id')->enable();
     }
 }

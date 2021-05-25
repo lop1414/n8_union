@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomRedis;
-use App\Model\LotteryModel;
+use App\Models\LotteryModel;
 
 class LotteryService extends BaseService
 {

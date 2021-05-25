@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\CycleTypeEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
-use App\Model\LotteryModel;
+use App\Models\LotteryModel;
 use App\Services\LotteryService;
 use Illuminate\Http\Request;
 

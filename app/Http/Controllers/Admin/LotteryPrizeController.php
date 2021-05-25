@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\StatusEnum;
 use App\Enums\PrizeTypeEnum;
-use App\Model\LotteryPrizeModel;
+use App\Models\LotteryPrizeModel;
 use Illuminate\Http\Request;
 
 class LotteryPrizeController extends BaseController
