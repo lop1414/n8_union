@@ -196,9 +196,18 @@ class UnionUserService extends BaseService
         }catch (CustomException $e){
             // 联运用户已存在
             if($e->getCode() == 'UUID_EXIST'){
-                return (new N8UnionUserData())
+                $info =  (new N8UnionUserData())
                     ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->validChannelId])
                     ->read();
+                if($info->created_time > $actionData['action_time']){
+                    (new N8UnionUserData())->update([
+                        'id'    => $info['id']
+                    ],[
+                        'created_time' => $actionData['action_time']
+                    ]);
+                    $info->created_time = $actionData['action_time'];
+                }
+                return $info;
             }else{
                 throw $e;
             }

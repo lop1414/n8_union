@@ -205,6 +205,8 @@ $router->group([
     // 渠道
     $router->group(['prefix' => 'channel'], function () use ($router) {
         $router->post('create', 'Front\ChannelController@create');
+        $router->post('get', 'Front\ChannelController@get');
+        $router->post('read', 'Front\ChannelController@read');
     });
 
     // 渠道扩展

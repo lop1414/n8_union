@@ -58,7 +58,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
         $unionUserService  = new UnionUserService();
         $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
-        $unionUserService->closeVerify(); //关闭验证
+//        $unionUserService->closeVerify(); //关闭验证
 
         $saveData = [
             'n8_guid'    => $globalUser['n8_guid'],
