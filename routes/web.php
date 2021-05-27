@@ -155,8 +155,8 @@ $router->group([
         $router->post('read', 'Admin\LotteryPrizeController@read');
         $router->post('create', 'Admin\LotteryPrizeController@create');
         $router->post('update', 'Admin\LotteryPrizeController@update');
-        $router->post('enable', 'Admin\LotteryController@enable');
-        $router->post('disable', 'Admin\LotteryController@disable');
+        $router->post('enable', 'Admin\LotteryPrizeController@enable');
+        $router->post('disable', 'Admin\LotteryPrizeController@disable');
     });
 
 
