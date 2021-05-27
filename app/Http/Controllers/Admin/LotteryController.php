@@ -75,6 +75,12 @@ class LotteryController extends BaseController
         });
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws CustomException
+     * 发布
+     */
     public function release(Request $request){
         $this->validRule($request->post(), [
             'lottery_id' => 'required|integer',
