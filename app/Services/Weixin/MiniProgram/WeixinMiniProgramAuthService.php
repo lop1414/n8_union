@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Weixin;
+namespace App\Services\Weixin\MiniProgram;
 
 use App\Common\Tools\CustomException;
 

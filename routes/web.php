@@ -160,6 +160,15 @@ $router->group([
     });
 
 
+    // 微信小程序
+    $router->group(['prefix' => 'weixin_mini_program'], function () use ($router) {
+        $router->post('select', 'Admin\WeixinMiniProgramController@select');
+        $router->post('read', 'Admin\WeixinMiniProgramController@read');
+        $router->post('create', 'Admin\WeixinMiniProgramController@create');
+        $router->post('update', 'Admin\WeixinMiniProgramController@update');
+    });
+
+
     // 队列数据
     $router->group(['prefix' => 'failed_queue'], function () use ($router) {
         $router->post('select', '\App\Common\Controllers\Admin\FailedQueueController@select');
@@ -237,4 +246,6 @@ $router->group([
 $router->group(['prefix' => 'front'], function () use ($router) {
     $router->post('lottery/read', 'Front\LotteryController@read');
     $router->post('lottery/draw', 'Front\LotteryController@draw');
+    $router->post('open_user/bind', 'Front\OpenUserController@bind');
+    $router->post('open_user/info', 'Front\OpenUserController@info');
 });
