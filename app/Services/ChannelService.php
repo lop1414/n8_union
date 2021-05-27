@@ -110,7 +110,7 @@ class ChannelService extends BaseService
      * @param $actionTime
      * @return bool
      * @throws CustomException
-     * 是否为保护期内活跃用户
+     * 是保护期内活跃用户
      */
     public function isActiveUser($actionTime){
 

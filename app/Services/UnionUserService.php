@@ -148,8 +148,9 @@ class UnionUserService extends BaseService
             $channelService->setChannelId($this->channelId);
             $channelService->setUser($user);
 
-            $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
+            $actionData['channel_id'] = $this->channelId;
 
+            $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
 
             //没有渠道不创建
             if(empty($actionData['channel_id']) && !empty($user['channel_id'])){
@@ -175,7 +176,6 @@ class UnionUserService extends BaseService
 
             $actionData['n8_guid'] = $user['n8_guid'];
             $actionData['product_id'] = $user['product_id'];
-            $actionData['channel_id'] = $this->channelId;
             $actionData['matcher'] = $product['matcher'];
 
             // 设备信息过滤
@@ -196,9 +196,18 @@ class UnionUserService extends BaseService
         }catch (CustomException $e){
             // 联运用户已存在
             if($e->getCode() == 'UUID_EXIST'){
-                return (new N8UnionUserData())
+                $info =  (new N8UnionUserData())
                     ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->validChannelId])
                     ->read();
+                if($info->created_time > $actionData['action_time']){
+                    (new N8UnionUserData())->update([
+                        'id'    => $info['id']
+                    ],[
+                        'created_time' => $actionData['action_time']
+                    ]);
+                    $info->created_time = $actionData['action_time'];
+                }
+                return $info;
             }else{
                 throw $e;
             }
