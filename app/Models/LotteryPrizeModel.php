@@ -39,7 +39,7 @@ class LotteryPrizeModel extends BaseModel
      */
     public function getChanceAttribute($value)
     {
-        return $value / 100;
+        return $value / 10000;
     }
 
     /**
@@ -48,6 +48,6 @@ class LotteryPrizeModel extends BaseModel
      */
     public function setChanceAttribute($value)
     {
-        $this->attributes['chance'] = $value * 100;
+        $this->attributes['chance'] = $value * 10000;
     }
 }
