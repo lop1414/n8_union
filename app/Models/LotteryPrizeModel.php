@@ -31,4 +31,23 @@ class LotteryPrizeModel extends BaseModel
     {
         $this->attributes['extends'] = json_encode($value);
     }
+
+    /**
+     * @param $value
+     * @return array
+     * 属性访问器
+     */
+    public function getChanceAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    /**
+     * @param $value
+     * 属性修饰器
+     */
+    public function setChanceAttribute($value)
+    {
+        $this->attributes['chance'] = $value * 100;
+    }
 }

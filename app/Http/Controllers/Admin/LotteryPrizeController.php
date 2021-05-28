@@ -62,7 +62,7 @@ class LotteryPrizeController extends BaseController
         $this->curdService->addField('name')->addValidRule('required');
         $this->curdService->addField('prize_type')->addValidRule('required')
             ->addValidEnum(PrizeTypeEnum::class);
-        $this->curdService->addField('chance')->addValidRule('required|integer|max:100|min:0');
+        $this->curdService->addField('chance')->addValidRule('required|max:100|min:0');
         $this->curdService->addField('total')->addValidRule('required|integer');
         $this->curdService->addField('image_url')->addValidRule('required');
 
