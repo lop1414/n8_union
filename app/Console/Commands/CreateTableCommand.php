@@ -70,10 +70,11 @@ class CreateTableCommand extends BaseCommand
         $unionUserModelData = new N8UnionUserData();
         $userModelData = new UserData();
         do{
-            $list = $unionUserModel->leftJoin('channels','channels.id','=','n8_union_users.channel_id')
+            $list = $unionUserModel
+                ->leftJoin('channels','channels.id','=','n8_union_users.channel_id')
                 ->select('n8_union_users.*')
                 ->whereBetween('n8_union_users.created_time',$timeRange)
-                ->where('n8_union_users.channel')
+                ->where('n8_union_users.channel','>',0)
                 ->where('n8_union_users.created_time','<','channels.create_time')
                 ->skip(0)
                 ->take(100)
