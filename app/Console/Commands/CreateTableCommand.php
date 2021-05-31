@@ -75,7 +75,7 @@ class CreateTableCommand extends BaseCommand
                 ->select('n8_union_users.*')
                 ->whereBetween('n8_union_users.created_time',$timeRange)
                 ->where('n8_union_users.channel_id','>',0)
-                ->where('n8_union_users.created_time','<','channels.create_time')
+                ->whereRaw('n8_union_users.created_time < channels.create_time')
                 ->skip(0)
                 ->take(100)
                 ->get();
