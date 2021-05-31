@@ -6,7 +6,7 @@ use App\Common\Enums\CycleTypeEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Models\LotteryModel;
-use App\Services\LotteryService;
+use App\Services\Activity\LotteryService;
 use Illuminate\Http\Request;
 
 class LotteryController extends BaseController
