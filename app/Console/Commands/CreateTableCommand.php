@@ -40,6 +40,8 @@ class CreateTableCommand extends BaseCommand
 
 
     public function handle(){
+
+        $this->updateInfo();die;
         $service = new CreateTableService();
 
         $date    = $this->option('date');
