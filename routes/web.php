@@ -244,8 +244,11 @@ $router->group([
     });
 });
 
-// 前台无签名接口
-$router->group(['prefix' => 'front'], function () use ($router) {
+// 前端接口
+$router->group([
+    'prefix' => 'front',
+    'middleware' => ['simple_sign_valid']
+], function () use ($router) {
     $router->post('lottery/read', 'Front\LotteryController@read');
     $router->post('lottery/draw', 'Front\LotteryController@draw');
     $router->post('open_user/bind', 'Front\OpenUserController@bind');
