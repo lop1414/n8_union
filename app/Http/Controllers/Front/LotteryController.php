@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Common\Controllers\Front\FrontController;
 use App\Common\Tools\CustomException;
-use App\Services\LotteryService;
+use App\Services\Activity\LotteryService;
 use Illuminate\Http\Request;
 
 class LotteryController extends FrontController
@@ -55,9 +55,14 @@ class LotteryController extends FrontController
     public function draw(Request $request){
         $requestData = $request->post();
 
+        // 抽奖
         $lotteryService = new LotteryService();
         $ret = $lotteryService->draw($requestData);
 
-        return $this->ret($ret);
+        // 获取奖品
+        $prize = $lotteryService->getPrize();
+        unset($prize['chance'], $prize['total']);
+
+        return $this->ret($ret, $prize);
     }
 }
