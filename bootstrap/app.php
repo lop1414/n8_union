@@ -88,6 +88,7 @@ $app->configure('common');
      'center_menu_auth' => \App\Common\Middleware\CenterMenuAuth::class,
      'admin_request_log' => \App\Common\Middleware\AdminRequestLog::class,
      'open_api_sign_valid' => \App\Http\Middleware\OpenApiSignValid::class,
+     'simple_sign_valid' => \App\Common\Middleware\SimpleSignValid::class,
  ]);
 
 /*
