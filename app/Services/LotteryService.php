@@ -6,6 +6,7 @@ use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomRedis;
 use App\Models\LotteryModel;
+use App\Services\Weixin\MiniProgram\WeixinMiniProgramAuthService;
 
 class LotteryService extends BaseService
 {
@@ -143,8 +144,35 @@ class LotteryService extends BaseService
         return true;
     }
 
-    public function draw($lotteryId){
-        $lottery = $this->getCache($lotteryId);
+    /**
+     * @param $lotteryId
+     * @throws CustomException
+     * 抽取
+     */
+    public function draw($param){
+        $this->validRule($param, [
+            'id' => 'required',
+            'user_source' => 'required',
+            'source_app_id' => 'present',
+        ]);
+
+        $openUserService = new OpenUserService();
+
+        // 获取第三方 open_id
+        $sourceOpenId = $openUserService->getSourceOpenId($param);
+
+        // 获取第三方用户
+        $openUser = $openUserService->getOpenUser($param['user_source'], $param['source_app_id'], $sourceOpenId);
+        if(empty($openUser)){
+            throw new CustomException([
+                'code' => 'NOT_FOUND_OPEN_USER',
+                'message' => '用户ID尚未绑定',
+            ]);
+        }
+
+        dd($openUser);
+
+        $lottery = $this->getCache($param['id']);
 
         $datetime = date('Y-m-d H:i:s', TIMESTAMP);
 
@@ -161,5 +189,24 @@ class LotteryService extends BaseService
                 'message' => '活动尚未开始',
             ]);
         }
+
+
+        $lockKey = "lottery|{$param['id']}|{$openUser['id']}";
+        $runParam = [];
+        $this->lockRun(
+            [$this, 'run'],
+            $lockKey,
+            3600,
+            ['log' => true],
+            $runParam
+        );
+    }
+
+    public function run($param){
+        $prize = $this->drawPrize();
+    }
+
+    public function drawPrize(){
+
     }
 }

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use App\Common\Models\BaseModel;
 
-class LotteryPrizeModel extends BaseModel
+class OpenUserModel extends BaseModel
 {
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
-    protected $table = 'lottery_prizes';
+    protected $table = 'open_users';
 
     /**
      * @param $value
@@ -30,24 +30,5 @@ class LotteryPrizeModel extends BaseModel
     public function setExtendsAttribute($value)
     {
         $this->attributes['extends'] = json_encode($value);
-    }
-
-    /**
-     * @param $value
-     * @return array
-     * 属性访问器
-     */
-    public function getChanceAttribute($value)
-    {
-        return $value / 10000;
-    }
-
-    /**
-     * @param $value
-     * 属性修饰器
-     */
-    public function setChanceAttribute($value)
-    {
-        $this->attributes['chance'] = $value * 10000;
     }
 }

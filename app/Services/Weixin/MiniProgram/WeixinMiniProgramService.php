@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Services\Weixin;
+namespace App\Services\Weixin\MiniProgram;
 
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
+use App\Models\WeixinMiniProgramModel;
 use App\Sdks\Weixin\MiniProgram\WeixinMiniProgramSdk;
 
 class WeixinMiniProgramService extends BaseService
@@ -41,15 +42,9 @@ class WeixinMiniProgramService extends BaseService
     public function setApp($appId){
         $this->setAppId($appId);
 
-        $map = [
-            'wx132d925a72107fc8' => [
-                'app_id' => 'wx132d925a72107fc8',
-                'app_secret' => 'f5094fbeb72068fb51753529798c9127',
-            ],
-        ];
-
-        #TODO:库中读取app
-
+        // 获取小程序密钥
+        $weixinMiniProgramModel = new WeixinMiniProgramModel();
+        $map = $weixinMiniProgramModel->get()->makeVisible('app_secret')->keyBy('app_id')->toArray();
         if(!isset($map[$this->appId])){
             throw new CustomException([
                 'code' => 'NOT_FOUND_APP',
@@ -71,6 +66,11 @@ class WeixinMiniProgramService extends BaseService
         return true;
     }
 
+    /**
+     * @return mixed
+     * @throws CustomException
+     * 获取 app id
+     */
     protected function getAppId(){
         if(empty($this->appId)){
             throw new CustomException([
@@ -79,16 +79,5 @@ class WeixinMiniProgramService extends BaseService
             ]);
         }
         return $this->appId;
-    }
-
-    /**
-     * @param $jsCode
-     * @return mixed
-     * @throws CustomException
-     * 凭借 jscode 获取 openid
-     */
-    public function getOpenIdByJsCode22($jsCode){
-        $result = $this->sdk->getOpenIdByJsCode($this->getAppId(), $this->appSecret, $jsCode);
-        return $result['openid'];
     }
 }

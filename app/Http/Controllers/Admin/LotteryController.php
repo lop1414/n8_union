@@ -75,15 +75,21 @@ class LotteryController extends BaseController
         });
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws CustomException
+     * 发布
+     */
     public function release(Request $request){
         $this->validRule($request->post(), [
-            'lottery_id' => 'required|integer',
+            'id' => 'required|integer',
         ]);
 
-        $lotteryId = $request->post('lottery_id');
+        $id = $request->post('id');
 
         $lotteryService = new LotteryService();
-        $ret = $lotteryService->release($lotteryId);
+        $ret = $lotteryService->release($id);
 
         return $this->ret($ret);
     }

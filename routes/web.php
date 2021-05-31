@@ -155,8 +155,17 @@ $router->group([
         $router->post('read', 'Admin\LotteryPrizeController@read');
         $router->post('create', 'Admin\LotteryPrizeController@create');
         $router->post('update', 'Admin\LotteryPrizeController@update');
-        $router->post('enable', 'Admin\LotteryController@enable');
-        $router->post('disable', 'Admin\LotteryController@disable');
+        $router->post('enable', 'Admin\LotteryPrizeController@enable');
+        $router->post('disable', 'Admin\LotteryPrizeController@disable');
+    });
+
+
+    // 微信小程序
+    $router->group(['prefix' => 'weixin_mini_program'], function () use ($router) {
+        $router->post('select', 'Admin\WeixinMiniProgramController@select');
+        $router->post('read', 'Admin\WeixinMiniProgramController@read');
+        $router->post('create', 'Admin\WeixinMiniProgramController@create');
+        $router->post('update', 'Admin\WeixinMiniProgramController@update');
     });
 
 
@@ -239,4 +248,6 @@ $router->group([
 $router->group(['prefix' => 'front'], function () use ($router) {
     $router->post('lottery/read', 'Front\LotteryController@read');
     $router->post('lottery/draw', 'Front\LotteryController@draw');
+    $router->post('open_user/bind', 'Front\OpenUserController@bind');
+    $router->post('open_user/info', 'Front\OpenUserController@info');
 });

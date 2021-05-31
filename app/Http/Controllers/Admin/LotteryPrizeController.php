@@ -62,8 +62,9 @@ class LotteryPrizeController extends BaseController
         $this->curdService->addField('name')->addValidRule('required');
         $this->curdService->addField('prize_type')->addValidRule('required')
             ->addValidEnum(PrizeTypeEnum::class);
-        $this->curdService->addField('chance')->addValidRule('required|integer|max:100|min:0');
-        $this->curdService->addField('image_path')->addValidRule('required');
+        $this->curdService->addField('chance')->addValidRule('required|max:100|min:0');
+        $this->curdService->addField('total')->addValidRule('required|integer');
+        $this->curdService->addField('image_url')->addValidRule('required');
 
         $this->curdService->saveBefore(function(){
             $extends = [];
@@ -73,6 +74,8 @@ class LotteryPrizeController extends BaseController
                 $extends = [
                     'book_coin' => $this->curdService->requestData['book_coin'],
                 ];
+            }elseif($this->curdService->requestData['prize_type'] == PrizeTypeEnum::NOTHING){
+                $this->curdService->handleData['total'] = -1;
             }
 
             $this->curdService->handleData['extends'] = $extends;
