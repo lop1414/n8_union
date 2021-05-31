@@ -38,4 +38,16 @@ class UserData extends BaseData
         parent::__construct(UserModel::class);
     }
 
+
+
+    public function update($where = [],$update = []){
+        if(empty($update)) return;
+
+        $this->model
+            ->where($where)
+            ->update($update);
+
+        // 删除缓存
+        $this->setParams($where)->clear();
+    }
 }
