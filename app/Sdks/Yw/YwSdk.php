@@ -7,11 +7,13 @@ use App\Sdks\Yw\Traits\Chapter;
 use App\Sdks\Yw\Traits\Order;
 use App\Sdks\Yw\Traits\Product;
 use App\Sdks\Yw\Traits\Request;
+use App\Sdks\Yw\Traits\User;
 
 class YwSdk
 {
 
     use Request;
+    use User;
     use Order;
     use Product;
     use Book;
