@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\StatusEnum;
+use App\Common\Tools\CustomException;
 use App\Enums\PrizeTypeEnum;
+use App\Models\LotteryModel;
 use App\Models\LotteryPrizeModel;
 use Illuminate\Http\Request;
 
@@ -44,7 +46,18 @@ class LotteryPrizeController extends BaseController
      */
     public function createPrepare(){
         $this->curdService->addField('status')->addDefaultValue(StatusEnum::ENABLE);
+
         $this->saveHandle();
+
+        $this->curdService->saveBefore(function(){
+            $lottery = LotteryModel::find($this->curdService->requestData['lottery_id']);
+            if($lottery->lottery_prizes()->count() > 10){
+                throw new CustomException([
+                    'code' => 'LOTTERY_PRIZE_MORE_THAN_10',
+                    'message' => '奖品不能超过10个',
+                ]);
+            }
+        });
     }
 
     /**
