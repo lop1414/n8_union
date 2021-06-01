@@ -19,6 +19,7 @@ class LotteryController extends FrontController
 
     /**
      * @param Request $request
+     * @return mixed
      * @throws CustomException
      * 详情
      */
@@ -43,7 +44,8 @@ class LotteryController extends FrontController
             unset($lottery['lottery_prizes'][$k]['chance']);
             unset($lottery['lottery_prizes'][$k]['total']);
         }
-        dd($lottery);
+
+        return $this->success($lottery);
     }
 
     /**
