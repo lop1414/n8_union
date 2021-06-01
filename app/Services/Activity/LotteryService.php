@@ -322,12 +322,19 @@ class LotteryService extends BaseService
     public function drawPrize($param){
         $lottery = $this->getCache($param['lottery_id']);
 
+        $lotteryPrizeLogService = new LotteryPrizeLogService();
+        $stat = $lotteryPrizeLogService->getLotteryPrizeStat($param['lottery_id']);
+
         $prizes = [];
         foreach($lottery['lottery_prizes'] as $k => $v){
-            #TODO:移除没有库存的奖品
-
             // 移除没库存或中奖几率为0奖品
             if($v['total'] == 0 || $v['chance'] == 0){
+                continue;
+            }
+
+            // 移除没有库存的奖品
+            $count = $stat[$v['id']] ?? 0;
+            if($v['total'] > 0 && $count >= $v['total']){
                 continue;
             }
 
