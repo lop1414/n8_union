@@ -184,17 +184,10 @@ class LotteryService extends BaseService
     public function draw($param){
         $this->validRule($param, [
             'id' => 'required',
-            'user_source' => 'required',
-            'source_app_id' => 'present',
         ]);
 
         $openUserService = new OpenUserService();
-
-        // 获取第三方 open_id
-        $sourceOpenId = $openUserService->getSourceOpenId($param);
-
-        // 获取第三方用户
-        $openUser = $openUserService->getOpenUser($param['user_source'], $param['source_app_id'], $sourceOpenId);
+        $openUser = $openUserService->info($param);
         if(empty($openUser)){
             throw new CustomException([
                 'code' => 'NOT_FOUND_OPEN_USER',
