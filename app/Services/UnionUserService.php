@@ -9,7 +9,6 @@ use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Datas\N8UnionUserData;
 use App\Datas\ProductData;
-use App\Services\UserActionDataToDb\RegActionDataToDbService;
 
 class UnionUserService extends BaseService
 {
@@ -184,11 +183,10 @@ class UnionUserService extends BaseService
             $this->validChannelId = $actionData['channel_id'];
 
             // 更改用户渠道ID
-            $userChangeData = [
+            (new UserService())->setUser($user)->update([
                 'channel_id' => $actionData['channel_id'],
                 'action_time' => $actionData['action_time']
-            ];
-            (new RegActionDataToDbService())->changeUserItem($user,$userChangeData,false);
+            ]);
 
             // 创建union user
             return (new N8UnionUserData())->create($actionData);

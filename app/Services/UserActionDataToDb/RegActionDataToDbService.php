@@ -5,9 +5,9 @@ namespace App\Services\UserActionDataToDb;
 
 use App\Enums\QueueEnums;
 use App\Models\UserExtendModel;
-use App\Models\UserInfoChangeLogModel;
 use App\Models\UserModel;
 use App\Services\UnionUserService;
+use App\Services\UserService;
 
 
 class RegActionDataToDbService extends UserActionDataToDbService
@@ -15,16 +15,6 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
 
     protected $queueEnum = QueueEnums::USER_REG_ACTION;
-
-
-    /**
-     * 用户信息 可变更字段
-     * @var string[]
-     */
-    protected $userAllowChangeField = array(
-        'channel_id',
-        'phone'
-    );
 
 
 
@@ -89,9 +79,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
     public function changeUserItem($user,$data,$createUnionUser = true){
 
-        $changeLogData = $changeData = [];
-        $n8Guid = $user['n8_guid'];
-
+        $userService = new UserService();
         // 创建union用户
         if($createUnionUser){
             $unionUserService  = new UnionUserService();
@@ -99,54 +87,12 @@ class RegActionDataToDbService extends UserActionDataToDbService
             $unionUserService->setUser($user);
             $unionUser = $unionUserService->create($data);
             if(!empty($unionUser)){
-                $data['channel_id'] = $unionUser['channel_id'];
+                // UnionUserService 中已更新channel_id了
+                $userService->delAllowChangeField('channel_id');
             }
         }
 
-
-
-        foreach ($this->userAllowChangeField as $field){
-            if(isset($data[$field]) && $user[$field] != $data[$field]){
-                $changeLogData[] = [
-                    'n8_guid'       => $n8Guid,
-                    'field'         => $field,
-                    'change_before' => $user[$field],
-                    'change_after'  => $data[$field],
-                    'change_time'   => $data['action_time']
-                ];
-                $changeData[$field] = $data[$field];
-            }
-        }
-        $userInfo = $this->getModel()->where('n8_guid',$n8Guid)->update($changeData);
-
-
-        // 日志
-        $this->saveChangeLog($changeLogData);
-
-        // 更新缓存
-        $this->refreshUserData($n8Guid);
-
-        return $userInfo;
+        return $userService->setUser($user)->update($data);
     }
 
-
-
-
-    /**
-     * @param $data
-     * 保存更改日志
-     */
-    public function saveChangeLog($data){
-
-        foreach ($data as $item){
-            $model = new UserInfoChangeLogModel();
-            $model->n8_guid         = $item['n8_guid'];
-            $model->field           = $item['field'];
-            $model->change_before   = $item['change_before'];
-            $model->change_after    = $item['change_after'];
-            $model->change_time     = $item['change_time'];
-            $model->created_at      = date('Y-m-d H:i:s');
-            $model->save();
-        }
-    }
 }

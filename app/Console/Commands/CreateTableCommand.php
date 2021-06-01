@@ -9,6 +9,7 @@ use App\Datas\N8UnionUserData;
 use App\Datas\UserData;
 use App\Models\N8UnionUserModel;
 use App\Services\CreateTableService;
+use Illuminate\Support\Facades\DB;
 
 class CreateTableCommand extends BaseCommand
 {
@@ -40,8 +41,6 @@ class CreateTableCommand extends BaseCommand
 
 
     public function handle(){
-
-        $this->updateInfo();die;
         $service = new CreateTableService();
 
         $date    = $this->option('date');
@@ -62,6 +61,10 @@ class CreateTableCommand extends BaseCommand
         }
 
     }
+
+
+
+
 
 
     public function updateInfo(){

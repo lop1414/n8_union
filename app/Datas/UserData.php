@@ -41,7 +41,9 @@ class UserData extends BaseData
 
 
     public function update($where = [],$update = []){
-        if(empty($update)) return;
+        if(empty($update)){
+            return $this->setParams($where)->read();
+        }
 
         $this->model
             ->where($where)
@@ -49,5 +51,7 @@ class UserData extends BaseData
 
         // 删除缓存
         $this->setParams($where)->clear();
+
+        return $this->setParams($where)->read();
     }
 }
