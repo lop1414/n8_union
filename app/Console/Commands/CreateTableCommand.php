@@ -70,7 +70,7 @@ class CreateTableCommand extends BaseCommand
         $unionUserModel = new N8UnionUserModel();
         do{
             $list = $unionUserModel
-                ->select('id','n8_guid','created_time',DB::Raw("COUNT(*) count"))
+                ->select(DB::Raw("COUNT(*) count,n8_guid,created_time"))
                 ->whereBetween('created_time',$timeRange)
                 ->groupBy('n8_guid')
                 ->havingRaw('count > ?', [1])
@@ -80,12 +80,12 @@ class CreateTableCommand extends BaseCommand
 
             foreach ($list as $item){
                 $unionUserModel
-                    ->where('n8_guid',$item['guid'])
+                    ->where('n8_guid',$item['n8_guid'])
                     ->where('created_time',$item['created_time'])
                     ->where('channel_id',0)
                     ->delete();
 
-                echo "删除成功: {$item->id}";
+                echo "删除成功: {$item['n8_guid']}";
             }
 
         }while(!$list->isEmpty());
