@@ -9,6 +9,7 @@ use App\Datas\N8UnionUserData;
 use App\Datas\UserData;
 use App\Models\N8UnionUserModel;
 use App\Services\CreateTableService;
+use Illuminate\Support\Facades\DB;
 
 class CreateTableCommand extends BaseCommand
 {
@@ -40,8 +41,7 @@ class CreateTableCommand extends BaseCommand
 
 
     public function handle(){
-
-        $this->updateInfo();die;
+        $this->delUnionUser();
         $service = new CreateTableService();
 
         $date    = $this->option('date');
@@ -62,6 +62,37 @@ class CreateTableCommand extends BaseCommand
         }
 
     }
+
+
+
+    public function delUnionUser(){
+        $timeRange = ['2021-03-01 00:00:00','2021-04-01 00:00:00'];
+        $unionUserModel = new N8UnionUserModel();
+        do{
+            $list = $unionUserModel
+                ->select('id','n8_guid','created_time',DB::Raw("COUNT(*) count"))
+                ->whereBetween('created_time',$timeRange)
+                ->groupBy('n8_guid')
+                ->havingRaw('count > ?', [1])
+                ->skip(0)
+                ->take(100)
+                ->get();
+
+            foreach ($list as $item){
+                $unionUserModel
+                    ->where('n8_guid',$item['guid'])
+                    ->where('created_time',$item['created_time'])
+                    ->where('channel_id',0)
+                    ->delete();
+
+                echo "删除成功: {$item->id}";
+            }
+
+        }while(!$list->isEmpty());
+    }
+
+
+
 
 
     public function updateInfo(){
