@@ -41,7 +41,6 @@ class CreateTableCommand extends BaseCommand
 
 
     public function handle(){
-        $this->delUnionUser();
         $service = new CreateTableService();
 
         $date    = $this->option('date');
@@ -63,33 +62,6 @@ class CreateTableCommand extends BaseCommand
 
     }
 
-
-
-    public function delUnionUser(){
-        $timeRange = ['2021-03-01 00:00:00','2021-04-01 00:00:00'];
-        $unionUserModel = new N8UnionUserModel();
-        do{
-            $list = $unionUserModel
-                ->select(DB::Raw("COUNT(*) count,n8_guid,created_time"))
-                ->whereBetween('created_time',$timeRange)
-                ->groupBy('n8_guid')
-                ->havingRaw('count > ?', [1])
-                ->skip(0)
-                ->take(100)
-                ->get();
-
-            foreach ($list as $item){
-                $unionUserModel
-                    ->where('n8_guid',$item['n8_guid'])
-                    ->where('created_time',$item['created_time'])
-                    ->where('channel_id',0)
-                    ->delete();
-
-                echo "删除成功: {$item['n8_guid']}";
-            }
-
-        }while(!$list->isEmpty());
-    }
 
 
 
