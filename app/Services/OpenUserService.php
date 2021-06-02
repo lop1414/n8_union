@@ -80,9 +80,11 @@ class OpenUserService extends BaseService
 
             $weixinMiniProgramAuthService = new WeixinMiniProgramAuthService();
             $weixinMiniProgramAuthService->setApp($param['source_app_id']);
-//            $sourceOpenId = $weixinMiniProgramAuthService->getOpenIdByJsCode($requestData['js_code']);
-
-            $sourceOpenId = "oZLu95TzGQPy6aP4KNiIBEUz_bHo";
+            if(Functions::isLocal()){
+                $sourceOpenId = "oZLu95TzGQPy6aP4KNiIBEUz_bHo";
+            }else{
+                $sourceOpenId = $weixinMiniProgramAuthService->getOpenIdByJsCode($param['js_code']);
+            }
         }else{
             throw new CustomException([
                 'code' => 'PLEASE_WRITE_GET_SOURCE_OPEN_ID_BY_USER_SOURCE_CODE',

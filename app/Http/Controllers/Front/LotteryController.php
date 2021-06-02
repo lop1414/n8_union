@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Front;
 
 use App\Common\Controllers\Front\FrontController;
 use App\Common\Tools\CustomException;
+use App\Services\Activity\LotteryPrizeLogService;
 use App\Services\Activity\LotteryService;
+use App\Services\OpenUserService;
 use Illuminate\Http\Request;
 
 class LotteryController extends FrontController
@@ -28,10 +30,10 @@ class LotteryController extends FrontController
             'id' => 'required',
         ]);
 
-        $id = $request->post('id');
+        $data = $request->post();
 
         $lotteryService = new LotteryService();
-        $lottery = $lotteryService->getCache($id);
+        $lottery = $lotteryService->getCache($data['id']);
         if(empty($lottery)){
             throw new CustomException([
                 'code' => 'NOT_FOUND_LOTTERY',
@@ -44,6 +46,15 @@ class LotteryController extends FrontController
             unset($lottery['lottery_prizes'][$k]['chance']);
             unset($lottery['lottery_prizes'][$k]['total']);
         }
+
+        // 获取用户信息
+        $openUserService = new OpenUserService();
+        $info = $openUserService->info($data);
+
+        // 剩余抽奖次数
+        $lotteryPrizeLogService = new LotteryPrizeLogService();
+        $lotteryTimes = $lotteryPrizeLogService->getLotteryTimes($info['n8_guid'], $lottery['id'], $lottery['cycle_type']);
+        $lottery['over_lottery_times'] = max($lottery['max_times'] - $lotteryTimes, 0);
 
         return $this->success($lottery);
     }
