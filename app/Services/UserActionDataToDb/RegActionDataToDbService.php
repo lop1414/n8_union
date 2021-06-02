@@ -77,20 +77,20 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
 
 
-    public function changeUserItem($user,$data,$createUnionUser = true){
+    public function changeUserItem($user,$data){
 
         $userService = new UserService();
         // 创建union用户
-        if($createUnionUser){
-            $unionUserService  = new UnionUserService();
-            $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
-            $unionUserService->setUser($user);
-            $unionUser = $unionUserService->create($data);
-            if(!empty($unionUser)){
-                // UnionUserService 中已更新channel_id了
-                $userService->delAllowChangeField('channel_id');
-            }
+
+        $unionUserService  = new UnionUserService();
+        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+        $unionUserService->setUser($user);
+        $unionUser = $unionUserService->create($data);
+        if(!empty($unionUser)){
+            // UnionUserService 中已更新channel_id了
+            $userService->delAllowChangeField('channel_id');
         }
+
 
         return $userService->setUser($user)->update($data);
     }
