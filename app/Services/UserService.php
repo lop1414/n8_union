@@ -43,6 +43,15 @@ class UserService extends BaseService
         return $this;
     }
 
+    /**
+     * @param $field
+     * @return $this
+     * 增加允许修改字段
+     */
+    public function addAllowChangeField($field){
+        $this->userAllowChangeField = array_merge($this->userAllowChangeField,[$field]);
+        return $this;
+    }
 
 
     public function setUser($info){

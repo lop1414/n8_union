@@ -3,6 +3,7 @@
 namespace App\Services\UserActionDataToDb;
 
 
+use App\Datas\N8UnionUserData;
 use App\Enums\QueueEnums;
 use App\Models\UserExtendModel;
 use App\Models\UserModel;
@@ -89,7 +90,23 @@ class RegActionDataToDbService extends UserActionDataToDbService
         if(!empty($unionUser)){
             // UnionUserService 中已更新channel_id了
             $userService->delAllowChangeField('channel_id');
+            // 修改 union_user 注册时间 兼容行为上报顺序问题
+            if($unionUser['created_time'] > $data['action_time']){
+                (new N8UnionUserData())
+                    ->update([
+                        'n8_guid' => $user['n8_guid']
+                    ],[
+                        'created_time'  => $data['action_time']
+                    ]);
+            }
         }
+
+        // 修改注册时间 兼容行为上报顺序问题
+        if($user['reg_time'] > $data['action_time']){
+            $userService->addAllowChangeField('reg_time');
+            $data['reg_time'] = $data['action_time'];
+        }
+
 
 
         return $userService->setUser($user)->update($data);
