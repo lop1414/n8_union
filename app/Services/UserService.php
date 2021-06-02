@@ -69,8 +69,8 @@ class UserService extends BaseService
         }
 
 
-        $userInfo = (new UserData())->update([
-            'n8_guid',$this->user['n8_guid']
+        $userInfo = $this->userModelData->update([
+            'n8_guid' => $this->user['n8_guid']
         ],$changeData);
 
         // 日志
