@@ -43,6 +43,15 @@ class UserService extends BaseService
         return $this;
     }
 
+    /**
+     * @param $field
+     * @return $this
+     * 增加允许修改字段
+     */
+    public function addAllowChangeField($field){
+        $this->userAllowChangeField = array_merge($this->userAllowChangeField,[$field]);
+        return $this;
+    }
 
 
     public function setUser($info){
@@ -69,8 +78,8 @@ class UserService extends BaseService
         }
 
 
-        $userInfo = (new UserData())->update([
-            'n8_guid',$this->user['n8_guid']
+        $userInfo = $this->userModelData->update([
+            'n8_guid' => $this->user['n8_guid']
         ],$changeData);
 
         // 日志

@@ -60,7 +60,6 @@ class UserActionDataToDbService extends BaseService
                 $queue->item['code'] = $e->getCode();
                 $rePushData[] = $queue->item;
 
-                var_dump($e->getErrorInfo());
 
                 // echo
                 (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
@@ -75,7 +74,7 @@ class UserActionDataToDbService extends BaseService
                 $queue->item['code'] = $e->getCode();
                 $rePushData[] = $queue->item;
 
-                var_dump($e->getMessage());
+
 
                 // echo
                 (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");

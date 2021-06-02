@@ -197,13 +197,13 @@ class UnionUserService extends BaseService
                 $info =  (new N8UnionUserData())
                     ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->validChannelId])
                     ->read();
-                if($info->created_time > $actionData['action_time']){
+                if($info['created_time'] > $actionData['action_time']){
                     (new N8UnionUserData())->update([
                         'id'    => $info['id']
                     ],[
                         'created_time' => $actionData['action_time']
                     ]);
-                    $info->created_time = $actionData['action_time'];
+                    $info['created_time'] = $actionData['action_time'];
                 }
                 return $info;
             }else{

@@ -3,6 +3,7 @@
 namespace App\Services\UserActionDataToDb;
 
 
+use App\Datas\N8UnionUserData;
 use App\Enums\QueueEnums;
 use App\Models\UserExtendModel;
 use App\Models\UserModel;
@@ -77,18 +78,26 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
 
 
-    public function changeUserItem($user,$data,$createUnionUser = true){
+    public function changeUserItem($user,$data){
 
         $userService = new UserService();
         // 创建union用户
-        if($createUnionUser){
-            $unionUserService  = new UnionUserService();
-            $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
-            $unionUserService->setUser($user);
-            $unionUser = $unionUserService->create($data);
-            if(!empty($unionUser)){
-                // UnionUserService 中已更新channel_id了
-                $userService->delAllowChangeField('channel_id');
+
+        $unionUserService  = new UnionUserService();
+        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+        $unionUserService->setUser($user);
+        $unionUser = $unionUserService->create($data);
+        if(!empty($unionUser)){
+            // UnionUserService 中已更新channel_id了
+            $userService->delAllowChangeField('channel_id');
+            // 修改 union_user 注册时间 兼容渠道变更用户 行为上报顺序问题
+            if($unionUser['created_time'] > $data['action_time']){
+                (new N8UnionUserData())
+                    ->update([
+                        'n8_guid' => $user['n8_guid']
+                    ],[
+                        'created_time'  => $data['action_time']
+                    ]);
             }
         }
 
