@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 50731
  Source Host           : localhost:3306
- Source Schema         : n8_product_kyy
+ Source Schema         : n8_union
 
  Target Server Type    : MySQL
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 23/03/2021 16:03:25
+ Date: 03/06/2021 17:24:42
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `user_extends`;
 CREATE TABLE `user_extends` (
-  `n8_guid` varchar(64) NOT NULL,
+  `n8_guid` bigint(20) NOT NULL,
   `ip` varchar(15) DEFAULT NULL COMMENT 'IP',
   `ua` text COMMENT 'UA',
   `muid` varchar(255) DEFAULT NULL COMMENT '设备号',
