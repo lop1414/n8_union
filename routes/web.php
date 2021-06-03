@@ -157,6 +157,7 @@ $router->group([
         $router->post('update', 'Admin\LotteryPrizeController@update');
         $router->post('enable', 'Admin\LotteryPrizeController@enable');
         $router->post('disable', 'Admin\LotteryPrizeController@disable');
+        $router->post('update_order', 'Admin\LotteryPrizeController@updateOrder');
     });
 
 
