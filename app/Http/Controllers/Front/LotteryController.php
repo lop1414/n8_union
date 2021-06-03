@@ -52,9 +52,13 @@ class LotteryController extends FrontController
         $info = $openUserService->info($data);
 
         // 剩余抽奖次数
-        $lotteryPrizeLogService = new LotteryPrizeLogService();
-        $lotteryTimes = $lotteryPrizeLogService->getLotteryTimes($info['n8_guid'], $lottery['id'], $lottery['cycle_type']);
-        $lottery['over_lottery_times'] = max($lottery['max_times'] - $lotteryTimes, 0);
+        if(!empty($info['n8_guid'])){
+            $lotteryPrizeLogService = new LotteryPrizeLogService();
+            $lotteryTimes = $lotteryPrizeLogService->getLotteryTimes($info['n8_guid'], $lottery['id'], $lottery['cycle_type']);
+            $lottery['over_lottery_times'] = max($lottery['max_times'] - $lotteryTimes, 0);
+        }else{
+            $lottery['over_lottery_times'] = $lottery['max_times'];
+        }
 
         return $this->success($lottery);
     }

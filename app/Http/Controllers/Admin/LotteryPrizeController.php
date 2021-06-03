@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 class LotteryPrizeController extends BaseController
 {
     /**
+     * @var string
+     * 默认排序
+     */
+    protected $defaultOrderBy = 'order';
+
+    /**
      * constructor.
      */
     public function __construct()
@@ -46,6 +52,7 @@ class LotteryPrizeController extends BaseController
      */
     public function createPrepare(){
         $this->curdService->addField('status')->addDefaultValue(StatusEnum::ENABLE);
+        $this->curdService->addField('order')->addDefaultValue(99);
 
         $this->saveHandle();
 
@@ -93,5 +100,36 @@ class LotteryPrizeController extends BaseController
 
             $this->curdService->handleData['extends'] = $extends;
         });
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws CustomException
+     * 更新排序
+     */
+    public function updateOrder(Request $request){
+        $this->validRule($request->post(), [
+            'ids' => 'required|array',
+        ]);
+
+        $ids = $request->post('ids');
+        $array = array_reverse($ids);
+
+        $order = 100;
+        foreach($array as $id){
+            $lotteryPrize = LotteryPrizeModel::find($id);
+
+            if(empty($lotteryPrize)){
+                continue;
+            }
+
+            $lotteryPrize->order = $order;
+            $lotteryPrize->save();
+
+            $order += 5;
+        }
+
+        return $this->success();
     }
 }
