@@ -9,7 +9,7 @@ use App\Models\N8UnionUserExtendModel;
 use App\Models\UserExtendModel;
 use App\Models\UserModel;
 use App\Services\UnionUserService;
-use App\Services\UserService;
+use App\Services\UpdateUserService;
 
 
 class RegActionDataToDbService extends UserActionDataToDbService
@@ -81,7 +81,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
     public function changeUserItem($user,$data){
 
-        $userService = new UserService();
+        $userService = new UpdateUserService();
         // 创建union用户
 
         $unionUserService  = new UnionUserService();
