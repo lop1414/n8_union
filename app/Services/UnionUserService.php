@@ -183,7 +183,7 @@ class UnionUserService extends BaseService
             $this->validChannelId = $actionData['channel_id'];
 
             // 更改用户渠道ID
-            (new UserService())->setUser($user)->update([
+            (new UpdateUserService())->setUser($user)->update([
                 'channel_id' => $actionData['channel_id'],
                 'action_time' => $actionData['action_time']
             ]);

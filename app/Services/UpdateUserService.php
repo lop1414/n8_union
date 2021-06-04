@@ -7,7 +7,7 @@ use App\Datas\UserData;
 use App\Models\UserInfoChangeLogModel;
 use App\Models\UserModel;
 
-class UserService extends BaseService
+class UpdateUserService extends BaseService
 {
 
     protected $user;
