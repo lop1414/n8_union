@@ -160,4 +160,21 @@ class LotteryPrizeLogService extends BaseService
 
         return $stat;
     }
+
+    /**
+     * @param $n8Guid
+     * @param $lotteryId
+     * @param $page
+     * @param $pageSize
+     * @return mixed
+     * 获取用户获奖日志
+     */
+    public function getUserLotteryPrizeLog($n8Guid, $lotteryId, $page, $pageSize){
+        $lotteryPrizeLogModel = new LotteryPrizeLogModel();
+        return $lotteryPrizeLogModel->where('lottery_id', $lotteryId)
+            ->where('n8_guid', $n8Guid)
+            ->where('prize_type', '<>', PrizeTypeEnum::NOTHING)
+            ->orderBy('created_at', 'desc')
+            ->listPage($page, $pageSize);
+    }
 }

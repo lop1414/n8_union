@@ -252,6 +252,8 @@ $router->group([
 ], function () use ($router) {
     $router->post('lottery/read', 'Front\LotteryController@read');
     $router->post('lottery/draw', 'Front\LotteryController@draw');
+    $router->post('lottery/prize_log', 'Front\LotteryController@prizeLog');
+
     $router->post('open_user/bind', 'Front\OpenUserController@bind');
     $router->post('open_user/info', 'Front\OpenUserController@info');
 });
