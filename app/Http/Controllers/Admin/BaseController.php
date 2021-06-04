@@ -37,9 +37,9 @@ class BaseController extends AdminController
                             'open_id'   => $openId
                         ])
                         ->read();
-                    if(!empty($globalUser)){
-                        $builder->where('n8_guid',$globalUser['n8_guid']);
-                    }
+                    $n8Guid = !empty($globalUser) ? $globalUser['n8_guid'] : 0;
+                    $builder->where('n8_guid',$n8Guid);
+
                 }
 
                 if(!empty($fn)){
