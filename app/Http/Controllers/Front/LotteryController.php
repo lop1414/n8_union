@@ -43,6 +43,7 @@ class LotteryController extends FrontController
 
         unset($lottery->release_data, $lottery->release_at);
         foreach($lottery['lottery_prizes'] as $k => $v){
+            // 移除概率与库存
             unset($lottery['lottery_prizes'][$k]['chance']);
             unset($lottery['lottery_prizes'][$k]['total']);
         }
@@ -78,8 +79,54 @@ class LotteryController extends FrontController
 
         // 获取奖品
         $prize = $lotteryService->getPrize();
+
+        // 移除概率与库存
         unset($prize['chance'], $prize['total']);
 
         return $this->ret($ret, $prize);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws CustomException
+     * 获奖记录
+     */
+    public function prizeLog(Request $request){
+        $requestData = $request->post();
+        $this->validRule($requestData, [
+            'lottery_id' => 'required|integer',
+            'page' => 'required|integer',
+            'page_size' => 'required|integer',
+        ]);
+
+        // 获取用户信息
+        $openUserService = new OpenUserService();
+        $openUser = $openUserService->info($requestData);
+        if(empty($openUser)){
+            throw new CustomException([
+                'code' => 'NOT_FOUND_OPEN_USER',
+                'message' => '用户ID尚未绑定',
+            ]);
+        }
+
+        $lotteryPrizeLogService = new LotteryPrizeLogService();
+        $listPage = $lotteryPrizeLogService->getUserLotteryPrizeLog(
+            $openUser['n8_guid'],
+            $requestData['lottery_id'],
+            $requestData['page'],
+            $requestData['page_size']
+        );
+
+        foreach($listPage['list'] as $k => $v){
+            // 展开扩展字段
+            $listPage['list'][$k] = $listPage['list'][$k]->expandExtendsField($v);
+
+            // 移除概率与库存
+            unset($listPage['list'][$k]->lottery_prize->chance);
+            unset($listPage['list'][$k]->lottery_prize->total);
+        }
+
+        return $this->success($listPage);
     }
 }
