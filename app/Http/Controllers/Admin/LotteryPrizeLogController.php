@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\LotteryPrizeLogModel;
+use App\Services\OpenUserService;
 use Illuminate\Http\Request;
 
 class LotteryPrizeLogController extends BaseController
@@ -24,6 +25,9 @@ class LotteryPrizeLogController extends BaseController
         $this->curdService->selectQueryAfter(function(){
             foreach($this->curdService->responseData['list'] as $k => $v){
                 $this->curdService->responseData['list'][$k] = $this->model->expandExtendsField($v);
+
+                $openUserService = new OpenUserService();
+                $this->curdService->responseData['list'][$k]['n8_global_user'] = $openUserService->getGlobalUserByGuid($v->n8_guid);
             }
         });
     }
@@ -34,6 +38,9 @@ class LotteryPrizeLogController extends BaseController
     public function readPrepare(){
         $this->curdService->findAfter(function(){
             $this->curdService->findData = $this->model->expandExtendsField($this->curdService->findData);
+
+            $openUserService = new OpenUserService();
+            $this->curdService->findData['n8_global_user'] = $openUserService->getGlobalUserByGuid($this->curdService->findData->n8_guid);
         });
     }
 }
