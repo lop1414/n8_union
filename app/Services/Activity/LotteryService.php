@@ -154,18 +154,8 @@ class LotteryService extends BaseService
             ]);
         }
 
-        // 去除发布字段
-        $lottery = $lottery->expandExtendsField($lottery);
-        unset($lottery->release_data, $lottery->release_at);
-
-        // 关联抽奖奖品
-        $lottery->lottery_prizes;
-        foreach($lottery->lottery_prizes as $k => $prize){
-            $lottery->lottery_prizes[$k] = $prize->expandExtendsField($prize);
-        }
-
         // 更新发布数据
-        $lottery->release_data = $lottery->toArray();
+        $lottery->release_data = $this->getReleaseData($lotteryId);
         $lottery->release_at = date('Y-m-d H:i:s', TIMESTAMP);
         $lottery->save();
 
@@ -173,6 +163,28 @@ class LotteryService extends BaseService
         $this->setCache($lotteryId, $lottery->release_data);
 
         return true;
+    }
+
+    /**
+     * @param $lotteryId
+     * @return mixed
+     * @throws CustomException
+     * 获取发布数据
+     */
+    public function getReleaseData($lotteryId){
+        $lottery = $this->found($lotteryId);
+
+        // 去除发布字段
+        $lottery = $lottery->expandExtendsField($lottery);
+        unset($lottery->release_data, $lottery->release_at, $lottery->updated_at);
+
+        // 关联抽奖奖品
+        $lottery->lottery_prizes;
+        foreach($lottery->lottery_prizes as $k => $prize){
+            $lottery->lottery_prizes[$k] = $prize->expandExtendsField($prize);
+        }
+
+        return $lottery->toArray();
     }
 
     /**
