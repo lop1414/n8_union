@@ -76,6 +76,22 @@ class LotteryController extends BaseController
     }
 
     /**
+     * 列表预处理
+     */
+    public function selectPrepare(){
+        $this->curdService->selectQueryAfter(function(){
+            $lotteryService = new LotteryService();
+            foreach($this->curdService->responseData['list'] as $k => $v){
+                // 获取发布数据
+                $releaseData = $lotteryService->getReleaseData($v->id);
+
+                // 是否发生改变
+                $this->curdService->responseData['list'][$k]->has_change = json_encode($releaseData) != json_encode($v->release_data);
+            }
+        });
+    }
+
+    /**
      * @param Request $request
      * @return mixed
      * @throws CustomException

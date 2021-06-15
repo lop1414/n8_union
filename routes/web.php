@@ -161,6 +161,13 @@ $router->group([
     });
 
 
+    // 获奖记录
+    $router->group(['prefix' => 'lottery_prize_log'], function () use ($router) {
+        $router->post('select', 'Admin\LotteryPrizeLogController@select');
+        $router->post('read', 'Admin\LotteryPrizeLogController@read');
+    });
+
+
     // 微信小程序
     $router->group(['prefix' => 'weixin_mini_program'], function () use ($router) {
         $router->post('select', 'Admin\WeixinMiniProgramController@select');
