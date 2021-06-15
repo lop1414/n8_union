@@ -29,6 +29,25 @@ class ProductModel extends BaseModel
         'logo'
     ];
 
+    /**
+     * @param $value
+     * @return array
+     * 属性访问器
+     */
+    public function getExtendsAttribute($value)
+    {
+        return json_decode($value,true);
+    }
+
+    /**
+     * @param $value
+     * 属性修饰器
+     */
+    public function setExtendsAttribute($value)
+    {
+        $this->attributes['extends'] = json_encode($value);
+    }
+
 
     /**
      * 关联全局用户 一对多

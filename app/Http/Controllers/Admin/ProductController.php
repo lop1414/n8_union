@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\MatcherEnum;
+use App\Common\Enums\OperatorEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
@@ -91,6 +92,9 @@ class ProductController extends BaseController
         $this->curdService->addField('matcher')
             ->addValidEnum(MatcherEnum::class)
             ->addDefaultValue(MatcherEnum::SYS);
+        $this->curdService->addField('operator')
+            ->addValidEnum(OperatorEnum::class)
+            ->addDefaultValue(OperatorEnum::SYS);
         $this->curdService->addField('cp_account_id')
             ->addValidRule('integer')
             ->addDefaultValue(0);
