@@ -57,11 +57,11 @@ class AddShortcutActionMatchService extends UserActionMatchService
                     'channel_id'=> $item['channel_id']
                 ])->read();
 
-                // CP方归因 且 没有click id 不进行匹配
-                if($unionUser['matcher'] == MatcherEnum::CP && empty($unionUser['click_id'])){
+                //没有click id 不进行匹配
+                if(empty($unionUser['click_id'])){
                     $item->last_match_time = $lastMatchTime;
                     $item->save();
-                    echo "CP方归因 且 没有click id 不进行匹配 \n";
+                    echo "没有click id 不进行匹配 \n";
                     continue;
                 }
 
