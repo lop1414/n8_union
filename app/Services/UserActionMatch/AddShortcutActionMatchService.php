@@ -37,7 +37,7 @@ class AddShortcutActionMatchService extends UserActionMatchService
                 $query->whereBetween('action_time',$this->timeRange);
             })
             ->where('click_id',0)
-            ->where('channel_Id','>',0)
+            ->where('channel_id','>',0)
             ->whereRaw(" (last_match_time IS NULL OR last_match_time <= '{$before}')")
             ->orderBy('action_time');
     }
@@ -57,6 +57,7 @@ class AddShortcutActionMatchService extends UserActionMatchService
 
                 // CP方归因 且 没有click id 不进行匹配
                 if($unionUser['matcher'] == MatcherEnum::CP && empty($unionUser['click_id'])){
+                    echo "CP方归因 且 没有click id 不进行匹配 \n";
                     continue;
                 }
 

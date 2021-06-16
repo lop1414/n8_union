@@ -39,7 +39,7 @@ class CompleteOrderActionMatchService extends UserActionMatchService
                 $query->whereBetween('complete_time',$this->timeRange);
             })
             ->where('complete_click_id',0)
-            ->where('channel_Id','>',0)
+            ->where('channel_id','>',0)
             ->whereRaw(" (complete_last_match_time IS NULL OR complete_last_match_time <= '{$before}')")
             ->orderBy('complete_time');
     }
