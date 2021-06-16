@@ -48,6 +48,8 @@ class FollowActionMatchService extends UserActionMatchService
         $this->modelListPage(function ($list){
 
             $convert = [];
+            $lastMatchTime = date('Y-m-d H:i:s');
+
             foreach ($list as $item){
 
                 $unionUser = $this->unionUserData->setParams([
@@ -57,6 +59,9 @@ class FollowActionMatchService extends UserActionMatchService
 
                 // CP方归因 且 没有click id 不进行匹配
                 if($unionUser['matcher'] == MatcherEnum::CP && empty($unionUser['click_id'])){
+                    $item->last_match_time = $lastMatchTime;
+                    $item->save();
+                    echo "CP方归因 且 没有click id 不进行匹配 \n";
                     continue;
                 }
 
@@ -82,7 +87,6 @@ class FollowActionMatchService extends UserActionMatchService
                 $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
                 // 保存click_id
-                $lastMatchTime = date('Y-m-d H:i:s');
                 foreach ($matchList as $match){
                     $updateData = [
                         'last_match_time'  => $lastMatchTime

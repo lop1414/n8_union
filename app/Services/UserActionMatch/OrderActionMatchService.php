@@ -50,6 +50,8 @@ class OrderActionMatchService extends UserActionMatchService
         $this->modelListPage(function ($list){
 
             $convert = [];
+            $lastMatchTime = date('Y-m-d H:i:s');
+
             foreach ($list as $item){
 
                 $unionUser = $this->unionUserData->setParams([
@@ -59,6 +61,9 @@ class OrderActionMatchService extends UserActionMatchService
 
                 // CP方归因 且 没有click id 不进行匹配
                 if($unionUser['matcher'] == MatcherEnum::CP && empty($unionUser['click_id'])){
+                    $item->last_match_time = $lastMatchTime;
+                    $item->save();
+                    echo "CP方归因 且 没有click id 不进行匹配 \n";
                     continue;
                 }
 
