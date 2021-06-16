@@ -161,7 +161,7 @@ class UserActionDataToDbService extends BaseService
             throw new CustomException([
                 'code'    => 'NOT_USER',
                 'message' => '找不到用户',
-                'log'     => true,
+                'log'     => false,
                 'data'    => [
                     'n8_guid' => $n8Guid
                 ]
