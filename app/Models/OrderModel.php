@@ -87,4 +87,9 @@ class OrderModel extends UserActionBaseModel
     public function extend(){
         return $this->hasOne('App\Models\OrderExtendModel', 'n8_goid', 'n8_goid');
     }
+
+    public function union_user(){
+        return $this->hasOne('App\Models\N8UnionUserModel', 'id', 'uuid');
+
+    }
 }

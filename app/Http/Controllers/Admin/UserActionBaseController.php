@@ -17,7 +17,6 @@ class UserActionBaseController extends BaseController
     protected $defaultOrderBy = 'action_time';
 
 
-    public $mapUnionUser = true;
 
     public $convertId = 'id';
 
@@ -70,9 +69,7 @@ class UserActionBaseController extends BaseController
                     $item->user;
                     $item->global_user;
                     $item->channel;
-                    if($this->mapUnionUser){
-                        $item->union_user = $this->model->union_user($item->n8_guid,$item->channel_id);
-                    }
+                    $item->union_user;
                     $this->itemPrepare($item);
                 }
             }
@@ -114,9 +111,7 @@ class UserActionBaseController extends BaseController
             $this->curdService->responseData->user;
             $this->curdService->responseData->global_user;
             $this->curdService->responseData->channel;
-            if($this->mapUnionUser){
-                $this->curdService->responseData->union_user = $this->model->union_user($this->curdService->responseData->n8_guid,$this->curdService->responseData->channel_id);
-            }
+            $this->curdService->responseData->union_user;
         });
     }
 
