@@ -53,5 +53,10 @@ class UserShortcutActionModel extends UserActionBaseModel
     ];
 
 
+    public function union_user(){
+        return $this->hasOne('App\Models\N8UnionUserModel', 'id', 'uuid');
+
+    }
+
 
 }

@@ -42,4 +42,9 @@ class UserFollowActionModel extends UserActionBaseModel
     public $timestamps = false;
 
 
+    public function union_user(){
+        return $this->hasOne('App\Models\N8UnionUserModel', 'id', 'uuid');
+
+    }
+
 }
