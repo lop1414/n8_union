@@ -61,7 +61,7 @@ class OrderActionMatchService extends UserActionMatchService
 
                 // 没有click id 不进行匹配
                 if(empty($unionUser['click_id'])){
-                    $item->last_match_time = $lastMatchTime;
+                    $item->order_last_match_time = $lastMatchTime;
                     $item->save();
                     echo "没有click id 不进行匹配 \n";
                     continue;
