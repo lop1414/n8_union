@@ -51,7 +51,7 @@ class OrderController extends BaseController
         // 必传参数
         $this->validRule($requestData,[
             'order_id'          =>  'required',
-            'complete_time'     =>  'required',
+            'action_time'     =>  'required',
         ]);
 
 

@@ -48,7 +48,7 @@ class CompleteOrderActionDataToDbService extends UserActionDataToDbService
             ->where('order_time','<',$order['order_time'])
             ->count();
 
-        $order->complete_time = $data['complete_time'];
+        $order->complete_time = $data['action_time'];
         $order->status = OrderStatusEnums::COMPLETE;
         $order->complete_times = $completeTimes + 1;
         $order->save();
