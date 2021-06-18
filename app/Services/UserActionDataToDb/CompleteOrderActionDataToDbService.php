@@ -34,7 +34,7 @@ class CompleteOrderActionDataToDbService extends UserActionDataToDbService
             throw new CustomException([
                 'code'    => 'NOT_GUID',
                 'message' => '找不到订单',
-                'log'     => true,
+                'log'     => false,
                 'data'    => [
                     'n8_goid' => $globalOrder['n8_goid']
                 ]
