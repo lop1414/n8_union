@@ -125,11 +125,9 @@ class ChannelController extends BaseController
 
             $advFeedBack = Advs::getFeedbackUrlMap();
             foreach ($this->curdService->responseData['list'] as $item){
-                $feedbackUrl = [];
                 foreach ($advFeedBack as $adv => $url){
-                    $feedbackUrl[$adv] = str_replace('__CHANNEL_ID__',$item['id'],$url);
+                    $item->feedback_url = str_replace('__CHANNEL_ID__',$item['id'],$url);
                 }
-                $item->feedback_url = $feedbackUrl;
                 $item->product;
                 $item->book;
                 $item->chapter;
