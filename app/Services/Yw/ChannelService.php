@@ -39,7 +39,7 @@ class ChannelService extends YwService
             $res = json_decode(file_get_contents($url),true);
             if($res['code'] != ResponseCodeEnum::SUCCESS){
                 throw new CustomException([
-                    'code' => 'SYNC_PRODUCT_ERROR',
+                    'code' => $res['code'],
                     'message' => $res['message']
                 ]);
             }
