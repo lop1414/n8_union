@@ -40,7 +40,7 @@ class ChannelService extends YwService
             if($res['code'] != ResponseCodeEnum::SUCCESS){
                 throw new CustomException([
                     'code' => $res['code'],
-                    'message' => $res['message']
+                    'message' => '请联系管理员!'
                 ]);
             }
         }
