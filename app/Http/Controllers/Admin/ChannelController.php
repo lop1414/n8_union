@@ -73,7 +73,7 @@ class ChannelController extends BaseController
             }
 
             $req = $this->curdService->requestData;
-            if(!isset($req['is_bind']) || $req['is_bind'] == 1){
+            if(!isset($req['is_bind']) && $req['is_bind'] == 1){
                 $builder->where('e.admin_id','>',0);
             }else{
                 $builder->whereNull('e.admin_id');
