@@ -16,6 +16,11 @@ use App\Models\ProductModel;
 
 class ProductController extends BaseController
 {
+    /**
+     * @var string
+     * 默认排序字段
+     */
+    protected $defaultOrderBy = 'id';
 
     /**
      * constructor.
