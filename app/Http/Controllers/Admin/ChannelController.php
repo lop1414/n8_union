@@ -68,15 +68,17 @@ class ChannelController extends BaseController
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
                 ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
 
-            if(!$this->isDataAuth()){
-                $builder->where('e.admin_id',$this->adminUser['admin_user']['id']);
-            }
+
 
             $req = $this->curdService->requestData;
             if(isset($req['is_bind']) && $req['is_bind'] == 0){
                 $builder->whereNull('e.admin_id');
             }else{
                 $builder->where('e.admin_id','>',0);
+
+                if(!$this->isDataAuth()){
+                    $builder->where('e.admin_id',$this->adminUser['admin_user']['id']);
+                }
             }
 
             if(!empty($req['admin_id'])){
