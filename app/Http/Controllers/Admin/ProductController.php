@@ -23,6 +23,12 @@ class ProductController extends BaseController
     protected $defaultOrderBy = 'id';
 
     /**
+     * @var string
+     * 默认排序类型
+     */
+    protected $defaultOrderType = 'asc';
+
+    /**
      * constructor.
      */
     public function __construct()
