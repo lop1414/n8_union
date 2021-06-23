@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 class ChannelExtendController extends BaseController
 {
 
+    public $adminUser;
 
     /**
      * constructor.
@@ -26,6 +27,8 @@ class ChannelExtendController extends BaseController
     {
         $this->model = new ChannelExtendModel();
         $this->modelData = new ChannelExtendData();
+
+        $this->adminUser = Functions::getGlobalData('admin_user_info');
 
         parent::__construct();
 
@@ -126,8 +129,11 @@ class ChannelExtendController extends BaseController
 
 
         // 赋值 admin_id
-        $adminUser = Functions::getGlobalData('admin_user_info');
-        $adminId = $adminUser['admin_user']['id'];
+        if($this->isAdmin() && isset($requestData['admin_id']) && !empty($requestData['admin_id'])){
+            $adminId = $requestData['admin_id'];
+        }else{
+            $adminId = $this->adminUser['admin_user']['id'];
+        }
 
 
         $ret = [
@@ -176,6 +182,18 @@ class ChannelExtendController extends BaseController
         }
 
         return $this->success($ret);
+    }
+
+
+
+    /**
+     * 有数据权限
+     * @return bool
+     */
+    public function isAdmin(){
+        if($this->adminUser['is_admin']) return true;
+
+        return false;
     }
 
 }
