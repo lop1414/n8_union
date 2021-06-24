@@ -181,8 +181,20 @@ class UnionUserService extends BaseService
                 'action_time' => $actionData['action_time']
             ]);
 
-            // 创建union user
-            return (new N8UnionUserData())->create($actionData);
+            $union = (new N8UnionUserData())
+                ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => 0])
+                ->read();
+
+            if(!empty($union) && !empty($actionData['channel_id']) && $union['created_time'] == $actionData['action_time']){
+                // 更新union user
+                (new N8UnionUserData())->update(['id'=>$union['id']],['channel_id'=>$actionData['channel_id']]);
+                 $union['channel_id'] = $actionData['channel_id'];
+                 return $union;
+            }else{
+                // 创建union user
+                return (new N8UnionUserData())->create($actionData);
+
+            }
 
         }catch (CustomException $e){
             // 联运用户已存在
