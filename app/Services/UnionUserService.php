@@ -151,16 +151,9 @@ class UnionUserService extends BaseService
 
             $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
 
-            //没有渠道不创建
-            if(empty($actionData['channel_id']) && !empty($user['channel_id'])){
-                $this->validChannelId = $user['channel_id'];
 
-                return (new N8UnionUserData())
-                    ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->validChannelId])
-                    ->read();
-            }
 
-            //没有渠道且用户渠道不为空  OR 开启验证 且 系统归因 才进行验证
+            //没有渠道且用户渠道不为空  OR 开启验证且系统归因才进行验证
             if(
                 (empty($actionData['channel_id']) && !empty($user['channel_id']))
                 OR
