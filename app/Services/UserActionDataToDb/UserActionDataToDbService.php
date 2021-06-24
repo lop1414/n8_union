@@ -192,7 +192,7 @@ class UserActionDataToDbService extends BaseService
             throw new CustomException([
                 'code'    => 'EXIST_ORDER',
                 'message' => '订单已存在',
-                'log'     => true,
+                'log'     => false,
                 'data'    => [
                     'n8_goid' => $n8Goid
                 ]
