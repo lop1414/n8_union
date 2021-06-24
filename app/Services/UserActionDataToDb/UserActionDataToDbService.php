@@ -67,12 +67,20 @@ class UserActionDataToDbService extends BaseService
 
                 DB::rollBack();
 
-                //日志
-                (new ErrorLogService())->catch($e);
+                //未命中唯一索引
+                if($e->getCode() != 23000){
+                    //日志
+                    (new ErrorLogService())->catch($e);
+                    $queue->item['exception'] = $e->getMessage();
+                    $queue->item['code'] = $e->getCode();
+                    $rePushData[] = $queue->item;
+                    echo $e->getMessage()."\n";
 
-                $queue->item['exception'] = $e->getMessage();
-                $queue->item['code'] = $e->getCode();
-                $rePushData[] = $queue->item;
+                }else{
+                    echo "  命中唯一索引 \n";
+                }
+
+
 
 
 
