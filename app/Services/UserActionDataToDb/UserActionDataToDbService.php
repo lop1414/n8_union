@@ -53,12 +53,18 @@ class UserActionDataToDbService extends BaseService
                 DB::rollBack();
 
 
-                //日志
-                (new ErrorLogService())->catch($e);
 
-                $queue->item['exception'] = $e->getErrorInfo();
-                $queue->item['code'] = $e->getCode();
-                $rePushData[] = $queue->item;
+                $errInfo = $e->getErrorInfo(true);
+
+                //不是 订单已存在异常
+                if($errInfo['code'] != 'EXIST_ORDER'){
+                    //日志
+                    (new ErrorLogService())->catch($e);
+
+                    $queue->item['exception'] = $e->getErrorInfo();
+                    $queue->item['code'] = $e->getCode();
+                    $rePushData[] = $queue->item;
+                }
 
 
                 // echo

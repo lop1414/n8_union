@@ -32,7 +32,7 @@ class CompleteOrderActionDataToDbService extends UserActionDataToDbService
 
         if(empty($order)){
             throw new CustomException([
-                'code'    => 'NOT_GUID',
+                'code'    => 'NOT_GOID',
                 'message' => '找不到订单',
                 'log'     => false,
                 'data'    => [
