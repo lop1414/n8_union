@@ -34,7 +34,6 @@ class UserActionDataToDbService extends BaseService
         while ($data = $queue->pull()) {
 
             try{
-                DB::beginTransaction();
 
 
                 $globalUser = [];
@@ -43,6 +42,7 @@ class UserActionDataToDbService extends BaseService
                     $globalUser = $this->readGlobalUser($data['product_id'],$data['open_id']);
                 }
 
+                DB::beginTransaction();
 
                 $this->item($data,$globalUser);
 
