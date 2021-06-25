@@ -7,6 +7,7 @@ use App\Common\Enums\OrderStatusEnums;
 use App\Enums\QueueEnums;
 use App\Models\OrderExtendModel;
 use App\Models\OrderModel;
+use App\Services\GlobalOrderService;
 use App\Services\UnionUserService;
 
 
@@ -29,7 +30,7 @@ class OrderActionDataToDbService extends UserActionDataToDbService
         $user = $this->userIsExist($globalUser['n8_guid']);
 
         // 订单存在
-        $globalOrder = $this->readGlobalOrder($data['product_id'],$data['order_id']);
+        $globalOrder = (new GlobalOrderService())->make($data['product_id'],$data['order_id']);
         $this->orderIsNotExist($globalOrder['n8_goid']);
 
         // 创建union用户

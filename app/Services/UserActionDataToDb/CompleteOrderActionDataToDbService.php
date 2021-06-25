@@ -5,9 +5,9 @@ namespace App\Services\UserActionDataToDb;
 
 use App\Common\Enums\OrderStatusEnums;
 use App\Common\Tools\CustomException;
-use App\Datas\N8GlobalOrderData;
 use App\Enums\QueueEnums;
 use App\Models\OrderModel;
+use App\Services\GlobalOrderService;
 
 
 class CompleteOrderActionDataToDbService extends UserActionDataToDbService
@@ -24,9 +24,7 @@ class CompleteOrderActionDataToDbService extends UserActionDataToDbService
 
     public function item($data,$globalUser){
 
-        $globalOrder = (new N8GlobalOrderData())
-            ->setParams(['product_id' => $data['product_id'], 'order_id' => $data['order_id']])
-            ->read();
+        $globalOrder = (new GlobalOrderService())->read($data['product_id'],$data['order_id']);
 
         $order = $this->getModel()->where('n8_goid',$globalOrder['n8_goid'])->first();
 

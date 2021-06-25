@@ -3,15 +3,15 @@
 namespace App\Services\UserActionDataToDb;
 
 use App\Common\Services\BaseService;
-use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomQueue;
 use App\Datas\ChannelExtendData;
-use App\Datas\N8GlobalOrderData;
-use App\Datas\N8GlobalUserData;
 use App\Datas\OrderData;
 use App\Datas\UserData;
+use App\Enums\QueueEnums;
+use App\Services\GlobalOrderService;
+use App\Services\GlobalUserService;
 use Illuminate\Support\Facades\DB;
 
 class UserActionDataToDbService extends BaseService
@@ -19,9 +19,12 @@ class UserActionDataToDbService extends BaseService
 
     protected $queueEnum;
 
+    protected $globalUserService;
+
 
     public function __construct(){
         parent::__construct();
+        $this->globalUserService = new GlobalUserService();
     }
 
 
@@ -34,15 +37,15 @@ class UserActionDataToDbService extends BaseService
         while ($data = $queue->pull()) {
 
             try{
+                DB::beginTransaction();
 
 
                 $globalUser = [];
 
                 if(isset($data['open_id'])){
-                    $globalUser = $this->readGlobalUser($data['product_id'],$data['open_id']);
+                    $globalUser = $this->globalUserService->make($data['product_id'],$data['open_id']);
                 }
 
-                DB::beginTransaction();
 
                 $this->item($data,$globalUser);
 
@@ -51,9 +54,7 @@ class UserActionDataToDbService extends BaseService
             }catch (CustomException $e){
 
                 DB::rollBack();
-
-
-
+                $this->failItem($data);
                 $errInfo = $e->getErrorInfo(true);
 
                 //不是 订单已存在异常
@@ -66,13 +67,11 @@ class UserActionDataToDbService extends BaseService
                     $rePushData[] = $queue->item;
                 }
 
-
-                // echo
-                (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
             }catch (\Exception $e){
 
                 DB::rollBack();
 
+                $this->failItem($data);
                 //未命中唯一索引
                 if($e->getCode() != 23000){
                     //日志
@@ -85,13 +84,6 @@ class UserActionDataToDbService extends BaseService
                 }else{
                     echo "  命中唯一索引 \n";
                 }
-
-
-
-
-
-                // echo
-                (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
             }
         }
 
@@ -107,6 +99,15 @@ class UserActionDataToDbService extends BaseService
     public function item($data,$globalUser){}
 
 
+    public function failItem($data){
+        // 事务回滚 删除缓存
+        $this->globalUserService->clearCache($data['product_id'],$data['open_id']);
+
+        if($this->queueEnum ==  QueueEnums::USER_ORDER_ACTION){
+            (new GlobalOrderService())->clearCache($data['product_id'],$data['order_id']);
+        }
+    }
+
 
     /**
      * @param $id
@@ -119,45 +120,6 @@ class UserActionDataToDbService extends BaseService
             ->setParams(['channel_id'=>$id])
             ->read();
         return $channel['adv_alias'];
-    }
-
-
-
-    /**
-     * @param $productId
-     * @param $openId
-     * @return mixed|null
-     * @throws CustomException
-     * 获取全局用户信息
-     */
-    public function readGlobalUser($productId,$openId){
-        $tmp = new N8GlobalUserData();
-        $info = $tmp->setParams(['product_id' => $productId,'open_id' => $openId])->read();
-
-        if(empty($info)){
-            $info = $tmp->create($productId,$openId);
-        }
-
-        return $info;
-    }
-
-
-    /**
-     * @param $productId
-     * @param $orderId
-     * @return mixed|null
-     * @throws CustomException
-     * 获取全局订单信息
-     */
-    public function readGlobalOrder($productId,$orderId){
-        $tmp = new N8GlobalOrderData();
-        $info = $tmp->setParams(['product_id' => $productId,'order_id' => $orderId])->read();
-
-        if(empty($info)){
-            $info = $tmp->create($productId,$orderId);
-        }
-
-        return $info;
     }
 
 
@@ -219,20 +181,6 @@ class UserActionDataToDbService extends BaseService
         return (new UserData())->setParams(['n8_guid'=>$n8Guid])->read();
     }
 
-
-
-    /**
-     * @param $n8Guid
-     * @return array|null
-     * @throws CustomException
-     * 刷新用户缓存
-     */
-    public function refreshUserData($n8Guid){
-        $tmp = (new UserData())->setParams(['n8_guid'=>$n8Guid]);
-
-        $tmp->clear();
-        return $tmp->read();
-    }
 
 
 
