@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Datas\N8GlobalUserData;
+use App\Common\Helpers\Functions;
 use App\Services\ConvertCallbackMapService;
 
 class UserActionBaseController extends BaseController
@@ -22,12 +22,57 @@ class UserActionBaseController extends BaseController
 
     public $convertType ;
 
+
+    public $adminUser;
+
+
     /**
      * @var bool
      * convert_callback 是否根据转化类型做为下标
      */
     public $isConvertCallbackKey = false;
 
+    public function __construct(){
+        parent::__construct();
+        $this->adminUser = Functions::getGlobalData('admin_user_info');
+    }
+
+
+    /**
+     * 有数据权限
+     * @return bool
+     */
+    public function isDataAuth(){
+        if($this->adminUser['is_admin']) return true;
+
+        return false;
+    }
+
+
+    public function selectCommonFilter(){
+
+
+        $this->curdService->selectQueryBefore(function(){
+            $this->curdService->customBuilder(function ($builder){
+
+                $unionWhere = '1';
+                if(!$this->isDataAuth()){
+                    $unionWhere .= ' AND admin_id = ' . $this->adminUser['admin_user']['id'];
+                }
+
+                $createdTime = $this->curdService->requestData['created_time'] ?? [];
+
+                if(!empty($createdTime)){
+                    $unionWhere .= " AND created_time BETWEEN '{$createdTime[0]}' AND '{$createdTime[1]}'";
+                }
+                if($unionWhere != '1'){
+                    $builder->whereRaw("uuid IN (SELECT id FROM n8_union_users WHERE {$unionWhere}");
+                }
+            });
+        });
+
+
+    }
 
 
     /**

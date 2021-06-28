@@ -40,6 +40,7 @@ class UserFollowActionController extends UserActionBaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
+        $this->selectCommonFilter();
         $this->selectUserCommonFilter();
         $this->selectCommonPrepare();
 

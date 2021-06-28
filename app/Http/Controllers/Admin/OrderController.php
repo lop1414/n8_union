@@ -55,13 +55,9 @@ class OrderController extends UserActionBaseController
 
                 }
             }
-            $createdTime = $this->curdService->requestData['created_time'] ?? [];
-            if(!empty($createdTime)){
-                $builder->whereRaw("uuid IN (SELECT id FROM n8_union_users WHERE created_time BETWEEN '{$createdTime[0]}' AND '{$createdTime[1]}')");
-            }
         });
 
-
+        $this->selectCommonFilter();
         $this->selectCommonPrepare(ConvertTypeEnum::ORDER);
         $this->selectCommonPrepare(ConvertTypeEnum::PAY);
 
