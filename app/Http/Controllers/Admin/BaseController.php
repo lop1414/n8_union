@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Controllers\Admin\AdminController;
+use App\Common\Services\SystemApi\CenterApiService;
 use App\Datas\N8GlobalUserData;
 
 
@@ -16,6 +17,13 @@ class BaseController extends AdminController
      * 默认排序字段
      */
     protected $defaultOrderBy = 'created_at';
+
+
+    public function getAdminUserMap($filter = []){
+        $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
+        return array_column($adminUsers,null,'id');
+    }
+
 
 
     /**

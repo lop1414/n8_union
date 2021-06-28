@@ -41,10 +41,6 @@ class ChannelController extends BaseController
 
 
 
-    public function getAdminUserName($filter = []){
-        $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
-        return array_column($adminUsers,'name','id');
-    }
 
 
     /**
@@ -123,7 +119,7 @@ class ChannelController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
 
-            $map = $this->getAdminUserName();
+            $map = $this->getAdminUserMap();
 
             $advFeedBack = Advs::getFeedbackUrlMap();
             foreach ($this->curdService->responseData['list'] as $item){
@@ -134,7 +130,7 @@ class ChannelController extends BaseController
                 $item->book;
                 $item->chapter;
                 $item->force_chapter;
-                $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
+                $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
             }
         });
@@ -152,14 +148,14 @@ class ChannelController extends BaseController
 
 
         $this->curdService->getQueryAfter(function(){
-            $map = $this->getAdminUserName();
+            $map = $this->getAdminUserMap();
 
             foreach ($this->curdService->responseData as $item){
                 $item->product;
                 $item->book;
                 $item->chapter;
                 $item->force_chapter;
-                $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
+                $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
             }
         });
@@ -183,11 +179,11 @@ class ChannelController extends BaseController
             if(isset($this->curdService->responseData->extend['admin_id'])){
                 $adminId = $this->curdService->responseData->extend['admin_id'];
 
-                $map = $this->getAdminUserName([
+                $map = $this->getAdminUserMap([
                     'id'  => $adminId
                 ]);
 
-                $this->curdService->responseData->admin_name = $map[$adminId];
+                $this->curdService->responseData->admin_name = $map[$adminId]['name'];
             }else{
                 $this->curdService->responseData->admin_name = '';
             }

@@ -57,6 +57,8 @@ class N8UnionUserController extends UserActionBaseController
         $item->book;
         $item->chapter;
         $item->force_chapter;
+        $item->admin_name = $this->adminMap[$item->admin_id]['name'];
+
     }
 
 
@@ -70,6 +72,7 @@ class N8UnionUserController extends UserActionBaseController
             $this->curdService->responseData->book;
             $this->curdService->responseData->chapter;
             $this->curdService->responseData->force_chapter;
+            $this->curdService->responseData->admin_name = $this->adminMap[$this->curdService->responseData->admin_id]['name'];
         });
     }
 

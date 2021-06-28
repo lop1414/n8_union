@@ -22,6 +22,7 @@ class UserActionBaseController extends BaseController
 
     public $convertType ;
 
+    protected $adminMap;
 
     public $adminUser;
 
@@ -35,6 +36,8 @@ class UserActionBaseController extends BaseController
     public function __construct(){
         parent::__construct();
         $this->adminUser = Functions::getGlobalData('admin_user_info');
+        $this->adminMap = $this->getAdminUserMap();
+
     }
 
 
@@ -116,6 +119,7 @@ class UserActionBaseController extends BaseController
                     $item->channel;
                     if($this->mapUnionUser){
                         $item->union_user;
+                        $item->union_user->admin_name = $this->adminMap[$item->union_user->admin_id]['name'];
                     }
                     $this->itemPrepare($item);
                 }
@@ -160,6 +164,8 @@ class UserActionBaseController extends BaseController
             $this->curdService->responseData->channel;
             if($this->mapUnionUser) {
                 $this->curdService->responseData->union_user;
+                $this->curdService->responseData->admin_name = $this->adminMap[$this->curdService->responseData->admin_id]['name'];
+
             }
         });
     }
