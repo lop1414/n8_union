@@ -63,6 +63,12 @@ class UserActionBaseController extends BaseController
                     $unionWhere .= ' AND admin_id = ' . $this->adminUser['admin_user']['id'];
                 }
 
+                $adminId = $this->curdService->requestData['admin_id'] ?? 0;
+                if(!empty($adminId)){
+                    $unionWhere .= ' AND admin_id = ' . $adminId;
+                }
+
+
                 $createdTime = $this->curdService->requestData['created_time'] ?? [];
 
                 if(!empty($createdTime)){
