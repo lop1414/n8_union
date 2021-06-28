@@ -181,6 +181,8 @@ $router->group([
     $router->group(['prefix' => 'failed_queue'], function () use ($router) {
         $router->post('select', '\App\Common\Controllers\Admin\FailedQueueController@select');
         $router->post('read', '\App\Common\Controllers\Admin\FailedQueueController@read');
+        $router->post('enable', '\App\Common\Controllers\Admin\FailedQueueController@enable');
+        $router->post('disable', '\App\Common\Controllers\Admin\FailedQueueController@disable');
         $router->post('re_push', '\App\Common\Controllers\Admin\FailedQueueController@rePush');
         $router->post('re_push_by_type', '\App\Common\Controllers\Admin\FailedQueueController@rePushAllByType');
     });
