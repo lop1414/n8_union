@@ -119,7 +119,7 @@ class UserActionBaseController extends BaseController
                     $item->channel;
                     if($this->mapUnionUser){
                         $item->union_user;
-                        $item->union_user->admin_name = $this->adminMap[$item->union_user->admin_id]['name'];
+                        $item->admin_name = $this->adminMap[$item->union_user->admin_id]['name'];
                     }
                     $this->itemPrepare($item);
                 }
