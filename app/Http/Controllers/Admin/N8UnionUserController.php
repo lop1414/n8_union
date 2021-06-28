@@ -39,14 +39,20 @@ class N8UnionUserController extends UserActionBaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
-        if(!$this->isDataAuth()){
 
-            $this->curdService->selectQueryBefore(function(){
-                $this->curdService->customBuilder(function ($builder){
-                    $builder->where('admin_id',$this->adminUser['admin_user']['id']);
-                });
+
+        $this->curdService->selectQueryBefore(function(){
+            $this->curdService->customBuilder(function ($builder){
+                if(!$this->isDataAuth()) {
+                    $builder->where('admin_id', $this->adminUser['admin_user']['id']);
+                }
+                $adminId = $this->curdService->requestData['admin_id'] ?? 0;
+                if(!empty($adminId)){
+                    $builder->where('admin_id',$adminId);
+                }
             });
-        }
+        });
+
         $this->selectUserCommonFilter();
         $this->selectCommonPrepare();
     }
