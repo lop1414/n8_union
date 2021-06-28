@@ -66,7 +66,7 @@ class UserActionBaseController extends BaseController
                     $unionWhere .= " AND created_time BETWEEN '{$createdTime[0]}' AND '{$createdTime[1]}'";
                 }
                 if($unionWhere != '1'){
-                    $builder->whereRaw("uuid IN (SELECT id FROM n8_union_users WHERE {$unionWhere}");
+                    $builder->whereRaw("uuid IN (SELECT id FROM n8_union_users WHERE {$unionWhere})");
                 }
             });
         });
