@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\ConvertTypeEnum;
-use App\Datas\N8GlobalOrderData;
 use App\Datas\N8GlobalUserData;
 use App\Models\OrderModel;
 
@@ -55,6 +54,10 @@ class OrderController extends UserActionBaseController
                     $builder->where('n8_guid',$globalUser['n8_guid']);
 
                 }
+            }
+            $createdTime = $this->curdService->requestData['created_time'] ?? [];
+            if(!empty($createdTime)){
+                $builder->whereRaw("uuid IN (SELECT id FROM n8_union_users WHERE created_time BETWEEN '{$createdTime[0]}' AND '{$createdTime[1]}')");
             }
         });
 
