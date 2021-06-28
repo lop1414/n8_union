@@ -21,7 +21,10 @@ class BaseController extends AdminController
 
     public function getAdminUserMap($filter = []){
         $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
-        return array_column($adminUsers,null,'id');
+        $tmp = array_column($adminUsers,null,'id');
+        // 兼容没有admin_id
+        $tmp[0] = ['name' => ''];
+        return $tmp;
     }
 
 
