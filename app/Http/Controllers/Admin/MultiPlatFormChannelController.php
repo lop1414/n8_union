@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
-use App\Common\Helpers\OS;
+use App\Common\Helpers\Platform;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -205,7 +205,7 @@ class MultiPlatFormChannelController extends BaseController
 
     public function isAndroidChannel($channelId){
         $product = $this->getProductInfo($channelId);
-        $productType = OS::getAndroidProductType();
+        $productType = Platform::getAndroidProductType();
         if(!in_array($product['type'],$productType)){
             throw new CustomException([
                 'code' => 'NOT_ANDROID_CHANNEL',
@@ -217,7 +217,7 @@ class MultiPlatFormChannelController extends BaseController
 
     public function isIOSChannel($channelId){
         $product = $this->getProductInfo($channelId);
-        $productType = OS::getIosProductType();
+        $productType = Platform::getIosProductType();
         if(!in_array($product['type'],$productType)){
             throw new CustomException([
                 'code' => 'NOT_IOS_CHANNEL',

@@ -4,11 +4,10 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Common\Enums\OSEnum;
+use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
-use App\Common\Helpers\OS;
-use App\Common\Services\SystemApi\CenterApiService;
+use App\Common\Helpers\Platform;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ProductData;
@@ -90,10 +89,10 @@ class ChannelController extends BaseController
             }
 
             if(!empty($req['os'])){
-                Functions::hasEnum(OSEnum::class,$req['os']);
+                Functions::hasEnum(PlatformEnum::class,$req['os']);
 
                 $productIds = (new ProductData())
-                    ->whereIn('type',OS::getOSProductType($req['os']))
+                    ->whereIn('type',Platform::getOSProductType($req['os']))
                     ->get('id')
                     ->toArray();
 
