@@ -6,8 +6,6 @@ use App\Common\Enums\AdvAliasEnum;
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\UserActionMatchCommand;
-use App\Console\Commands\Yw\PullBookCommand;
-use App\Console\Commands\Yw\PullChapterCommand;
 use App\Console\Commands\PullCpChannelCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -28,11 +26,6 @@ class Kernel extends ConsoleKernel
 
         // 用户行为匹配
         UserActionMatchCommand::class,
-
-
-        // 阅文快应用
-        PullBookCommand::class,
-        PullChapterCommand::class,
 
         // 同步渠道
         PullCpChannelCommand::class

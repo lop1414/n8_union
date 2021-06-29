@@ -61,6 +61,11 @@ class PullCpChannelCommand extends BaseCommand
 
 
     public function sync(){
+        if(empty($this->cpType) || $this->cpType == CpTypeEnums::YW){
+            echo "阅文\n";
+            (new \App\Services\Yw\ChannelService())->sync($this->startDate,$this->endDate);
+        }
+
         if(empty($this->cpType) || $this->cpType == CpTypeEnums::BM){
             echo "笔墨\n";
             (new \App\Services\Bm\ChannelService())->sync($this->startDate,$this->endDate);
