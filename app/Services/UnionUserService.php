@@ -185,9 +185,15 @@ class UnionUserService extends BaseService
                 ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => 0])
                 ->read();
 
-            if(!empty($union) && !empty($actionData['channel_id']) && $union['created_time'] == $actionData['action_time']){
+            if(!empty($union) && !empty($actionData['channel_id']) && $union['created_time'] >= $actionData['action_time']){
                 // 更新union user
-                (new N8UnionUserData())->update(['id'=>$union['id']],['channel_id'=>$actionData['channel_id']]);
+                (new N8UnionUserData())->update(
+                    ['id'=>$union['id']],
+                    [
+                        'channel_id'    => $actionData['channel_id'],
+                        'created_time'  => $actionData['action_time']
+                    ]
+                );
                  $union['channel_id'] = $actionData['channel_id'];
                  return $union;
             }else{
