@@ -3,6 +3,7 @@
 namespace App\Sdks\Yw;
 
 use App\Sdks\Yw\Traits\Book;
+use App\Sdks\Yw\Traits\Channel;
 use App\Sdks\Yw\Traits\Chapter;
 use App\Sdks\Yw\Traits\Order;
 use App\Sdks\Yw\Traits\Product;
@@ -18,6 +19,7 @@ class YwSdk
     use Product;
     use Book;
     use Chapter;
+    use Channel;
 
     /**
      * @var

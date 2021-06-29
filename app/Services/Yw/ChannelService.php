@@ -3,12 +3,8 @@
 namespace App\Services\Yw;
 
 
-
-use App\Common\Enums\ResponseCodeEnum;
-use App\Common\Enums\SystemAliasEnum;
-use App\Common\Tools\CustomException;
 use App\Models\ChannelModel;
-
+use App\Sdks\Yw\YwSdk;
 
 
 class ChannelService extends YwService
@@ -28,21 +24,52 @@ class ChannelService extends YwService
         $where = $productId ? ['id'=>$productId] : [];
         $productList = $this->getProductList($where);
 
-        $repData = [
-            'start_date'    => $startDate,
-            'end_date'      => $endDate
-        ];
+        $startTime = $startDate.' 00:00:00';
+        $endTime = $endDate.' 23:59:59';
 
         foreach ($productList as $product){
-            $repData['product_id'] = $product['id'];
-            $url = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.url').'/open/sync_yw_channel?'. http_build_query($repData);
-            $res = json_decode(file_get_contents($url),true);
-            if($res['code'] != ResponseCodeEnum::SUCCESS){
-                throw new CustomException([
-                    'code' => $res['code'],
-                    'message' => '请联系管理员!'
-                ]);
-            }
+            $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
+            $currentTotal = 0;
+            do{
+                $page = 1;
+                $list  = $sdk->getChannelList($startTime,$endTime,$page);
+                $total = $list['total_count'];
+                $currentTotal += count($list['list']);
+                foreach ($list['list'] as $item){
+                    $model = (new ChannelModel())
+                        ->where('product_id',$product['id'])
+                        ->where('cp_channel_id',$item['channel_id'])
+                        ->first();
+
+                    if(empty($model)){
+                        $model = new ChannelModel();
+                    }
+
+                    $book = (new BookService())->setProduct($product)->read($item['cbid']);
+                    $chapterService = (new ChapterService())->setProduct($product)->setBook($book);
+                    $chapter = $chapterService->read($item['ccid']);
+                    $forceChapter = $chapterService->readBySeq($item['force_chapter']);
+
+
+                    $model->product_id = $product['id'];
+                    $model->cp_channel_id = $item['channel_id'];
+                    $model->name = $item['channel_name'];
+                    $model->book_id = $book['id'];
+                    $model->chapter_id = $chapter['id'];
+                    $model->force_chapter_id = $forceChapter['id'];
+                    $model->extends = [
+                        'hap_url'   => $item['hap_url'],
+                        'h5_url'    => $item['h5_url'],
+                        'http_url'  => $item['http_url'],
+                        'apk_url'   => $item['apk_url'],
+                    ];
+                    $model->create_time = date('Y-m-d H:i:s',$item['create_time']);
+                    $model->updated_time = date('Y-m-d H:i:s',$item['create_time']);
+                    $model->save();
+
+                    $page += 1;
+                }
+            }while($currentTotal < $total);
         }
     }
 }

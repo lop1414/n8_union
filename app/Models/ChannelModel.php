@@ -22,9 +22,30 @@ class ChannelModel extends BaseModel
         'book_id',
         'chapter_id',
         'force_chapter_id',
+        'extends',
         'create_time',
         'updated_time',
     ];
+
+
+    /**
+     * @param $value
+     * @return array
+     * 属性访问器
+     */
+    public function getExtendsAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    /**
+     * @param $value
+     * 属性修饰器
+     */
+    public function setExtendsAttribute($value)
+    {
+        $this->attributes['extends'] = json_encode($value);
+    }
 
 
 

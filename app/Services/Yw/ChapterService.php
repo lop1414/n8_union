@@ -2,16 +2,16 @@
 
 namespace App\Services\Yw;
 
-use App\Common\Services\ConsoleEchoService;
-use App\Common\Services\ErrorLogService;
-use App\Common\Tools\CustomException;
+
 use App\Datas\ChapterData;
 use App\Models\ChapterModel;
-use App\Models\BookModel;
 use App\Sdks\Yw\YwSdk;
 
 class ChapterService extends YwService
 {
+
+
+    protected $book;
 
     /**
      * constructor.
@@ -23,54 +23,52 @@ class ChapterService extends YwService
     }
 
 
+    public function setBook($info){
+        $this->book = $info;
+        return $this;
+    }
+
+
+    public function read($cpChapterId){
+        $query = $this->model->where('book_id',$this->book['id'])->where('cp_chapter_id',$cpChapterId);
+        $info = $query->first();
+        if(empty($info)){
+            $this->sync();
+            $info = $query->first();
+        }
+        return $info;
+    }
+
+
+
+    public function readBySeq($seq){
+        $query = $this->model->where('book_id',$this->book['id'])->where('seq',$seq);
+        $info = $query->first();
+        if(empty($info)){
+            $this->sync();
+            $info = $query->first();
+        }
+        return $info;
+    }
+
+
+
     public function sync(){
 
-        $productList = $this->getProductList();
-
-        $consoleEchoService = new ConsoleEchoService();
-
         $chapterData = new ChapterData();
-        foreach ($productList as $product){
-            $consoleEchoService->echo($product['name']);
 
-            $bookList = (new BookModel())
-                ->where('cp_type',$this->cpType)
-                ->get();
-            $count = count($bookList);
+        $sdk = new YwSdk($this->product['cp_product_alias'],$this->product['cp_account']['account'],$this->product['cp_account']['cp_secret']);
 
-            $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
-            foreach ($bookList as $i => $book){
+        $list = $sdk->getChapterList( $this->book['cp_book_id']);
+        $list = $list['chapter_list'] ?? [];
 
-                $consoleEchoService->incrOffset();
-                try{
-                    $consoleEchoService->progress($count,$i,$book['id']);
-
-                    $list = $sdk->getChapterList($book['cp_book_id']);
-                    $list = $list['chapter_list'] ?? [];
-
-                    foreach ($list as $chapter){
-                        $chapterData->save([
-                            'book_id'       => $book['id'],
-                            'cp_chapter_id' => $chapter['ccid'],
-                            'name'          => $chapter['chapter_title'],
-                            'seq'           => $chapter['chapter_seq']
-                        ]);
-                    }
-
-                }catch (CustomException $e){
-
-                    // 日志
-                    (new ErrorLogService())->catch($e);
-
-                    // 提示
-                    $msg = json_decode($e->getMessage(),true);
-                    $consoleEchoService->incrOffset();
-                    $consoleEchoService->error($msg['data']['result']['msg'] ?? $msg['message']);
-                    $consoleEchoService->decrOffset();
-                }
-                $consoleEchoService->decrOffset();
-            }
+        foreach ($list as $chapter){
+            $chapterData->save([
+                'book_id'       => $this->book['id'],
+                'cp_chapter_id' => $chapter['ccid'],
+                'name'          => $chapter['chapter_title'],
+                'seq'           => $chapter['chapter_seq']
+            ]);
         }
-        $consoleEchoService->echo('');
     }
 }

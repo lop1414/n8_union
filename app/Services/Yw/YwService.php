@@ -15,6 +15,8 @@ class YwService extends BaseService
      */
     protected $cpType = CpTypeEnums::YW;
 
+    protected $product;
+
 
     /**
      * constructor.
@@ -22,6 +24,12 @@ class YwService extends BaseService
     public function __construct(){
         parent::__construct();
 
+    }
+
+
+    public function setProduct($info){
+        $this->product = $info;
+        return $this;
     }
 
 
@@ -34,11 +42,9 @@ class YwService extends BaseService
      */
     public function getProductList($data = []){
 
-        $list = (new ProductModel())
+        return (new ProductModel())
             ->where('cp_type',$this->cpType)
             ->where($data)
             ->get();
-
-        return $list;
     }
 }
