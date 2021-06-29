@@ -25,17 +25,25 @@ class ChannelService extends YwService
         $where = $productId ? ['id'=>$productId] : [];
         $productList = $this->getProductList($where);
 
-        $startTime = $startDate.' 00:00:00';
-        $endTime = $endDate.' 23:59:59';
+
 
         foreach ($productList as $product){
-            if($product['type'] == ProductTypeEnums::KYY){
-                $this->syncKyyItem($startTime,$endTime,$product);
-            }
 
+            echo $product['name']. "\n";
+            $date = $startDate;
+            do{
 
-            if($product['type'] == ProductTypeEnums::H5){}
+                echo $date. "\n";
+                $startTime = $date.' 00:00:00';
+                $endTime = $date.' 23:59:59';
+                if($product['type'] == ProductTypeEnums::KYY){
+                    $this->syncKyyItem($startTime,$endTime,$product);
+                }
 
+                if($product['type'] == ProductTypeEnums::H5){}
+
+                $date = date('Y-m-d',  strtotime('+1 day',strtotime($date)) );
+            }while($date <= $endDate);
 
         }
     }
