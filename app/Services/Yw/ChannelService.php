@@ -29,11 +29,9 @@ class ChannelService extends YwService
 
         foreach ($productList as $product){
 
-            echo $product['name']. "\n";
             $date = $startDate;
             do{
 
-                echo $date. "\n";
                 $startTime = $date.' 00:00:00';
                 $endTime = $date.' 23:59:59';
                 if($product['type'] == ProductTypeEnums::KYY){
