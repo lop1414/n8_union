@@ -61,8 +61,9 @@ class CreateTableCommand extends BaseCommand
     }
 
 
-
-
+    /**
+     * 同步转发系统的request_id
+     */
     public function demo(){
         $sql = <<<STR
 SELECT
@@ -83,6 +84,7 @@ STR;
         foreach ($list as $item){
             if(empty($item->e_request_id)){
                 $model->where('uuid',$item->uuid)->update(['request_id' => $item->l_request_id]);
+                echo "更新成功: {$item->n8_guid}\n";
             }
         }
 
