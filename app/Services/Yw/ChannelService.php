@@ -34,9 +34,7 @@ class ChannelService extends YwService
             }
 
 
-            if($product['type'] == ProductTypeEnums::H5){
-                $this->syncKyyItem($startTime,$endTime,$product);
-            }
+            if($product['type'] == ProductTypeEnums::H5){}
 
 
         }
