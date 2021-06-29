@@ -5,9 +5,7 @@ namespace App\Console\Commands;
 use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
-use App\Datas\N8UnionUserData;
-use App\Datas\UserData;
-use App\Models\N8UnionUserModel;
+use App\Models\N8UnionUserExtendModel;
 use App\Services\CreateTableService;
 use Illuminate\Support\Facades\DB;
 
@@ -65,50 +63,28 @@ class CreateTableCommand extends BaseCommand
 
 
 
+    public function demo(){
+        $sql = <<<STR
+SELECT
+	u.n8_guid,u.click_id,l.request_id l_request_id,e.request_id e_request_id,e.uuid
+FROM
+	n8_union.n8_union_users u
+	LEFT JOIN n8_union_user_extends e ON u.id = e.uuid
+	LEFT JOIN n8_global_users g ON g.n8_guid = u.n8_guid
+	LEFT JOIN n8_transfer.user_action_logs_202106 l ON g.open_id = l.open_id AND g.product_id = l.product_id
+WHERE
+	u.created_time >= '2021-06-01 00:00:00'
+	AND e.request_id = ''
+	AND l.request_id != ''
+STR;
+        $list = DB::select($sql);
+        $model = new N8UnionUserExtendModel();
 
-
-    public function updateInfo(){
-        $timeRange = ['2020-09-19 00:00:00','2021-01-01 00:00:00'];
-        $unionUserModel = new N8UnionUserModel();
-        $unionUserModelData = new N8UnionUserData();
-        $userModelData = new UserData();
-        do{
-            $list = $unionUserModel
-                ->leftJoin('channels','channels.id','=','n8_union_users.channel_id')
-                ->select('n8_union_users.*')
-                ->whereBetween('n8_union_users.created_time',$timeRange)
-                ->where('n8_union_users.channel_id','>',0)
-                ->whereRaw('n8_union_users.created_time < channels.create_time')
-                ->skip(0)
-                ->take(100)
-                ->get();
-
-            foreach ($list as $item){
-                $unionUserModelData->update([
-                    'id'    => $item->id
-                ],[
-                    'channel_id'    => 0,
-                    'book_id'       => 0,
-                    'chapter_id'    => 0,
-                    'force_chapter_id'=> 0,
-                    'admin_id'      => 0,
-                    'adv_alias'     => '',
-                    'click_id'      => 0,
-                    'last_match_time'=> null,
-                ]);
-
-                $userModelData->update([
-                    'n8_guid'   => $item->n8_guid
-                ],[
-                    'channel_id'    => 0
-                ]);
-
-                echo "更新成功: {$item->id}";
+        foreach ($list as $item){
+            if(empty($item->e_request_id)){
+                $model->where('uuid',$item->uuid)->update(['request_id' => $item->l_request_id]);
             }
-
-        }while(!$list->isEmpty());
-
-
+        }
 
     }
 
