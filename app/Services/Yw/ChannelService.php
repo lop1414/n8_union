@@ -77,7 +77,7 @@ class ChannelService extends YwService
                 $model->cp_channel_id = $item['channel_id'];
                 $model->name = $item['channel_name'];
                 $model->book_id = $book['id'];
-                $model->chapter_id = $chapter['id'];
+                $model->chapter_id = $chapter['id'] ?? 0;
                 $model->force_chapter_id = $forceChapter['id'];
                 $model->extends = [
                     'hap_url'   => $item['hap_url'],
