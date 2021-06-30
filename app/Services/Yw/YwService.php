@@ -2,6 +2,7 @@
 
 namespace App\Services\Yw;
 
+use App\Common\Enums\StatusEnum;
 use App\Common\Services\BaseService;
 use App\Common\Enums\CpTypeEnums;
 use App\Models\ProductModel;
@@ -45,6 +46,7 @@ class YwService extends BaseService
         return (new ProductModel())
             ->where('cp_type',$this->cpType)
             ->where($data)
+            ->where('status',StatusEnum::ENABLE)
             ->get();
     }
 }
