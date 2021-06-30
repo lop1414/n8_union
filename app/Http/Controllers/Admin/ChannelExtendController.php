@@ -68,9 +68,7 @@ class ChannelExtendController extends BaseController
     public function updatePrepare(){
 
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
-        $this->curdService->addField('adv_alias')
-            ->addValidRule('required')
-            ->addValidEnum(AdvAliasEnum::class);
+        $this->curdService->addField('adv_alias')->addValidEnum(AdvAliasEnum::class);
         $this->curdService->addField('platform')
             ->addValidRule('required')
             ->addValidEnum(PlatformEnum::class);

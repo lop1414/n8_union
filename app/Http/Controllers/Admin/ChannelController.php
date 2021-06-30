@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
-use App\Common\Helpers\Platform;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ProductData;
