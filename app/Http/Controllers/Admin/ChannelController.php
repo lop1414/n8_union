@@ -175,9 +175,9 @@ class ChannelController extends BaseController
                     'id'  => $adminId
                 ]);
 
-                $this->curdService->responseData->admin_name = $map[$adminId]['name'];
+                $this->curdService->responseData->channel_extend['admin_name'] = $map[$adminId]['name'];
             }else{
-                $this->curdService->responseData->admin_name = '';
+                $this->curdService->responseData->channel_extend['admin_name'] = '';
             }
 
             $this->curdService->responseData->has_extend = $this->curdService->responseData->channel_extend ? true : false;
