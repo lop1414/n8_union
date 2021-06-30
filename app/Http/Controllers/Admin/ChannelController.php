@@ -162,14 +162,14 @@ class ChannelController extends BaseController
     public function readPrepare(){
 
         $this->curdService->findAfter(function(){
-            $this->curdService->responseData->extend;
+            $this->curdService->responseData->channel_extend;
             $this->curdService->responseData->product;
             $this->curdService->responseData->book;
             $this->curdService->responseData->chapter;
             $this->curdService->responseData->force_chapter;
 
-            if(isset($this->curdService->responseData->extend['admin_id'])){
-                $adminId = $this->curdService->responseData->extend['admin_id'];
+            if(isset($this->curdService->responseData->channel_extend['admin_id'])){
+                $adminId = $this->curdService->responseData->channel_extend['admin_id'];
 
                 $map = $this->getAdminUserMap([
                     'id'  => $adminId
@@ -180,7 +180,7 @@ class ChannelController extends BaseController
                 $this->curdService->responseData->admin_name = '';
             }
 
-            $this->curdService->responseData->has_extend = $this->curdService->responseData->extend ? true : false;
+            $this->curdService->responseData->has_extend = $this->curdService->responseData->channel_extend ? true : false;
 
         });
     }
