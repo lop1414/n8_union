@@ -61,7 +61,7 @@ class ChannelController extends BaseController
         $this->curdService->customBuilder(function ($builder){
 
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
-                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
+                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id,e.platform'));
 
 
 
@@ -88,15 +88,9 @@ class ChannelController extends BaseController
                 $builder->where('e.status',$req['status']);
             }
 
-            if(!empty($req['os'])){
-                Functions::hasEnum(PlatformEnum::class,$req['os']);
-
-                $productIds = (new ProductData())
-                    ->whereIn('type',Platform::getOSProductType($req['os']))
-                    ->get('id')
-                    ->toArray();
-
-                return $builder->whereIn('product_id',array_column($productIds,'id'));
+            if(!empty($req['platform'])){
+                Functions::hasEnum(PlatformEnum::class,$req['platform']);
+                $builder->where('e.platform',$req['platform']);
             }
 
         });

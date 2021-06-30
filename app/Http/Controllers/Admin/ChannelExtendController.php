@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\PlatformEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ErrorLogService;
@@ -43,7 +44,9 @@ class ChannelExtendController extends BaseController
         $this->curdService->addField('adv_alias')
             ->addValidRule('required')
             ->addValidEnum(AdvAliasEnum::class);
-
+        $this->curdService->addField('platform')
+            ->addValidRule('required')
+            ->addValidEnum(PlatformEnum::class);
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
 
         // 追加主键
@@ -68,11 +71,29 @@ class ChannelExtendController extends BaseController
         $this->curdService->addField('adv_alias')
             ->addValidRule('required')
             ->addValidEnum(AdvAliasEnum::class);
+        $this->curdService->addField('platform')
+            ->addValidRule('required')
+            ->addValidEnum(PlatformEnum::class);
+
+
 
         $this->curdService->saveBefore(function(){
+            if($this->hasData()){
+                unset($this->curdService->handleData['adv_alias']);
+            }
 
-            $this->extendData();
-            unset($this->curdService->handleData['adv_alias']);
+            if(!$this->isAdmin()){
+                unset($this->curdService->handleData['admin_id']);
+            }
+
+            // 接口验证
+            if($this->curdService->handleData['platform'] != $this->curdService->findData['platform']){
+                throw new CustomException([
+                    'code' => 'CAN_NOT_CHANGE_PLATFORM',
+                    'message' => '不满足更改平台条件'
+                ]);
+            }
+
         });
     }
 
@@ -80,21 +101,20 @@ class ChannelExtendController extends BaseController
 
 
     /**
-     * @throws CustomException
-     * 有注册用户 不可修改
+     * @return bool
+     * 渠道下有注册用户
      */
-    public function extendData(){
+    public function hasData(){
         $tmp = (new N8UnionUserModel())
             ->where('channel_id',$this->curdService->getModel()->id)
-            ->where('created_time',$this->curdService->getModel()->created_at)
+            ->where('created_time','>',$this->curdService->getModel()->created_at)
             ->first();
 
         if(!empty($tmp)){
-            throw new CustomException([
-                'code' => 'NO_EDITING',
-                'message' => '渠道已产生数据,信息不可修改'
-            ]);
+            return false;
         }
+
+        return true;
     }
 
 
@@ -127,6 +147,11 @@ class ChannelExtendController extends BaseController
         Functions::hasEnum(StatusEnum::class,$requestData['status']);
 
 
+        if(!isset($requestData['platform'])){
+            $requestData['platform'] = PlatformEnum::DEFAULT;
+        }
+        Functions::hasEnum(PlatformEnum::class,$requestData['platform']);
+
 
         // 赋值 admin_id
         if($this->isAdmin() && isset($requestData['admin_id']) && !empty($requestData['admin_id'])){
@@ -150,6 +175,7 @@ class ChannelExtendController extends BaseController
                 $channelExtendModel->adv_alias = $requestData['adv_alias'];
                 $channelExtendModel->status = $requestData['status'];
                 $channelExtendModel->admin_id = $adminId;
+                $channelExtendModel->platform = $requestData['platform'];
                 $tmp = $channelExtendModel->save();
 
                 if($tmp){
