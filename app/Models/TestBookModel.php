@@ -32,7 +32,7 @@ class TestBookModel extends BaseModel
      * 章节 一对多
      */
     public function book(){
-        return $this->hasMany('App\Models\BookModel', 'id', 'book_id');
+        return $this->hasOne('App\Models\BookModel', 'id', 'book_id');
     }
 
 
