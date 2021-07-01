@@ -18,6 +18,7 @@ class TestBookModel extends BaseModel
 
 
     protected $fillable = [
+        'product_id',
         'book_id',
         'description',
         'start_at',

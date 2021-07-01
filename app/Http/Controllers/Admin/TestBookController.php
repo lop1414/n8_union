@@ -23,6 +23,8 @@ class TestBookController extends BaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
+        $this->curdService->addField('product_id')->addValidRule('required');
+
         $this->curdService->selectQueryAfter(function(){
 
             foreach ($this->curdService->responseData['list'] as $item){
@@ -47,6 +49,7 @@ class TestBookController extends BaseController
      * 保持验证规则
      */
     public function saveValidRule(){
+        $this->curdService->addField('product_id')->addValidRule('required');
         $this->curdService->addField('book_id')->addValidRule('required');
         $this->curdService->addField('start_at')->addValidRule('required');
         $this->curdService->addField('end_at')->addValidRule('required');

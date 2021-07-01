@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 01/07/2021 10:52:38
+ Date: 01/07/2021 11:06:09
 */
 
 SET NAMES utf8mb4;
@@ -23,6 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `test_books`;
 CREATE TABLE `test_books` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) NOT NULL COMMENT '产品id',
   `book_id` bigint(20) NOT NULL COMMENT '书籍id',
   `description` text COMMENT '说明',
   `start_at` timestamp NULL DEFAULT NULL COMMENT '开始时间',
@@ -31,7 +32,8 @@ CREATE TABLE `test_books` (
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `book_id` (`book_id`) USING BTREE
+  KEY `book_id` (`book_id`) USING BTREE,
+  KEY `product_id` (`product_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='测试书籍';
 
 SET FOREIGN_KEY_CHECKS = 1;
