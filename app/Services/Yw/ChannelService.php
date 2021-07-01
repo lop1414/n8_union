@@ -50,8 +50,9 @@ class ChannelService extends YwService
     public function syncKyyItem($startTime,$endTime,$product){
         $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
         $currentTotal = 0;
+        $page = 1;
+
         do{
-            $page = 1;
             $list  = $sdk->getChannelList($startTime,$endTime,$page);
             $total = $list['total_count'];
             $currentTotal += count($list['list']);
@@ -87,8 +88,9 @@ class ChannelService extends YwService
                 $model->updated_time = date('Y-m-d H:i:s',$item['create_time']);
                 $model->save();
 
-                $page += 1;
             }
+            $page += 1;
+
         }while($currentTotal < $total);
     }
 }
