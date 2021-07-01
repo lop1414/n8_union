@@ -131,6 +131,15 @@ $router->group([
         $router->post('get', 'Admin\BookController@get');
         $router->post('read', 'Admin\BookController@read');
     });
+    // 测试书籍
+    $router->group(['prefix' => 'test_book'], function () use ($router) {
+        $router->post('select', 'Admin\TestBookController@select');
+        $router->post('read', 'Admin\TestBookController@read');
+        $router->post('create', 'Admin\TestBookController@create');
+        $router->post('update', 'Admin\TestBookController@update');
+        $router->post('enable', 'Admin\TestBookController@enable');
+        $router->post('disable', 'Admin\TestBookController@disable');
+    });
 
 
     // 抽奖
