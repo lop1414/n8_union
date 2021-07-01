@@ -125,6 +125,13 @@ $router->group([
         $router->post('disable', 'Admin\ChannelExtendController@disable');
     });
 
+    // 书籍
+    $router->group(['prefix' => 'book'], function () use ($router) {
+        $router->post('select', 'Admin\BookController@select');
+        $router->post('get', 'Admin\BookController@get');
+        $router->post('read', 'Admin\BookController@read');
+    });
+
 
     // 抽奖
     $router->group(['prefix' => 'lottery'], function () use ($router) {
