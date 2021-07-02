@@ -41,7 +41,7 @@ class CreateTableCommand extends BaseCommand
 
     public function handle(){
         $service = new CreateTableService();
-$this->demo2();die;
+$this->demo3();die;
         $date    = $this->option('date');
 
         $dateList = [];
@@ -59,6 +59,30 @@ $this->demo2();die;
             $service->create();
         }
 
+    }
+
+
+    public function demo3(){
+        $sql = <<<STR
+SELECT
+u.n8_guid,u.click_id,u.created_time,e.request_id,c.click_at,c.id cid
+FROM
+	n8_union.n8_union_users u
+	LEFT JOIN n8_union.n8_union_user_extends e ON u.id = e.uuid
+	LEFT JOIN n8_adv_ocean.clicks c ON c.request_id = e.request_id
+WHERE
+	u.click_id = 0
+	AND created_time BETWEEN '2021-06-01 00:00:00' AND '2021-07-01 00:00:00'
+	AND e.request_id != ''
+	AND c.click_at IS NOT NULL
+	AND u.created_time < c.click_at
+STR;
+        $list = DB::select($sql);
+
+        foreach ($list as $item){
+             DB::update('update clicks set click_at = ? where id = ?', [$item->created_time,$item->cid]);
+             echo $item->n8_guid. "\n";die;
+        }
     }
 
 
