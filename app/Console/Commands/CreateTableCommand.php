@@ -41,7 +41,7 @@ class CreateTableCommand extends BaseCommand
 
     public function handle(){
         $service = new CreateTableService();
-
+$this->demo2();die;
         $date    = $this->option('date');
 
         $dateList = [];
@@ -98,7 +98,7 @@ STR;
             $changeInfo = $model
                 ->select(DB::raw('n8_union_user_extends.*'))
                 ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
-                ->where('channels.n8_guid',$item->n8_guid)
+                ->where('n8_union_users.n8_guid',$item->n8_guid)
                 ->where('e.ip','')
                 ->first();
             // 补ip
