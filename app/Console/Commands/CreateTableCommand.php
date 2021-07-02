@@ -75,11 +75,11 @@ WHERE
 	u.n8_guid IN (
 		SELECT n8_guid
 		FROM (
-				SELECT count(*) c,u.n8_guid
-				FROM n8_union_users u
-				LEFT JOIN products p ON p.id = u.product_id
-				WHERE p.type = 'H5' AND u.created_time BETWEEN '2021-05-01 00:00:00' AND '2021-07-01 00:00:00'
-				GROUP BY u.n8_guid HAVING c > 1
+				SELECT count(*) c,n.n8_guid
+				FROM n8_union_users n
+				LEFT JOIN products p ON p.id = n.product_id
+				WHERE p.type = 'H5' AND n.created_time BETWEEN '2021-05-01 00:00:00' AND '2021-07-01 00:00:00'
+				GROUP BY n.n8_guid HAVING c > 1
 			) a
 	)
 	AND u.channel_id  = 0
@@ -96,8 +96,8 @@ STR;
             $info = $model->where('id',$item->id)->first();
 
             $changeInfo = $model
-                ->select(DB::raw('channel_extends.*'))
-                ->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
+                ->select(DB::raw('n8_union_user_extends.*'))
+                ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
                 ->where('channels.n8_guid',$item->n8_guid)
                 ->where('e.ip','')
                 ->first();
@@ -112,7 +112,7 @@ STR;
             $extendModel->where('uuid',$info['id'])->delete();
             $info->delete();
 
-            echo "成功: {$info->id}\n";
+            echo "成功: {$info->id}\n"; die;
         }
     }
 
