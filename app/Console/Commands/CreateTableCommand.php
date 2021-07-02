@@ -6,6 +6,7 @@ use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
 use App\Models\N8UnionUserExtendModel;
+use App\Models\N8UnionUserModel;
 use App\Services\CreateTableService;
 use Illuminate\Support\Facades\DB;
 
@@ -58,6 +59,63 @@ class CreateTableCommand extends BaseCommand
             $service->create();
         }
 
+    }
+
+
+    public function demo2(){
+        $sql = <<<STR
+SELECT
+	u.id,u.n8_guid,u.product_id,u.channel_id,u.created_time,u.adv_alias,f.id fid,s.id sid,o.n8_goid
+FROM
+	n8_union_users u
+	LEFT JOIN user_follow_actions f ON f.uuid = u.id
+	LEFT JOIN user_shortcut_actions s ON s.uuid = u.id
+	LEFT JOIN orders o ON o.uuid = u.id
+WHERE
+	u.n8_guid IN (
+		SELECT
+			n8_guid
+		FROM (
+				SELECT
+					count(*) c,u.*
+				FROM n8_union_users u
+				LEFT JOIN products p ON p.id = u.product_id
+				WHERE p.type = 'H5' AND u.created_time BETWEEN '2021-05-01 00:00:00' AND '2021-07-01 00:00:00'
+				GROUP BY u.n8_guid HAVING c > 1
+			) a
+	)
+	AND u.channel_id  = 0
+	AND f.id IS NULL
+	AND s.id IS NULL
+	AND o.n8_goid IS NULL
+ORDER BY n8_guid
+STR;
+        $list = DB::select($sql);
+        $model = new N8UnionUserModel();
+        $extendModel = new N8UnionUserExtendModel();
+
+        foreach ($list as $item){
+            $info = $model->where('id',$item->id)->first();
+
+            $changeInfo = $model
+                ->select(DB::raw('channel_extends.*'))
+                ->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
+                ->where('channels.n8_guid',$item->n8_guid)
+                ->where('e.ip','')
+                ->first();
+            // 补ip
+            if(!empty($info->extend['ip']) && empty($changeInfo['ip'])){
+                $extendModel->where('uuid',$changeInfo['uuid'])->update([
+                    'ip'    => $info->extend['ip']
+                ]);
+            }
+
+            //删除
+            $extendModel->where('uuid',$info['id'])->delete();
+            $info->delete();
+
+            echo "成功: {$info->id}\n";
+        }
     }
 
 
