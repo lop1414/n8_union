@@ -188,18 +188,14 @@ class UnionUserService extends BaseService
 
             if(!empty($union) && !empty($actionData['channel_id']) && $union['created_time'] >= $actionData['action_time']){
 
-                $changeData = [
-                    'channel_id' => $actionData['channel_id']
-                ];
+                $changeData = ['channel_id' => $actionData['channel_id']];
+
                 // 关注行为不更新注册时间
                 if($actionType != QueueEnums::USER_FOLLOW_ACTION){
                     $changeData['created_time'] = $actionData['action_time'];
                 }
-                // 更新union user
-                (new N8UnionUserData())->update(
-                    ['id'=>$union['id']],
-                    $changeData
-                );
+
+                 $this->change($union['id'],$changeData);
                  $union['channel_id'] = $actionData['channel_id'];
                  return $union;
             }else{
@@ -227,6 +223,36 @@ class UnionUserService extends BaseService
                 throw $e;
             }
         }
+    }
+
+
+
+    /**
+     * @param $uuid
+     * @param $changeData
+     * @throws CustomException
+     * 更改信息
+     */
+    protected function change($uuid,$changeData){
+        if(isset($changeData['channel_id'])){
+            $channelId = $changeData['channel_id'];
+            $channel = (new ChannelData())->setParams(['id' => $channelId])->read();
+            $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $channelId])->read();
+            $changeData = array_merge([
+                'book_id'    => $channel['book_id'],
+                'chapter_id' => $channel['chapter_id'],
+                'force_chapter_id' => $channel['force_chapter_id'],
+                'admin_id'    => $channelExtend['admin_id'],
+                'adv_alias' => $channelExtend['adv_alias'],
+            ],$changeData);
+        }
+
+
+        // 更新union user
+        return (new N8UnionUserData())->update(
+            ['id'=>$uuid],
+            $changeData
+        );
     }
 
 
