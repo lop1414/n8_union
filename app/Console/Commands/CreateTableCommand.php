@@ -73,11 +73,9 @@ FROM
 	LEFT JOIN orders o ON o.uuid = u.id
 WHERE
 	u.n8_guid IN (
-		SELECT
-			n8_guid
+		SELECT n8_guid
 		FROM (
-				SELECT
-					count(*) c,u.*
+				SELECT count(*) c,u.n8_guid
 				FROM n8_union_users u
 				LEFT JOIN products p ON p.id = u.product_id
 				WHERE p.type = 'H5' AND u.created_time BETWEEN '2021-05-01 00:00:00' AND '2021-07-01 00:00:00'
