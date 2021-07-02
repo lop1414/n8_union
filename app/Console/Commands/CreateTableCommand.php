@@ -96,7 +96,7 @@ STR;
             $info = $model->where('id',$item->id)->first();
 
             $changeInfo = $model
-                ->select(DB::raw('n8_union_user_extends.*'))
+                ->select(DB::raw('e.*'))
                 ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
                 ->where('n8_union_users.n8_guid',$item->n8_guid)
                 ->where('e.ip','')
