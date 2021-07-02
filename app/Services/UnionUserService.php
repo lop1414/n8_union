@@ -233,7 +233,7 @@ class UnionUserService extends BaseService
      * @throws CustomException
      * 更改信息
      */
-    protected function change($uuid,$changeData){
+    public function change($uuid,$changeData){
         if(isset($changeData['channel_id'])){
             $channelId = $changeData['channel_id'];
             $channel = (new ChannelData())->setParams(['id' => $channelId])->read();

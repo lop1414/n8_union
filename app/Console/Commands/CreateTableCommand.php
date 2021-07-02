@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
+use App\Models\N8UnionUserModel;
 use App\Services\CreateTableService;
+use App\Services\UnionUserService;
 
 class CreateTableCommand extends BaseCommand
 {
@@ -37,6 +39,7 @@ class CreateTableCommand extends BaseCommand
 
 
     public function handle(){
+        $this->demo();die;
         $service = new CreateTableService();
         $date    = $this->option('date');
 
@@ -55,6 +58,20 @@ class CreateTableCommand extends BaseCommand
             $service->create();
         }
 
+    }
+
+
+
+    public function demo(){
+        $list = (new N8UnionUserModel())
+            ->where('channel_id','>',0)
+            ->where('book_id',0)
+            ->get();
+        $service = new UnionUserService();
+        foreach ($list as $item){
+            $changeData['channel_id'] = $item->channel_id;
+            $service->change($item->id,$changeData);
+        }
     }
 
 
