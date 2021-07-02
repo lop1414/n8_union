@@ -80,7 +80,7 @@ STR;
         $list = DB::select($sql);
 
         foreach ($list as $item){
-             DB::update('update clicks set click_at = ? where id = ?', [$item->created_time,$item->cid]);
+             DB::update('update n8_adv_ocean.clicks set click_at = ? where id = ?', [$item->created_time,$item->cid]);
              echo $item->n8_guid. "\n";die;
         }
     }
