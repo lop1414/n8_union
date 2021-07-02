@@ -9,6 +9,7 @@ use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Datas\N8UnionUserData;
 use App\Datas\ProductData;
+use App\Enums\QueueEnums;
 
 class UnionUserService extends BaseService
 {
@@ -132,7 +133,7 @@ class UnionUserService extends BaseService
 
 
 
-    public function create($actionData){
+    public function create($actionData,$actionType = ''){
         try{
             if (empty($this->user)){
                 throw new CustomException([
@@ -186,13 +187,18 @@ class UnionUserService extends BaseService
                 ->read();
 
             if(!empty($union) && !empty($actionData['channel_id']) && $union['created_time'] >= $actionData['action_time']){
+
+                $changeData = [
+                    'channel_id' => $actionData['channel_id']
+                ];
+                // 关注行为不更新注册时间
+                if($actionType != QueueEnums::USER_FOLLOW_ACTION){
+                    $changeData['created_time'] = $actionData['action_time'];
+                }
                 // 更新union user
                 (new N8UnionUserData())->update(
                     ['id'=>$union['id']],
-                    [
-                        'channel_id'    => $actionData['channel_id'],
-                        'created_time'  => $actionData['action_time']
-                    ]
+                    $changeData
                 );
                  $union['channel_id'] = $actionData['channel_id'];
                  return $union;

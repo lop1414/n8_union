@@ -32,7 +32,7 @@ class FollowActionDataToDbService extends UserActionDataToDbService
         $unionUserService  = new UnionUserService();
         $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
         $unionUserService->setUser($user);
-        $unionUser = $unionUserService->create($data);
+        $unionUser = $unionUserService->create($data,$this->queueEnum);
 
 
         $deviceData = $unionUserService->filterDeviceInfo($data);
