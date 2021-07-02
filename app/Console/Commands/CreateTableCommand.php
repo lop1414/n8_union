@@ -64,33 +64,27 @@ class CreateTableCommand extends BaseCommand
 
 
 
-    /**
-     * 同步转发系统的request_id
-     */
     public function demo(){
         $sql = <<<STR
 SELECT
-	u.n8_guid,u.click_id,l.request_id l_request_id,e.request_id e_request_id,e.uuid
+u.n8_guid,u.click_id,u.created_time,e.request_id,c.click_at,c.id cid
 FROM
 	n8_union.n8_union_users u
-	LEFT JOIN n8_union_user_extends e ON u.id = e.uuid
-	LEFT JOIN n8_global_users g ON g.n8_guid = u.n8_guid
-	LEFT JOIN n8_transfer.user_action_logs_202106 l ON g.open_id = l.open_id AND g.product_id = l.product_id
+	LEFT JOIN n8_union.n8_union_user_extends e ON u.id = e.uuid
+	LEFT JOIN n8_adv_ocean.clicks c ON c.request_id = e.request_id
 WHERE
-	u.created_time >= '2021-06-01 00:00:00'
-	AND e.request_id = ''
-	AND l.request_id != ''
+	u.click_id = 0
+	AND created_time BETWEEN '2021-06-01 00:00:00' AND '2021-07-01 00:00:00'
+	AND e.request_id != ''
+	AND c.click_at IS NOT NULL
+	AND u.created_time < c.click_at
 STR;
         $list = DB::select($sql);
-        $model = new N8UnionUserExtendModel();
 
         foreach ($list as $item){
-            if(empty($item->e_request_id)){
-                $model->where('uuid',$item->uuid)->update(['request_id' => $item->l_request_id]);
-                echo "更新成功: {$item->n8_guid}\n";
-            }
+            DB::update('update n8_adv_ocean.clicks set click_at = ? where id = ?', [$item->created_time,$item->cid]);
+            echo $item->n8_guid. "\n";die;
         }
-
     }
 
 
