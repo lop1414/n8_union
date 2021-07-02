@@ -5,9 +5,11 @@ namespace App\Console\Commands;
 use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
+use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
 use App\Services\CreateTableService;
 use App\Services\UnionUserService;
+use Illuminate\Support\Facades\DB;
 
 class CreateTableCommand extends BaseCommand
 {
@@ -62,16 +64,33 @@ class CreateTableCommand extends BaseCommand
 
 
 
+    /**
+     * 同步转发系统的request_id
+     */
     public function demo(){
-        $list = (new N8UnionUserModel())
-            ->where('channel_id','>',0)
-            ->where('book_id',0)
-            ->get();
-        $service = new UnionUserService();
+        $sql = <<<STR
+SELECT
+	u.n8_guid,u.click_id,l.request_id l_request_id,e.request_id e_request_id,e.uuid
+FROM
+	n8_union.n8_union_users u
+	LEFT JOIN n8_union_user_extends e ON u.id = e.uuid
+	LEFT JOIN n8_global_users g ON g.n8_guid = u.n8_guid
+	LEFT JOIN n8_transfer.user_action_logs_202106 l ON g.open_id = l.open_id AND g.product_id = l.product_id
+WHERE
+	u.created_time >= '2021-06-01 00:00:00'
+	AND e.request_id = ''
+	AND l.request_id != ''
+STR;
+        $list = DB::select($sql);
+        $model = new N8UnionUserExtendModel();
+
         foreach ($list as $item){
-            $changeData['channel_id'] = $item->channel_id;
-            $service->change($item->id,$changeData);
+            if(empty($item->e_request_id)){
+                $model->where('uuid',$item->uuid)->update(['request_id' => $item->l_request_id]);
+                echo "更新成功: {$item->n8_guid}\n";
+            }
         }
+
     }
 
 
