@@ -45,7 +45,7 @@ class ChannelClaimService extends CheckService
                 $tmp = "产品：{$product['name']}<br>";
                 $tmp .= "渠道:<br>";
                 foreach ($sendItem as $c){
-                    $tmp .= "    {$c['name']}<br>";
+                    $tmp .= "        {$c['name']}<br>";
                 }
                 $this->sendContent = $tmp;
                 $this->sendMessage();

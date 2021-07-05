@@ -64,7 +64,6 @@ class CheckService extends BaseService
 
 
     protected function feishu(){
-        dd($this->sendTitle, $this->sendContent, $this->sendAdminIds);
         (new NoticeApiService())->apiSendFeishuMessage($this->sendTitle, $this->sendContent, $this->sendAdminIds);
     }
 
