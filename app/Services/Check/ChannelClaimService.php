@@ -42,7 +42,7 @@ class ChannelClaimService extends CheckService
             $product = (new ProductData())->setParams(['id' => $productId])->read();
 
             // 只检测阅文平台
-            if($product['cp_type'] != CpTypeEnums::YW && $product['status'] != StatusEnum::ENABLE) continue;
+            if($product['cp_type'] != CpTypeEnums::YW || $product['status'] != StatusEnum::ENABLE) continue;
 
             $tmpItem = array_chunk($item,'5');
 
