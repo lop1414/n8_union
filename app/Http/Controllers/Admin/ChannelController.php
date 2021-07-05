@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
+use App\Common\Helpers\Platform;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ProductData;
@@ -87,9 +88,15 @@ class ChannelController extends BaseController
                 $builder->where('e.status',$req['status']);
             }
 
-            if(!empty($req['platform'])){
-                Functions::hasEnum(PlatformEnum::class,$req['platform']);
-                $builder->where('e.platform',$req['platform']);
+            if(!empty($req['os'])){
+                Functions::hasEnum(PlatformEnum::class,$req['os']);
+
+                $productIds = (new ProductData())
+                    ->whereIn('type',Platform::getOSProductType($req['os']))
+                    ->get('id')
+                    ->toArray();
+
+                return $builder->whereIn('product_id',array_column($productIds,'id'));
             }
 
         });

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\AdvAliasEnum;
-use App\Common\Enums\ProductTypeEnums;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
+use App\Common\Helpers\Platform;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -205,7 +205,8 @@ class MultiPlatFormChannelController extends BaseController
 
     public function isAndroidChannel($channelId){
         $product = $this->getProductInfo($channelId);
-        if(!in_array($product['type'],[ProductTypeEnums::KYY,ProductTypeEnums::H5])){
+        $productType = Platform::getAndroidProductType();
+        if(!in_array($product['type'],$productType)){
             throw new CustomException([
                 'code' => 'NOT_ANDROID_CHANNEL',
                 'message' => "不是安卓渠道",
@@ -216,7 +217,8 @@ class MultiPlatFormChannelController extends BaseController
 
     public function isIOSChannel($channelId){
         $product = $this->getProductInfo($channelId);
-        if(!in_array($product['type'],[ProductTypeEnums::H5])){
+        $productType = Platform::getIosProductType();
+        if(!in_array($product['type'],$productType)){
             throw new CustomException([
                 'code' => 'NOT_IOS_CHANNEL',
                 'message' => "不是iOS渠道",

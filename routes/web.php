@@ -125,6 +125,17 @@ $router->group([
         $router->post('disable', 'Admin\ChannelExtendController@disable');
     });
 
+    // 多平台渠道
+    $router->group(['prefix' => 'multi_plat_form_channel'], function () use ($router) {
+        $router->post('select', 'Admin\MultiPlatFormChannelController@select');
+        $router->post('get', 'Admin\MultiPlatFormChannelController@get');
+        $router->post('read', 'Admin\MultiPlatFormChannelController@read');
+        $router->post('create', 'Admin\MultiPlatFormChannelController@create');
+        $router->post('update', 'Admin\MultiPlatFormChannelController@update');
+        $router->post('enable', 'Admin\MultiPlatFormChannelController@enable');
+        $router->post('disable', 'Admin\MultiPlatFormChannelController@disable');
+    });
+
     // 书籍
     $router->group(['prefix' => 'book'], function () use ($router) {
         $router->post('select', 'Admin\BookController@select');

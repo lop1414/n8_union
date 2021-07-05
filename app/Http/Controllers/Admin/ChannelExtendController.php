@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\AdvAliasEnum;
-use App\Common\Enums\PlatformEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ErrorLogService;
-use App\Common\Tools\CustomException;
 use App\Datas\ChannelExtendData;
 use App\Models\ChannelExtendModel;
 use App\Models\ChannelModel;
@@ -44,9 +42,6 @@ class ChannelExtendController extends BaseController
         $this->curdService->addField('adv_alias')
             ->addValidRule('required')
             ->addValidEnum(AdvAliasEnum::class);
-        $this->curdService->addField('platform')
-            ->addValidRule('required')
-            ->addValidEnum(PlatformEnum::class);
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
 
         // 追加主键
@@ -69,10 +64,6 @@ class ChannelExtendController extends BaseController
 
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
         $this->curdService->addField('adv_alias')->addValidEnum(AdvAliasEnum::class);
-        $this->curdService->addField('platform')
-            ->addValidRule('required')
-            ->addValidEnum(PlatformEnum::class);
-
 
 
         $this->curdService->saveBefore(function(){
@@ -82,14 +73,6 @@ class ChannelExtendController extends BaseController
 
             if(!$this->isAdmin()){
                 unset($this->curdService->handleData['admin_id']);
-            }
-
-            // 接口验证
-            if($this->curdService->handleData['platform'] != $this->curdService->findData['platform']){
-                throw new CustomException([
-                    'code' => 'CAN_NOT_CHANGE_PLATFORM',
-                    'message' => '不满足更改平台条件'
-                ]);
             }
 
         });
@@ -145,11 +128,6 @@ class ChannelExtendController extends BaseController
         Functions::hasEnum(StatusEnum::class,$requestData['status']);
 
 
-        if(!isset($requestData['platform'])){
-            $requestData['platform'] = PlatformEnum::DEFAULT;
-        }
-        Functions::hasEnum(PlatformEnum::class,$requestData['platform']);
-
 
         // 赋值 admin_id
         if($this->isAdmin() && isset($requestData['admin_id']) && !empty($requestData['admin_id'])){
@@ -173,7 +151,6 @@ class ChannelExtendController extends BaseController
                 $channelExtendModel->adv_alias = $requestData['adv_alias'];
                 $channelExtendModel->status = $requestData['status'];
                 $channelExtendModel->admin_id = $adminId;
-                $channelExtendModel->platform = $requestData['platform'];
                 $tmp = $channelExtendModel->save();
 
                 if($tmp){
