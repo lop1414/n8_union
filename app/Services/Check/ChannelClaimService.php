@@ -6,6 +6,7 @@ namespace App\Services\Check;
 
 
 use App\Common\Enums\CpTypeEnums;
+use App\Common\Enums\StatusEnum;
 use App\Datas\ProductData;
 use App\Models\ChannelModel;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ class ChannelClaimService extends CheckService
             $product = (new ProductData())->setParams(['id' => $productId])->read();
 
             // 只检测阅文平台
-            if($product['cp_type'] != CpTypeEnums::YW) continue;
+            if($product['cp_type'] != CpTypeEnums::YW && $product['status'] != StatusEnum::ENABLE) continue;
 
             $tmpItem = array_chunk($item,'5');
 
