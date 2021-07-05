@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Console\Commands\Check\ChannelClaimCommand;
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\UserActionMatchCommand;
@@ -28,7 +29,10 @@ class Kernel extends ConsoleKernel
         UserActionMatchCommand::class,
 
         // 同步渠道
-        PullCpChannelCommand::class
+        PullCpChannelCommand::class,
+
+        // 检查
+        ChannelClaimCommand::class,
     ];
 
     /**
