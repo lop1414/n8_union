@@ -73,7 +73,8 @@ class Kernel extends ConsoleKernel
         }
 
 
-
+        //渠道认领检测
+        $schedule->command('check:channel_claim')->cron('*/10 * * * *');
 
     }
 }
