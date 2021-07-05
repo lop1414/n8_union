@@ -46,6 +46,7 @@ class ChannelClaimService extends CheckService
                 $tmp .= "渠道:<br>";
                 foreach ($sendItem as $c){
                     $tmp .= "        {$c['name']}<br>";
+                    $this->recordSendLog($c['id']);
                 }
                 $this->sendContent = $tmp;
                 $this->sendMessage();
