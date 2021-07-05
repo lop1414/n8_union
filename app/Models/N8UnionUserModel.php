@@ -34,6 +34,7 @@ class N8UnionUserModel extends UserActionBaseModel
         'book_id',
         'chapter_id',
         'force_chapter_id',
+        'platform',
         'admin_id',
         'adv_alias',
         'click_id',

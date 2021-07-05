@@ -3,9 +3,15 @@
 namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
+use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
+use App\Datas\N8UnionUserData;
+use App\Models\N8UnionUserModel;
+use App\Models\UserExtendModel;
 use App\Services\CreateTableService;
+use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 
 
 class CreateTableCommand extends BaseCommand
@@ -38,6 +44,7 @@ class CreateTableCommand extends BaseCommand
 
 
     public function handle(){
+        $this->demo();die;
         $service = new CreateTableService();
         $date    = $this->option('date');
 
@@ -59,6 +66,37 @@ class CreateTableCommand extends BaseCommand
     }
 
 
+
+    public function demo(){
+        $lastMaxId = 0;
+        do{
+            $list = (new N8UnionUserModel())
+                ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
+                ->select(DB::raw('n8_union_users.id,n8_union_users.n8_guid,e.ua'))
+                ->where('n8_union_users.platform','')
+                ->where('n8_union_users.id','>',$lastMaxId)
+                ->take(1000)
+                ->get();
+            foreach ($list as $item){
+                $lastMaxId = $item['id'];
+                $ua = $item->ua ?: $this->getUserUa($item['n8_guid']);
+                if(empty($ua)) continue;
+
+                $agent = new Agent();
+                $agent->setUserAgent($ua);
+                $platform = $agent->isiOS() ? PlatformEnum::IOS : PlatformEnum::ANDROID;
+
+                (new N8UnionUserData())->update(['id'=>$item['id']],['platform'=>$platform]);
+            }
+
+
+        }while(!$list->isEmpty());
+    }
+
+    public function getUserUa($n8Guid){
+       $info = (new UserExtendModel())->where('n8_guid',$n8Guid)->first();
+       return $info['ua'];
+    }
 
 
 

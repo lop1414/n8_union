@@ -5,9 +5,12 @@ namespace App\Datas;
 
 
 use App\Common\Datas\BaseData;
+use App\Common\Enums\PlatformEnum;
 use App\Common\Tools\CustomException;
 use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
+use App\Models\UserExtendModel;
+use Jenssegers\Agent\Agent;
 
 class N8UnionUserData extends BaseData
 {
@@ -94,6 +97,15 @@ class N8UnionUserData extends BaseData
                 ]);
             }
 
+
+            $ua = $data['ua'] ?: $this->getUserUa($data['n8_guid']);
+            $platform = '';
+            if(!empty($ua)){
+                $agent = new Agent();
+                $agent->setUserAgent($ua);
+                $platform = $agent->isiOS() ? PlatformEnum::IOS : PlatformEnum::ANDROID;
+            }
+
             $ret = (new N8UnionUserModel())->create([
                 'n8_guid'       => $data['n8_guid'],
                 'product_id'    => $data['product_id'],
@@ -102,6 +114,7 @@ class N8UnionUserData extends BaseData
                 'book_id'       => $channel['book_id'],
                 'chapter_id'    => $channel['chapter_id'],
                 'force_chapter_id' => $channel['force_chapter_id'],
+                'platform'      => $platform,
                 'admin_id'      => $channelExtend['admin_id'],
                 'adv_alias'     => $channelExtend['adv_alias'],
                 'matcher'       => $product['matcher'],
@@ -155,5 +168,11 @@ class N8UnionUserData extends BaseData
 
         // 删除缓存
         $this->setParams($where)->clear();
+    }
+
+
+    public function getUserUa($n8Guid){
+        $info = (new UserExtendModel())->where('n8_guid',$n8Guid)->first();
+        return $info['ua'];
     }
 }
