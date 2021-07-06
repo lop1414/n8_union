@@ -182,8 +182,44 @@ class MultiPlatFormChannelController extends BaseController
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
 
         $this->curdService->saveBefore(function(){
-            $this->isAndroidChannel($this->curdService->handleData['android_channel_id']);
-            $this->isIOSChannel($this->curdService->handleData['ios_channel_id']);
+            //验证
+            $androidChannel = (new ChannelData())
+                ->setParams(['id' => $this->curdService->handleData['android_channel_id']])
+                ->read();
+            $androidProduct = (new ProductData())
+                ->setParams(['id' => $androidChannel['product_id']])
+                ->read();
+            $iosChannel = (new ChannelData())
+                ->setParams(['id' => $this->curdService->handleData['ios_channel_id']])
+                ->read();
+            $iosProduct = (new ProductData())
+                ->setParams(['id' => $iosChannel['product_id']])
+                ->read();
+
+            if($androidChannel['adv_alias'] != $iosChannel['adv_alias']){
+                throw new CustomException([
+                    'code' => 'ADV_UNLIKE',
+                    'message' => "渠道广告商不一致",
+                ]);
+            }
+
+
+            if(!in_array($androidProduct['type'],Platform::getAndroidProductType())){
+                throw new CustomException([
+                    'code' => 'NOT_ANDROID_CHANNEL',
+                    'message' => "不是安卓渠道",
+                ]);
+            }
+
+            if(!in_array($iosProduct['type'],Platform::getIosProductType())){
+                throw new CustomException([
+                    'code' => 'NOT_IOS_CHANNEL',
+                    'message' => "不是iOS渠道",
+                ]);
+            }
+
+
+
             // 赋值 admin_id
             $adminUser = Functions::getGlobalData('admin_user_info');
             $this->curdService->handleData['admin_id'] = $adminUser['admin_user']['id'];
@@ -191,21 +227,21 @@ class MultiPlatFormChannelController extends BaseController
     }
 
 
-    /**
-     * 更新预处理
-     */
-    public function updatePrepare(){
-
-        $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
-
-        $this->curdService->saveBefore(function(){
-            $this->isAndroidChannel($this->curdService->handleData['android_channel_id']);
-            $this->isIOSChannel($this->curdService->handleData['ios_channel_id']);
-
-            unset($this->curdService->handleData['adv_alias']);
-            unset($this->curdService->handleData['admin_id']);
-        });
-    }
+//    /**
+//     * 更新预处理
+//     */
+//    public function updatePrepare(){
+//
+//        $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
+//
+//        $this->curdService->saveBefore(function(){
+//            $this->isAndroidChannel($this->curdService->handleData['android_channel_id']);
+//            $this->isIOSChannel($this->curdService->handleData['ios_channel_id']);
+//
+//            unset($this->curdService->handleData['adv_alias']);
+//            unset($this->curdService->handleData['admin_id']);
+//        });
+//    }
 
 
     public function isAndroidChannel($channelId){
