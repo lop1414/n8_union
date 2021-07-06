@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Functions;
 use App\Services\ConvertCallbackMapService;
 
@@ -66,6 +67,12 @@ class UserActionBaseController extends BaseController
                 $adminId = $this->curdService->requestData['admin_id'] ?? 0;
                 if(!empty($adminId)){
                     $unionWhere .= ' AND admin_id = ' . $adminId;
+                }
+
+                $platform = $this->curdService->requestData['platform'] ?? '';
+                if(!empty($platform)){
+                    Functions::hasEnum(PlatformEnum::class,$platform);
+                    $unionWhere .= " AND platform = '{$platform}'";
                 }
 
 
