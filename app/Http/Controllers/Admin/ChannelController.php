@@ -123,7 +123,7 @@ class ChannelController extends BaseController
             $advFeedBack = Advs::getFeedbackUrlMap();
 
             foreach ($this->curdService->responseData['list'] as $item){
-                $url = $advFeedBack[$item['adv_alias']];
+                $url = $advFeedBack[$item['adv_alias']] ?? '';
                 $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
                 $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
                 $item->product;
