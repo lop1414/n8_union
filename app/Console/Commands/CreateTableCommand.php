@@ -71,15 +71,15 @@ class CreateTableCommand extends BaseCommand
         $lastMaxId = 0;
         do{
             $list = (new N8UnionUserModel())
-                ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
-                ->select(DB::raw('n8_union_users.id,n8_union_users.n8_guid,e.ua'))
+                ->leftJoin('n8_global_users AS g','g.n8_guid','n8_union_users.n8_guid')
+                ->select(DB::raw('n8_union_users.id,n8_union_users.channel_id,n8_union_users.platform,n8_union_users.click_id,g.*'))
                 ->where('n8_union_users.platform','')
                 ->where('n8_union_users.id','>',$lastMaxId)
                 ->take(1000)
                 ->get();
             foreach ($list as $item){
                 $lastMaxId = $item['id'];
-                $ua = $item->ua ?: $this->getUserUa($item['n8_guid']);
+                $ua = $item->ua ?: $this->getUserUa($item['n8_guid'],$item['open_id']);
                 if(empty($ua)) continue;
 
                 $agent = new Agent();
@@ -93,9 +93,11 @@ class CreateTableCommand extends BaseCommand
         }while(!$list->isEmpty());
     }
 
-    public function getUserUa($n8Guid){
-       $info = (new UserExtendModel())->where('n8_guid',$n8Guid)->first();
-       return $info['ua'];
+    public function getUserUa($n8Guid,$openId){
+        $info = DB::connection('novel_admin')->select("SELECT * FROM novel_users WHERE open_id = '{$openId}' AND ua != ''");
+        if(empty($info)) return '';
+
+        return $info[0]->ua;
     }
 
 
