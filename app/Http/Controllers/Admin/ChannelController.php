@@ -121,10 +121,11 @@ class ChannelController extends BaseController
             $map = $this->getAdminUserMap();
 
             $advFeedBack = Advs::getFeedbackUrlMap();
+
             foreach ($this->curdService->responseData['list'] as $item){
-                foreach ($advFeedBack as $adv => $url){
-                    $item->feedback_url = str_replace('__CHANNEL_ID__',$item['id'],$url);
-                }
+                $url = $advFeedBack[$item['adv_alias']];
+                $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
+                $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
                 $item->product;
                 $item->book;
                 $item->chapter;

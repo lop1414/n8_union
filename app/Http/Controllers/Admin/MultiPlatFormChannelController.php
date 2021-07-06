@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\StatusEnum;
+use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Helpers\Platform;
 use App\Common\Services\SystemApi\CenterApiService;
@@ -98,8 +99,12 @@ class MultiPlatFormChannelController extends BaseController
         $this->curdService->selectQueryAfter(function(){
 
             $map = $this->getAdminUserName();
+            $advFeedBack = Advs::getFeedbackUrlMap();
 
             foreach ($this->curdService->responseData['list'] as $item){
+                $url = $advFeedBack[$item['adv_alias']];
+                $url = str_replace('__ANDROID_CHANNEL_ID__',$item->android_channel->id,$url);
+                $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item->ios_channel->id,$url);
 
                 $item->android_channel->product;
                 $item->android_channel->book;
