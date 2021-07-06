@@ -74,6 +74,7 @@ class CreateTableCommand extends BaseCommand
                 ->leftJoin('n8_global_users AS g','g.n8_guid','n8_union_users.n8_guid')
                 ->select(DB::raw('n8_union_users.id,n8_union_users.channel_id,n8_union_users.platform,n8_union_users.click_id,g.*'))
                 ->where('n8_union_users.platform','')
+                ->where('n8_union_users.created_time','>','2021-03-25 00:00:00')
                 ->where('n8_union_users.id','>',$lastMaxId)
                 ->take(1000)
                 ->get();
