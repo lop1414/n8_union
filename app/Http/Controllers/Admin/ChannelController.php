@@ -61,7 +61,7 @@ class ChannelController extends BaseController
         $this->curdService->customBuilder(function ($builder){
 
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
-                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id,e.platform'));
+                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
 
 
 
