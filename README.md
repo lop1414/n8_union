@@ -1,18 +1,23 @@
-#composer 安装 lumen 6.0
+###切换开发分支 并提交到远程仓库
+```
+git checkout -b develop
+git push
+```
+###composer 安装 lumen 6.0
  composer create-project --prefer-dist laravel/lumen n8_union 6.0
 
-#.gitignore 添加忽略
+###.gitignore 添加忽略
 ```
 composer.lock
 /app/Common
 ```
 
-#命令行生成 .env APP_KEY
+###命令行生成 .env APP_KEY
 ```
  php -r "echo md5(uniqid());";
 ```
 
-#配置 .env
+###配置 .env
 ```
 APP_NAME=Feishu
 APP_ENV=local
@@ -51,9 +56,10 @@ $app->withFacades(true, [
 //开启ORM
 $app->withEloquent();
 // 请求时间戳
-defined('TIMESTAMP');
+defined('TIMESTAMP') || define('TIMESTAMP', time());
+
 ```
-#bootstrap/app.php 
+###bootstrap/app.php 
 ```
 //修改异常处理
 $app->singleton(
@@ -71,7 +77,7 @@ $app->routeMiddleware([
 ]);
 ```
  
-#composer.json 添加依赖库
+###composer.json 添加依赖库
 ```
  "require": {
         "php": "^7.2",
@@ -84,3 +90,5 @@ $app->routeMiddleware([
         "predis/predis": "1.1.*"
     },
 ```
+
+###添加n8_common公共sql
