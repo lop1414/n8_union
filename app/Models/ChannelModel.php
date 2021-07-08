@@ -28,6 +28,19 @@ class ChannelModel extends BaseModel
     ];
 
 
+    protected $appends = ['href_url'];
+
+
+
+    public function getHrefUrlAttribute()
+    {
+        $extends = $this->attributes['extends'];
+        if(empty($extends)) return '';
+        $extends = $this->getExtendsAttribute($extends);
+        return $extends->hap_url;
+    }
+
+
     /**
      * @param $value
      * @return array
