@@ -100,11 +100,18 @@ class MultiPlatFormChannelController extends BaseController
 
             $map = $this->getAdminUserName();
             $advFeedBack = Advs::getFeedbackUrlMap();
+            $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
             foreach ($this->curdService->responseData['list'] as $item){
-                $url = $advFeedBack[$item['adv_alias']];
+                $url = $advFeedBack[$item['adv_alias']] ?? '';
                 $url = str_replace('__ANDROID_CHANNEL_ID__',$item->android_channel->id,$url);
                 $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item->ios_channel->id,$url);
+
+
+                $pageUrl = $advPageFeedBack[$item['adv_alias']] ?? '';
+                $pageUrl = str_replace('__N8_MULTI_CHANNEL_ID__',$item->id,$pageUrl);
+                $pageUrl = str_replace('__ANDROID_CHANNEL_ID__',$item->android_channel->id,$pageUrl);
+                $item->page_feedback_url = str_replace('__IOS_CHANNEL_ID__',$item->ios_channel->id,$pageUrl);
 
                 $item->android_channel->product;
                 $item->android_channel->book;
