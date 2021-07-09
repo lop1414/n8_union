@@ -49,20 +49,18 @@ class ChannelClaimService extends CheckService
                 $channelExtendModel->adv_alias = AdvAliasEnum::OCEAN;
                 $channelExtendModel->status = StatusEnum::ENABLE;
                 $channelExtendModel->admin_id = $item['admin_id'];
-//                $channelExtendModel->save();
+                $channelExtendModel->save();
 
 
 
                 $tmp = "渠道：{$channel['name']}<br>";
                 $tmp .= "书城渠道ID：{$channel['cp_channel_id']}<br>";
-                $tmp .= "<br>检测到的投放信息<br>";
-                $tmp .= "    广告商： ".$advNameMap[$channelExtendModel->adv_alias]."<br>";
-                $tmp .= "    产品： {$product['name']}<br>";
-                $tmp .= "    账户： {$item['account_name']}<br>";
-                $tmp .= "    计划： {$item['ad_name']}<br>";
+                $tmp .= "广告商： ".$advNameMap[$channelExtendModel->adv_alias]."<br>";
+                $tmp .= "产品： {$product['name']}<br>";
+                $tmp .= "账户： {$item['account_name']}<br>";
+                $tmp .= "计划： {$item['ad_name']}<br>";
 
-//                $this->sendAdminIds=[25,$channelExtendModel->admin_id];
-                $this->sendAdminIds=[25];
+                $this->sendAdminIds=[25,$channelExtendModel->admin_id];
                 $this->sendContent = $tmp;
                 $this->sendMessage();
             }
