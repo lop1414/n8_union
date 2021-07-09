@@ -15,7 +15,7 @@ class ChannelClaimService extends CheckService
 {
 
 
-    public $sendTitle = '渠道认领提示';
+    public $sendTitle = '渠道自动认领';
 
 
     public function index(){
@@ -53,17 +53,14 @@ class ChannelClaimService extends CheckService
 
 
 
-
                 $tmp = "渠道：{$channel['name']}<br>";
-                $tmp .= "<br>投放信息：<br>";
-                $tmp .= "产品： {$product['name']}<br>";
-                $tmp .= "账户： {$item['account_name']}<br>";
-                $tmp .= "计划： {$item['ad_name']}<br>";
+                $tmp .= "书城渠道ID：{$channel['cp_channel_id']}<br>";
+                $tmp .= "<br>检测到的投放信息<br>";
+                $tmp .= "    广告商： ".$advNameMap[$channelExtendModel->adv_alias]."<br>";
+                $tmp .= "    产品： {$product['name']}<br>";
+                $tmp .= "    账户： {$item['account_name']}<br>";
+                $tmp .= "    计划： {$item['ad_name']}<br>";
 
-                $tmp .= "<br>";
-                $tmp .= "默认认领信息：<br>";
-                $tmp .= "广告商：".$advNameMap[$channelExtendModel->adv_alias]."<br>";
-                $tmp .= "状态：".$statusNameMap[$channelExtendModel->status]."<br>";
 //                $this->sendAdminIds=[25,$channelExtendModel->admin_id];
                 $this->sendAdminIds=[25];
                 $this->sendContent = $tmp;
