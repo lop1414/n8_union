@@ -5,8 +5,7 @@ namespace App\Console\Commands;
 use App\Common\Console\BaseCommand;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
-use App\Services\CreateTableService;
-
+use App\Common\Services\CreateTableService;
 
 
 class CreateTableCommand extends BaseCommand
@@ -58,13 +57,6 @@ class CreateTableCommand extends BaseCommand
         }
 
     }
-
-
-
-
-
-
-
 
 
 }
