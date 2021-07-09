@@ -237,6 +237,11 @@ $router->group([
         $router->post('create', 'Front\ChapterController@create');
     });
 
+    // 多平台渠道
+    $router->group(['prefix' => 'multi_platform_channel'], function () use ($router) {
+        $router->post('read', 'Front\MultiPlatChannelController@read');
+    });
+
     // 渠道
     $router->group(['prefix' => 'channel'], function () use ($router) {
         $router->post('create', 'Front\ChannelController@create');
