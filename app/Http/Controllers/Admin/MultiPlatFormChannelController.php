@@ -12,6 +12,7 @@ use App\Common\Helpers\Platform;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
+use App\Datas\ChannelExtendData;
 use App\Datas\MultiPlatFormChannelData;
 use App\Datas\ProductData;
 use App\Models\MultiPlatFormChannelModel;
@@ -190,13 +191,13 @@ class MultiPlatFormChannelController extends BaseController
 
         $this->curdService->saveBefore(function(){
             //验证
-            $androidChannel = (new ChannelData())
+            $androidChannel = (new ChannelExtendData())
                 ->setParams(['id' => $this->curdService->handleData['android_channel_id']])
                 ->read();
             $androidProduct = (new ProductData())
                 ->setParams(['id' => $androidChannel['product_id']])
                 ->read();
-            $iosChannel = (new ChannelData())
+            $iosChannel = (new ChannelExtendData())
                 ->setParams(['id' => $this->curdService->handleData['ios_channel_id']])
                 ->read();
             $iosProduct = (new ProductData())
