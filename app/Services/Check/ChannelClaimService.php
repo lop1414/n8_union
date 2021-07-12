@@ -31,7 +31,6 @@ class ChannelClaimService extends CheckService
             $list = (new AdvOceanApiService())->apiGetChannelAds($time,$tmpEndTime);
 
             $advNameMap = array_column(AdvAliasEnum::$list,'name','id');
-            $statusNameMap = array_column(StatusEnum::$list,'name','id');
 
             foreach ($list as  $item){
                 $channelExtend = (new ChannelExtendModel())->where('channel_id',$item['channel_id'])->first();
