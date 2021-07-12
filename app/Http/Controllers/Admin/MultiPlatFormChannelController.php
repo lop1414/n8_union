@@ -191,25 +191,18 @@ class MultiPlatFormChannelController extends BaseController
 
         $this->curdService->saveBefore(function(){
             //验证
-            $androidChannel = (new ChannelExtendData())
-                ->setParams(['channel_id' => $this->curdService->handleData['android_channel_id']])
+            $androidChannel = (new ChannelData())
+                ->setParams(['id' => $this->curdService->handleData['android_channel_id']])
                 ->read();
             $androidProduct = (new ProductData())
                 ->setParams(['id' => $androidChannel['product_id']])
                 ->read();
-            $iosChannel = (new ChannelExtendData())
-                ->setParams(['channel_id' => $this->curdService->handleData['ios_channel_id']])
+            $iosChannel = (new ChannelData())
+                ->setParams(['id' => $this->curdService->handleData['ios_channel_id']])
                 ->read();
             $iosProduct = (new ProductData())
                 ->setParams(['id' => $iosChannel['product_id']])
                 ->read();
-
-            if($androidChannel['adv_alias'] != $iosChannel['adv_alias']){
-                throw new CustomException([
-                    'code' => 'ADV_UNLIKE',
-                    'message' => "渠道广告商不一致",
-                ]);
-            }
 
 
             if(!in_array($androidProduct['type'],Platform::getAndroidProductType())){
@@ -223,6 +216,21 @@ class MultiPlatFormChannelController extends BaseController
                 throw new CustomException([
                     'code' => 'NOT_IOS_CHANNEL',
                     'message' => "不是iOS渠道",
+                ]);
+            }
+
+
+            $androidChannelExtend = (new ChannelExtendData())
+                ->setParams(['channel_id' => $this->curdService->handleData['android_channel_id']])
+                ->read();
+            $iosChannelExtend = (new ChannelExtendData())
+                ->setParams(['channel_id' => $this->curdService->handleData['ios_channel_id']])
+                ->read();
+
+            if($androidChannelExtend['adv_alias'] != $iosChannelExtend['adv_alias']){
+                throw new CustomException([
+                    'code' => 'ADV_UNLIKE',
+                    'message' => "渠道广告商不一致",
                 ]);
             }
 
