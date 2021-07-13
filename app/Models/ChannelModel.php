@@ -34,7 +34,7 @@ class ChannelModel extends BaseModel
 
     public function getHrefUrlAttribute()
     {
-        $extends = $this->attributes['extends'];
+        $extends = $this->attributes['extends'] ?? [];
         if(empty($extends)) return '';
         $extends = $this->getExtendsAttribute($extends);
         return $extends->hap_url;
