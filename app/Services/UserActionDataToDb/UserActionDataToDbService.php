@@ -10,8 +10,11 @@ use App\Datas\ChannelExtendData;
 use App\Datas\OrderData;
 use App\Datas\UserData;
 use App\Enums\QueueEnums;
+use App\Models\UserExtendModel;
+use App\Models\UserModel;
 use App\Services\GlobalOrderService;
 use App\Services\GlobalUserService;
+use App\Services\UnionUserService;
 use Illuminate\Support\Facades\DB;
 
 class UserActionDataToDbService extends BaseService
@@ -66,6 +69,30 @@ class UserActionDataToDbService extends BaseService
                     $queue->item['code'] = $e->getCode();
                     $rePushData[] = $queue->item;
                 }
+
+                // 临时 下单行为找不到用户则创建用户
+                if($this->queueEnum == QueueEnums::USER_ORDER_ACTION && $errInfo['code'] == 'NOT_USER'){
+
+                    $unionUserService  = new UnionUserService();
+                    $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+
+                    $globalUser = $this->globalUserService->make($data['product_id'],$data['open_id']);
+
+                    $saveData = [
+                        'n8_guid'    => $globalUser['n8_guid'],
+                        'product_id' => $globalUser['product_id'],
+                        'reg_time'   => $data['action_time'],
+                        'channel_id' => $unionUserService->getChannelId(),
+                        'phone'      => $data['phone'] ?? ''
+                    ];
+
+                    (new UserModel())->create($saveData);
+                    $extendData = $unionUserService->filterDeviceInfo($data);
+                    $extendData['n8_guid'] = $globalUser['n8_guid'];
+
+                    (new UserExtendModel())->create($extendData);
+                }
+
 
             }catch (\Exception $e){
 
