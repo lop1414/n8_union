@@ -72,25 +72,30 @@ class UserActionDataToDbService extends BaseService
 
                 // 临时 下单行为找不到用户则创建用户
                 if($this->queueEnum == QueueEnums::USER_ORDER_ACTION && $errInfo['code'] == 'NOT_USER'){
+                    try{
+                        $unionUserService  = new UnionUserService();
+                        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
 
-                    $unionUserService  = new UnionUserService();
-                    $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
+                        $globalUser = $this->globalUserService->make($data['product_id'],$data['open_id']);
 
-                    $globalUser = $this->globalUserService->make($data['product_id'],$data['open_id']);
+                        $saveData = [
+                            'n8_guid'    => $globalUser['n8_guid'],
+                            'product_id' => $globalUser['product_id'],
+                            'reg_time'   => $data['action_time'],
+                            'channel_id' => $unionUserService->getChannelId(),
+                            'phone'      => $data['phone'] ?? ''
+                        ];
 
-                    $saveData = [
-                        'n8_guid'    => $globalUser['n8_guid'],
-                        'product_id' => $globalUser['product_id'],
-                        'reg_time'   => $data['action_time'],
-                        'channel_id' => $unionUserService->getChannelId(),
-                        'phone'      => $data['phone'] ?? ''
-                    ];
+                        (new UserModel())->create($saveData);
+                        $extendData = $unionUserService->filterDeviceInfo($data);
+                        $extendData['n8_guid'] = $globalUser['n8_guid'];
 
-                    (new UserModel())->create($saveData);
-                    $extendData = $unionUserService->filterDeviceInfo($data);
-                    $extendData['n8_guid'] = $globalUser['n8_guid'];
+                        (new UserExtendModel())->create($extendData);
+                    }catch (CustomException $e){
+                        $errInfo = $e->getErrorInfo(true);
+                        var_dump($errInfo);
 
-                    (new UserExtendModel())->create($extendData);
+                    }
                 }
 
 
