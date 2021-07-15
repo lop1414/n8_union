@@ -94,7 +94,7 @@ class ChannelService extends BaseService
         if(empty($this->user['channel_id']) && $this->user['channel_id'] != $this->channelId){
             return true;
         }
-
+        var_dump( $this->channelId);
         // 变更渠 且 保护期内不活跃
         if($this->user['channel_id'] != $this->channelId && !$this->isActiveUser($dateTime)){
 
