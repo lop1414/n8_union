@@ -32,13 +32,13 @@ class RegActionDataToDbService extends UserActionDataToDbService
     public function item($data,$globalUser){
 
         $user = $this->readUser($globalUser['n8_guid']);
-
+        echo $user['product_id']. "\n";
         // 用户存在
         if(!empty($user)){
-
+            echo "change\n";
             $this->changeUserItem($user,$data);
         }else{
-
+            echo "save\n";
             $this->saveUserItem($globalUser,$data);
         }
 
@@ -64,13 +64,23 @@ class RegActionDataToDbService extends UserActionDataToDbService
         $extendData = $unionUserService->filterDeviceInfo($data);
         $extendData['n8_guid'] = $globalUser['n8_guid'];
 
-        (new UserExtendModel())->create($extendData);
+//        (new UserExtendModel())->create($extendData);
+
+        $tmp = (new UserExtendModel())->where('n8_guid',$globalUser['n8_guid'])->first();
+        if(empty($tmp)){
+            (new UserExtendModel())->create($extendData);
+
+        }else{
+            $tmp->update($extendData);
+
+        }
 
 
 
         // 创建union用户
         $unionUserService->setUser($saveData);
         $unionUserService->create($data);
+        echo  "创建union user 成功\n";
 
         return $userInfo;
     }
