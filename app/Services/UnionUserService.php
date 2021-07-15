@@ -160,12 +160,12 @@ class UnionUserService extends BaseService
                 OR
                 ($this->verify && $product['matcher'] == MatcherEnum::SYS && !$channelService->isValidChange($actionData['action_time']))
             ){
-                echo "{$user['n8_guid']}无需创建\n";
                 $this->validChannelId = $user['channel_id'];
 
-                return (new N8UnionUserData())
+                $tmp = (new N8UnionUserData())
                     ->setParams(['n8_guid' => $user['n8_guid'], 'channel_id' => $this->validChannelId])
                     ->read();
+                if(!empty($tmp)) return $tmp;
             }
 
             $actionData['n8_guid'] = $user['n8_guid'];
@@ -198,7 +198,6 @@ class UnionUserService extends BaseService
 
                  $this->change($union['id'],$changeData);
                  $union['channel_id'] = $actionData['channel_id'];
-                 echo "更改union\n";
                  return $union;
             }else{
                 // 创建union user

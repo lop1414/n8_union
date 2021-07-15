@@ -88,14 +88,11 @@ class ChannelService extends BaseService
             ]);
         }
 
-        var_dump("user:",$this->user);
-
         //自然渠道不受保护
         if(empty($this->user['channel_id']) && $this->user['channel_id'] != $this->channelId){
             return true;
         }
 
-        var_dump( $this->channelId);
         // 变更渠 且 保护期内不活跃
         if($this->user['channel_id'] != $this->channelId && !$this->isActiveUser($dateTime)){
 
@@ -139,12 +136,10 @@ class ChannelService extends BaseService
 
         //阅读活跃
         $readInfo = (new UserReadActionData())->readLastDataByRange($n8Guid,$dateRange);
-        var_dump('阅读活跃:',$readInfo);
         if(!empty($readInfo)) return true;
 
         //登陆活跃
         $loginInfo = (new UserLoginActionData())->readLastDataByRange($n8Guid,$dateRange);
-        var_dump('登陆活跃:',$loginInfo);
         if(!empty($loginInfo)) return true;
 
         //加桌活跃
@@ -152,7 +147,6 @@ class ChannelService extends BaseService
             ->where('n8_guid',$n8Guid)
             ->whereBetween('action_time',$timeRange)
             ->first();
-        var_dump('加桌活跃:',$addShortcutInfo);
 
         if(!empty($addShortcutInfo)) return true;
 
