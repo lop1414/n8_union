@@ -32,7 +32,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
     public function item($data,$globalUser){
 
         $user = $this->readUser($globalUser['n8_guid']);
-        echo $user['product_id']. "\n";
+        echo $globalUser['product_id']. "\n";
         // 用户存在
         if(!empty($user)){
             echo "change\n";
