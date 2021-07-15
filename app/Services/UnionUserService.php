@@ -154,7 +154,7 @@ class UnionUserService extends BaseService
 
 
 
-            //没有渠道且用户渠道不为空  OR 开启验证且系统归因才进行验证
+            //没有渠道且用户渠道不为空就不重复创建  OR 开启验证且系统归因才进行验证
             if(
                 (empty($actionData['channel_id']) && !empty($user['channel_id']))
                 OR
