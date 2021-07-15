@@ -161,7 +161,6 @@ class UnionUserService extends BaseService
                 ($this->verify && $product['matcher'] == MatcherEnum::SYS && !$channelService->isValidChange($actionData['action_time']))
             ){
                 echo "{$user['n8_guid']}无需创建\n";
-                var_dump($actionData,$product,$channelService->isValidChange($actionData['action_time']));
                 $this->validChannelId = $user['channel_id'];
 
                 return (new N8UnionUserData())
