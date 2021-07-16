@@ -4,6 +4,8 @@ namespace App\Services\Yw;
 
 
 use App\Common\Enums\CpTypeEnums;
+use App\Common\Services\ErrorLogService;
+use App\Common\Tools\CustomException;
 use App\Datas\BookData;
 use App\Models\BookModel;
 use App\Sdks\Yw\YwSdk;
@@ -69,7 +71,24 @@ class BookService extends YwService
                 ->orderBy('id')
                 ->get();
             foreach ($list as $item){
-                $this->sync($item['cp_book_id']);
+                try{
+                    $this->sync($item['cp_book_id']);
+
+                }catch (CustomException $e){
+
+                    $errInfo = $e->getErrorInfo(true);
+
+                    //10010 小说不存在
+                    if($errInfo['code'] != '10010'){
+                        (new ErrorLogService())->catch($e);
+                    }
+                    echo $errInfo['msg']."\n";
+
+                }catch (\Exception $e){
+                    (new ErrorLogService())->catch($e);
+                    echo $e->getMessage()."\n";
+
+                }
 
                 $lastMinId = $item['id'];
             }
