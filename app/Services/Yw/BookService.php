@@ -82,7 +82,7 @@ class BookService extends YwService
                     if($errInfo['code'] != '10010'){
                         (new ErrorLogService())->catch($e);
                     }
-                    echo $errInfo['msg']."\n";
+                    echo $errInfo['message']."\n";
 
                 }catch (\Exception $e){
                     (new ErrorLogService())->catch($e);
