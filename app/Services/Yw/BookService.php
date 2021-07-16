@@ -79,7 +79,7 @@ class BookService extends YwService
                     $errInfo = $e->getErrorInfo(true);
 
                     //10010 小说不存在
-                    if($errInfo['code'] != '10010'){
+                    if(isset($errInfo['data']['result']['code']) && $errInfo['data']['result']['code'] != '10010'){
                         (new ErrorLogService())->catch($e);
                     }
                     echo $errInfo['message']."\n";
