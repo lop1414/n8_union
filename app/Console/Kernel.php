@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Console\Commands\Check\ChannelClaimCommand;
+use App\Console\Commands\Yw\UpdateBookCommand;
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\UserActionMatchCommand;
@@ -33,6 +34,9 @@ class Kernel extends ConsoleKernel
 
         // 检查
         ChannelClaimCommand::class,
+
+        // 更新书籍信息
+        UpdateBookCommand::class,
     ];
 
     /**
@@ -75,6 +79,8 @@ class Kernel extends ConsoleKernel
 
         //渠道认领检测
         $schedule->command('check:channel_claim')->cron('*/10 * * * *');
+        // 更新阅文书籍信息
+        $schedule->command('yw:update_book')->cron('0 2 * * *');
 
     }
 }

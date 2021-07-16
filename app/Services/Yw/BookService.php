@@ -46,6 +46,7 @@ class BookService extends YwService
         $sdk = new YwSdk($this->product['cp_product_alias'],$this->product['cp_account']['account'],$this->product['cp_account']['cp_secret']);
 
         $info = $sdk->getBookInfo($cpBookId);
+
         return $bookData->save([
             'cp_type'       => $this->product['cp_type'],
             'cp_book_id'    => $info['cbid'],
@@ -54,5 +55,25 @@ class BookService extends YwService
             'all_words'     => $info['all_words'],
             'update_time'   => $info['update_time']
         ]);
+    }
+
+
+    public function updateAll(){
+        $lastMinId = 0;
+        do{
+            $list = (new BookModel())
+                ->where('cp_type',CpTypeEnums::YW)
+                ->where('id','>',$lastMinId)
+                ->skip(0)
+                ->take(1000)
+                ->orderBy('id')
+                ->get();
+            foreach ($list as $item){
+                $this->sync($item['cp_book_id']);
+
+                $lastMinId = $item['id'];
+            }
+        }while(!$list->isEmpty());
+
     }
 }
