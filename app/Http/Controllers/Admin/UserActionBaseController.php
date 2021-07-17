@@ -25,7 +25,6 @@ class UserActionBaseController extends BaseController
 
     protected $adminMap;
 
-    public $adminUser;
 
 
     /**
@@ -36,20 +35,8 @@ class UserActionBaseController extends BaseController
 
     public function __construct(){
         parent::__construct();
-        $this->adminUser = Functions::getGlobalData('admin_user_info');
         $this->adminMap = $this->getAdminUserMap();
 
-    }
-
-
-    /**
-     * 有数据权限
-     * @return bool
-     */
-    public function isDataAuth(){
-        if($this->adminUser['is_admin']) return true;
-
-        return false;
     }
 
 

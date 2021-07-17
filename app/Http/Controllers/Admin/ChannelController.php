@@ -20,7 +20,6 @@ class ChannelController extends BaseController
 
     protected $defaultOrderBy = 'updated_time';
 
-    public $adminUser;
 
 
     /**
@@ -42,15 +41,7 @@ class ChannelController extends BaseController
 
 
 
-    /**
-     * 有数据权限
-     * @return bool
-     */
-    public function isDataAuth(){
-        if($this->adminUser['is_admin']) return true;
 
-        return false;
-    }
 
 
     /**

@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Advs;
-use App\Common\Helpers\Functions;
 use App\Common\Helpers\Platform;
 use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
@@ -20,10 +19,6 @@ use App\Models\MultiPlatFormChannelModel;
 class MultiPlatFormChannelController extends BaseController
 {
 
-
-    public $adminUser;
-
-
     /**
      * constructor.
      */
@@ -35,8 +30,6 @@ class MultiPlatFormChannelController extends BaseController
 
         parent::__construct();
 
-        $this->adminUser = Functions::getGlobalData('admin_user_info');
-
     }
 
 
@@ -46,16 +39,6 @@ class MultiPlatFormChannelController extends BaseController
         return array_column($adminUsers,'name','id');
     }
 
-
-    /**
-     * 有数据权限
-     * @return bool
-     */
-    public function isDataAuth(){
-        if($this->adminUser['is_admin']) return true;
-
-        return false;
-    }
 
 
     /**
@@ -237,8 +220,7 @@ class MultiPlatFormChannelController extends BaseController
 
 
             // 赋值 admin_id
-            $adminUser = Functions::getGlobalData('admin_user_info');
-            $this->curdService->handleData['admin_id'] = $adminUser['admin_user']['id'];
+            $this->curdService->handleData['admin_id'] = $this->adminUser['admin_user']['id'];
         });
     }
 

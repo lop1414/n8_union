@@ -17,7 +17,6 @@ use Illuminate\Http\Request;
 class ChannelExtendController extends BaseController
 {
 
-    public $adminUser;
 
     /**
      * constructor.
@@ -26,8 +25,6 @@ class ChannelExtendController extends BaseController
     {
         $this->model = new ChannelExtendModel();
         $this->modelData = new ChannelExtendData();
-
-        $this->adminUser = Functions::getGlobalData('admin_user_info');
 
         parent::__construct();
 
@@ -49,8 +46,7 @@ class ChannelExtendController extends BaseController
 
         $this->curdService->saveBefore(function(){
             // 赋值 admin_id
-            $adminUser = Functions::getGlobalData('admin_user_info');
-            $this->curdService->handleData['admin_id'] = $adminUser['admin_user']['id'];
+            $this->curdService->handleData['admin_id'] = $this->adminUser['admin_user']['id'];
         });
     }
 
