@@ -216,8 +216,9 @@ class ChannelController extends BaseController
             return $this->fail('FAIL','该产品暂无此功能');
         }
 
+        $channelIds = $req['channel_ids'] ?? [];
         $startDate = $endDate = date('Y-m-d');
-        (new $class)->sync($startDate,$endDate,$productId);
+        (new $class)->sync($startDate,$endDate,$productId,$channelIds);
 
         return $this->success();
     }

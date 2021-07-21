@@ -21,4 +21,18 @@ trait Channel
         return $this->apiRequest($uri,$param);
     }
 
+
+    public function getChannelById($startTime,$endTime,$id = 1, $recycle = 1,$type = 2){
+        $uri = 'cpapi/wxNovel/GetQuickSpreadList';
+        $param = [
+            'channel_id'  => $id,
+            'start_time' => strtotime($startTime),
+            'end_time' => strtotime($endTime),
+            'recycle'     => $recycle,
+            'type'        => $type,
+        ];
+
+        return $this->apiRequest($uri,$param);
+    }
+
 }

@@ -21,7 +21,7 @@ class ChannelService extends YwService
     }
 
 
-    public function sync($startDate,$endDate,$productId = null){
+    public function sync($startDate,$endDate,$productId = null,$channelIds = []){
         $where = $productId ? ['id'=>$productId] : [];
         $productList = $this->getProductList($where);
 
@@ -35,7 +35,11 @@ class ChannelService extends YwService
                 $startTime = $date.' 00:00:00';
                 $endTime = $date.' 23:59:59';
                 if($product['type'] == ProductTypeEnums::KYY){
-                    $this->syncKyyItem($startTime,$endTime,$product);
+                    if(empty($channelIds)){
+                        $this->syncKyyItem($startTime,$endTime,$product);
+                    }else{
+                        $this->syncKyyItemById($product,$channelIds);
+                    }
                 }
 
                 if($product['type'] == ProductTypeEnums::H5){}
@@ -92,5 +96,20 @@ class ChannelService extends YwService
             $page += 1;
 
         }while($currentTotal < $total);
+    }
+
+
+    public function syncKyyItemById($product,$channelIds){
+        $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
+        $channelList = (new ChannelModel())->whereIn('id',$channelIds)->get();
+        foreach ($channelList as $channel){
+            $startTime = date('Y-m-d H:i:s',strtotime($channel['create_time']) - 60 * 10);
+            $endTime = date('Y-m-d H:i:s',strtotime($channel['create_time']) + 60 * 10);
+            $tmp  = $sdk->getChannelById($startTime,$endTime,$channel['cp_channel_id']);
+            $info = $tmp['list'];
+            if(empty($info)) continue;
+            $channel->name = $info[0]['channel_name'];
+            $channel->save();
+        }
     }
 }
