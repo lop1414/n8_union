@@ -94,7 +94,7 @@ class UserActionBaseController extends BaseController
 
                     if($requestData['adv_alias'] == AdvAliasEnum::OCEAN){
                         isset($requestData['unit_id']) && $builder->whereRaw("{$this->clickField} IN (SELECT id FROM n8_adv_ocean.clicks WHERE ad_id = {$requestData['unit_id']})");
-                        isset($requestData['convert_callback_status']) && $builder->whereRaw("{$this->clickField} IN (SELECT click_id FROM n8_adv_ocean.convert_callback_status WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
+                        isset($requestData['convert_callback_status']) && $builder->whereRaw("{$this->clickField} IN (SELECT click_id FROM n8_adv_ocean.convert_callbacks WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
                     }
 
                 }
