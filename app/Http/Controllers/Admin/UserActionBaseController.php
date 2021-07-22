@@ -83,7 +83,7 @@ class UserActionBaseController extends BaseController
 
 
                 // 广告单元id 回传状态筛选
-                if(isset($requestData['unit_id']) || isset($requestData['callback_status'])){
+                if(isset($requestData['unit_id']) || isset($requestData['convert_callback_status'])){
 
                     if(!isset($requestData['adv_alias'])){
                         throw new CustomException([
@@ -94,7 +94,7 @@ class UserActionBaseController extends BaseController
 
                     if($requestData['adv_alias'] == AdvAliasEnum::OCEAN){
                         isset($requestData['unit_id']) && $builder->whereRaw("{$this->clickField} IN (SELECT id FROM n8_adv_ocean.clicks WHERE ad_id = {$requestData['unit_id']})");
-                        isset($requestData['callback_status']) && $builder->whereRaw("{$this->clickField} IN (SELECT click_id FROM n8_adv_ocean.convert_callbacks WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['callback_status']}')");
+                        isset($requestData['convert_callback_status']) && $builder->whereRaw("{$this->clickField} IN (SELECT click_id FROM n8_adv_ocean.convert_callback_status WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
                     }
 
                 }
