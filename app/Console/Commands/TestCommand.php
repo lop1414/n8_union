@@ -48,7 +48,7 @@ class TestCommand extends BaseCommand
         $endTime = '2021-07-02 00:00:00';
 
         $list = (new OrderModel())
-            ->whereBetween('action_time',[$startTime,$endTime])
+            ->whereBetween('order_time',[$startTime,$endTime])
             ->get();
         foreach ($list as $item){
             $orderTimes = (new OrderModel())
