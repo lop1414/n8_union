@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Console\Commands\Check\ChannelClaimCommand;
+use App\Console\Commands\TestCommand;
 use App\Console\Commands\Yw\UpdateBookCommand;
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionDataToDbCommand;
@@ -20,6 +21,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+
+        TestCommand::class,
         // 创建table
         CreateTableCommand::class,
 
