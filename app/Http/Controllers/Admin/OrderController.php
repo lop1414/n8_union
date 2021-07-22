@@ -18,6 +18,7 @@ class OrderController extends UserActionBaseController
      */
     protected $defaultOrderBy = 'order_time';
 
+    public $convertType = ConvertTypeEnum::PAY;
 
     public $isConvertCallbackKey = true;
 
