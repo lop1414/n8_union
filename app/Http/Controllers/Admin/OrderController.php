@@ -23,6 +23,9 @@ class OrderController extends UserActionBaseController
 
     public $convertId = 'n8_goid';
 
+    public $clickField = 'complete_click_id';
+
+
 
     /**
      * constructor.

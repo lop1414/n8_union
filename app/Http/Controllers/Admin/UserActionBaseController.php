@@ -27,6 +27,12 @@ class UserActionBaseController extends BaseController
 
     protected $adminMap;
 
+    /**
+     * @var string
+     * 点击id字段
+     */
+    public $clickField = 'click_id';
+
 
 
     /**
@@ -87,8 +93,8 @@ class UserActionBaseController extends BaseController
                     }
 
                     if($requestData['adv_alias'] == AdvAliasEnum::OCEAN){
-                        isset($requestData['unit_id']) && $builder->whereRaw("click_id IN (SELECT id FROM n8_adv_ocean.clicks WHERE ad_id = {$requestData['unit_id']})");
-                        isset($requestData['callback_status']) && $builder->whereRaw("click_id IN (SELECT click_id FROM n8_adv_ocean.convert_callbacks WHERE convert_callback_status = '{$requestData['callback_status']}')");
+                        isset($requestData['unit_id']) && $builder->whereRaw("{$this->clickField} IN (SELECT id FROM n8_adv_ocean.clicks WHERE ad_id = {$requestData['unit_id']})");
+                        isset($requestData['callback_status']) && $builder->whereRaw("{$this->clickField} IN (SELECT click_id FROM n8_adv_ocean.convert_callbacks WHERE convert_callback_status = '{$requestData['callback_status']}')");
                     }
 
                 }
