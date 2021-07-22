@@ -42,19 +42,16 @@ class OrderActionDataToDbService extends UserActionDataToDbService
         // 入库
         $channelId = $unionUserService->getValidChannelId();
         $advAlias = $this->getAdvAliasByChannel($channelId);
-        $orderTmp = (new OrderModel())
+        $orderTimes = (new OrderModel())
             ->where('n8_guid',$globalUser['n8_guid'])
             ->where('channel_id',$channelId)
-            ->orderBy('order_times','DESC')
-            ->first();
-
-        $orderTimes = empty($orderTmp) ? 1 :$orderTmp->order_times + 1;
-
-
+            ->where('order_time','<',$data['action_time'])
+            ->count();
         $completeTimes = (new OrderModel())
             ->where('n8_guid',$globalUser['n8_guid'])
             ->where('channel_id',$channelId)
             ->where('status',OrderStatusEnums::COMPLETE)
+            ->where('order_time','<',$data['action_time'])
             ->count();
 
         $this->getModel()->create([
