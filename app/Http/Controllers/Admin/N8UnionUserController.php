@@ -50,9 +50,9 @@ class N8UnionUserController extends UserActionBaseController
                 if(!empty($adminId)){
                     $builder->where('admin_id',$adminId);
                 }
-                $this->filterAdv($builder,$this->curdService->requestData);
             });
         });
+        $this->filterAdv();
 
         $this->selectUserCommonFilter();
         $this->selectCommonPrepare();

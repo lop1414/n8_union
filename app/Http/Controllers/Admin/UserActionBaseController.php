@@ -50,7 +50,6 @@ class UserActionBaseController extends BaseController
 
     public function selectCommonFilter(){
 
-
         $this->curdService->selectQueryBefore(function(){
             $this->curdService->customBuilder(function ($builder){
 
@@ -80,38 +79,38 @@ class UserActionBaseController extends BaseController
                 if($unionWhere != '1'){
                     $builder->whereRaw("uuid IN (SELECT id FROM n8_union_users WHERE {$unionWhere})");
                 }
-
-
-                $this->filterAdv($builder,$requestData);
-
             });
         });
-
+        $this->filterAdv();
 
     }
 
+
     /**
-     * @param $builder
-     * @param $requestData
-     * @throws CustomException
      * 广告单元id 回传状态筛选
      */
-    protected function filterAdv($builder,$requestData){
-        if(!empty($requestData['unit_id']) ||  !empty($requestData['convert_callback_status'])){
+    protected function filterAdv(){
+        $this->curdService->selectQueryBefore(function(){
+            $this->curdService->customBuilder(function ($builder){
+                $requestData = $this->curdService->requestData;
+                if(!empty($requestData['unit_id']) ||  !empty($requestData['convert_callback_status'])){
 
-            if(empty($requestData['adv_alias'])){
-                throw new CustomException([
-                    'code' => 'NOT_ADV_ALIAS',
-                    'message' => '请筛选广告商',
-                ]);
-            }
+                    if(empty($requestData['adv_alias'])){
+                        throw new CustomException([
+                            'code' => 'NOT_ADV_ALIAS',
+                            'message' => '请筛选广告商',
+                        ]);
+                    }
 
-            if($requestData['adv_alias'] == AdvAliasEnum::OCEAN){
-                !empty($requestData['unit_id']) && $builder->whereRaw("{$this->clickField} IN (SELECT id FROM n8_adv_ocean.clicks WHERE ad_id = {$requestData['unit_id']})");
-                !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$this->convertId} IN (SELECT convert_id FROM n8_adv_ocean.convert_callbacks WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
-            }
+                    if($requestData['adv_alias'] == AdvAliasEnum::OCEAN){
+                        !empty($requestData['unit_id']) && $builder->whereRaw("{$this->clickField} IN (SELECT id FROM n8_adv_ocean.clicks WHERE ad_id = {$requestData['unit_id']})");
+                        !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$this->convertId} IN (SELECT convert_id FROM n8_adv_ocean.convert_callbacks WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
+                    }
 
-        }
+                }
+            });
+        });
+
     }
 
 
