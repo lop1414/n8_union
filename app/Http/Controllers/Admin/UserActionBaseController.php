@@ -85,7 +85,7 @@ class UserActionBaseController extends BaseController
                 // 广告单元id 回传状态筛选
                 if(isset($requestData['unit_id']) || isset($requestData['convert_callback_status'])){
 
-                    if(!isset($requestData['adv_alias'])){
+                    if(!isset($requestData['adv_alias']) || empty($requestData['adv_alias'])){
                         throw new CustomException([
                             'code' => 'NOT_ADV_ALIAS',
                             'message' => '请筛选广告商',
