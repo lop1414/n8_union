@@ -50,10 +50,11 @@ class OrderController extends UserActionBaseController
                         'open_id'  => $openId
                     ])
                     ->read();
-                if(!empty($globalUser)){
-                    $builder->where('n8_guid',$globalUser['n8_guid']);
+                if(!empty($globalUser)) $globalUser['n8_guid'] = 0;
 
-                }
+
+                $builder->where('n8_guid',$globalUser['n8_guid']);
+
             }
         });
 

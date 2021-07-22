@@ -4,8 +4,10 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Functions;
+use App\Common\Tools\CustomException;
 use App\Services\ConvertCallbackMapService;
 
 class UserActionBaseController extends BaseController
@@ -46,24 +48,25 @@ class UserActionBaseController extends BaseController
         $this->curdService->selectQueryBefore(function(){
             $this->curdService->customBuilder(function ($builder){
 
+                $requestData = $this->curdService->requestData;
                 $unionWhere = '1';
                 if(!$this->isDataAuth()){
                     $unionWhere .= ' AND admin_id = ' . $this->adminUser['admin_user']['id'];
                 }
 
-                $adminId = $this->curdService->requestData['admin_id'] ?? 0;
+                $adminId = $requestData['admin_id'] ?? 0;
                 if(!empty($adminId)){
                     $unionWhere .= ' AND admin_id = ' . $adminId;
                 }
 
-                $platform = $this->curdService->requestData['platform'] ?? '';
+                $platform = $requestData['platform'] ?? '';
                 if(!empty($platform)){
                     Functions::hasEnum(PlatformEnum::class,$platform);
                     $unionWhere .= " AND platform = '{$platform}'";
                 }
 
 
-                $createdTime = $this->curdService->requestData['created_time'] ?? [];
+                $createdTime = $requestData['created_time'] ?? [];
 
                 if(!empty($createdTime)){
                     $unionWhere .= " AND created_time BETWEEN '{$createdTime[0]}' AND '{$createdTime[1]}'";
@@ -71,6 +74,25 @@ class UserActionBaseController extends BaseController
                 if($unionWhere != '1'){
                     $builder->whereRaw("uuid IN (SELECT id FROM n8_union_users WHERE {$unionWhere})");
                 }
+
+
+                // 广告单元id 回传状态筛选
+                if(isset($requestData['unit_id']) || isset($requestData['callback_status'])){
+
+                    if(!isset($requestData['adv_alias'])){
+                        throw new CustomException([
+                            'code' => 'NOT_ADV_ALIAS',
+                            'message' => '请筛选广告商',
+                        ]);
+                    }
+
+                    if($requestData['adv_alias'] == AdvAliasEnum::OCEAN){
+                        isset($requestData['unit_id']) && $builder->whereRaw("click_id IN (SELECT id FROM n8_adv_ocean.click WHERE ad_id = {$requestData['unit_id']})");
+                        isset($requestData['callback_status']) && $builder->whereRaw("click_id IN (SELECT click_id FROM n8_adv_ocean.convert_callbacks WHERE convert_callback_status = '{$requestData['callback_status']}')");
+                    }
+
+                }
+
             });
         });
 
