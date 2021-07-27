@@ -34,7 +34,11 @@ class ChannelController extends FrontController
             $this->fail(ResponseCodeEnum::FAIL,'参数错误');
         }
         $channel = (new ChannelData())->setParams($params)->read();
-        $channel['channel_extends'] = (new ChannelExtendData())->setParams(['channel_id'=>$channel['id']])->read();
+        $extends = [];
+        if(!empty($channel)){
+            $extends = (new ChannelExtendData())->setParams(['channel_id'=>$channel['id']])->read();
+        }
+        $channel['channel_extends'] = $extends;
         return $this->success($channel);
     }
 
