@@ -108,7 +108,14 @@ class ChannelService extends YwService
             $tmp  = $sdk->getChannelById($startTime,$endTime,$channel['cp_channel_id']);
             $info = $tmp['list'];
             if(empty($info)) continue;
-            $channel->name = $info[0]['channel_name'];
+            $item = $info[0];
+            $channel->name = $item['channel_name'];
+            $channel->extends = [
+                'hap_url'   => $item['hap_url'],
+                'h5_url'    => $item['h5_url'],
+                'http_url'  => $item['http_url'],
+                'apk_url'   => $item['apk_url'],
+            ];
             $channel->save();
         }
     }
