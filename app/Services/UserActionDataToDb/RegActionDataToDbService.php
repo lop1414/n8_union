@@ -109,7 +109,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
 
                     (new N8UnionUserExtendModel())
                         ->where('uuid',$unionUser['id'])
-                        ->update(['request_id',$data['request_id']]);
+                        ->update(['request_id'=>$data['request_id']]);
                 }
             }
         }
