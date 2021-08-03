@@ -40,7 +40,7 @@ class RegActionMatchService extends UserActionMatchService
 
 
     public function isCanMatch($item,$unionUser){
-
+        $extend = $item->extend ? $item->extend->toArray() : [];
         $requestId = $extend['request_id'] ?? '';
 
         if( $item['matcher'] != MatcherEnum::SYS && empty($requestId)){
