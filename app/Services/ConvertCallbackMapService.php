@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
+use App\Common\Services\SystemApi\AdvBdApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 
 class ConvertCallbackMapService extends BaseService
@@ -37,7 +38,7 @@ class ConvertCallbackMapService extends BaseService
 
 
     public function baiDu($convert){
-        $tmp = (new AdvOceanApiService())->apiGetConvertCallbacks($convert);
+        $tmp = (new AdvBdApiService())->apiGetConvertCallbacks($convert);
         return array_column($tmp,null,'convert_id');
     }
 
