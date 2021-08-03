@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 
@@ -20,7 +21,7 @@ class ConvertCallbackMapService extends BaseService
         $result = [];
         foreach ($convertList as $adv => $convert){
             if(!empty($adv)){
-                $adv = strtolower($adv);
+                $adv = Functions::camelize($adv);
                 $result += $this->$adv($convert);
             }
         }
@@ -34,5 +35,10 @@ class ConvertCallbackMapService extends BaseService
         return array_column($tmp,null,'convert_id');
     }
 
+
+    public function baiDu($convert){
+        $tmp = (new AdvOceanApiService())->apiGetConvertCallbacks($convert);
+        return array_column($tmp,null,'convert_id');
+    }
 
 }
