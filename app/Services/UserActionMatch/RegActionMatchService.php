@@ -5,7 +5,6 @@ namespace App\Services\UserActionMatch;
 
 use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Enums\MatcherEnum;
-use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Datas\N8UnionUserData;
 use App\Models\N8UnionUserModel;
 
@@ -39,61 +38,48 @@ class RegActionMatchService extends UserActionMatchService
     }
 
 
-    public function ocean(){
 
-        $this->modelListPage(function ($list){
-            $convert = [];
-            foreach ($list as $item){
+    public function isCanMatch($item,$unionUser){
 
-                $tmp = [
-                    'convert_type' => $this->convertType,
-                    'convert_id'   => $item['id'],
-                    'convert_at'   => $item['created_time'],
-                    'convert_times'=> 1,
-                    'n8_union_user'=> [
-                        'guid'  => $item['n8_guid'],
-                        'channel_id' => $item['channel_id'],
-                        'created_at' => $item['created_time'],
-                        'click_source'  => $this->getAdvClickSourceEnum($item['matcher'])
-                    ]
-                ];
+        $requestId = $extend['request_id'] ?? '';
 
-                $extend = $item->extend ? $item->extend->toArray() : [];
+        if( $item['matcher'] != MatcherEnum::SYS && empty($requestId)){
+            echo " {$unionUser['n8_guid']} 归因方不是系统 且没有request id不进行匹配\n";
+            return false;
+        }
 
-
-                $requestId = $extend['request_id'] ?? '';
-                if($item['matcher'] != MatcherEnum::SYS && empty($requestId)){
-                    echo "  归因方不是系统 且没有request id不进行匹配\n";
-                    $item->last_match_time = date('Y-m-d H:i:s');
-                    $item->save();
-                    continue;
-                }
-
-                array_push($convert,array_merge($tmp,$extend));
-            }
-
-            if(!empty($convert)){
-                echo "\r   匹配数:".count($convert)."\n";
-                $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
-
-                // 保存click_id
-                $lastMatchTime = date('Y-m-d H:i:s');
-                foreach ($matchList as $match){
-                    $updateData = [
-                        'last_match_time'  => $lastMatchTime
-                    ];
-                    if($match['click_id'] > 0){
-                        $updateData['click_id'] = $match['click_id'];
-                    }
-
-                    $where = ['id' => $match['convert_id']];
-                    (new N8UnionUserData())->update($where,$updateData);
-                }
-            }
-
-
-        });
+        return true;
     }
+
+
+    public function getConvertMatchData($item,$unionUser){
+        return [
+            'convert_type' => $this->convertType,
+            'convert_id'   => $item['id'],
+            'convert_at'   => $item['created_time'],
+            'convert_times'=> 1,
+            'n8_union_user'=> [
+                'guid'  => $item['n8_guid'],
+                'channel_id' => $item['channel_id'],
+                'created_at' => $item['created_time'],
+                'click_source'  => $this->getAdvClickSourceEnum($item['matcher'])
+            ]
+        ];
+    }
+
+
+    public function updateActionData($match){
+        $updateData = [
+            'last_match_time'  => date('Y-m-d H:i:s')
+        ];
+        if($match['click_id'] > 0){
+            $updateData['click_id'] = $match['click_id'];
+        }
+
+        $where = ['id' => $match['convert_id']];
+        (new N8UnionUserData())->update($where,$updateData);
+    }
+
 
 
 

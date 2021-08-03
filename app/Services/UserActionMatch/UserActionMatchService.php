@@ -9,7 +9,10 @@ use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
+use App\Common\Services\SystemApi\AdvBdApiService;
+use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Common\Tools\CustomException;
+use App\Datas\N8UnionUserData;
 use Illuminate\Support\Facades\DB;
 
 class UserActionMatchService extends BaseService
@@ -36,11 +39,21 @@ class UserActionMatchService extends BaseService
     protected $pageSize = 20;
 
 
-
+    /**
+     * @var
+     * 转化类型
+     */
     protected $convertType;
 
 
+    /**
+     * @var
+     * 广告商点击数据来源映射
+     */
     protected $advClickSourceMap;
+
+
+    protected $unionUserData;
 
 
     /**
@@ -55,6 +68,7 @@ class UserActionMatchService extends BaseService
     public function __construct(){
         parent::__construct();
         $this->setAdvClickSource();
+        $this->unionUserData = new N8UnionUserData();
     }
 
 
@@ -91,49 +105,6 @@ class UserActionMatchService extends BaseService
 
     public function run(){
 
-        try{
-
-            $advAlias = strtolower($this->advAlias);
-            if(!method_exists($this,$advAlias)){
-                echo "未定义{$advAlias}方法！";
-            }
-
-            $this->$advAlias();
-
-        }catch (CustomException $e){
-
-            //日志
-            (new ErrorLogService())->catch($e);
-
-
-            // echo
-            (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
-        }catch (\Exception $e){
-
-            //日志
-            (new ErrorLogService())->catch($e);
-
-            // echo
-            (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
-        }
-    }
-
-
-    public function getQuery(){}
-
-
-
-    public function ocean(){}
-
-
-
-    /**
-     * @param $fn
-     * @throws CustomException
-     * 数据分页执行
-     */
-    public function modelListPage($fn){
-
         $query = $this->getQuery();
         do{
             try {
@@ -141,8 +112,51 @@ class UserActionMatchService extends BaseService
                 DB::beginTransaction();
 
                 $list = $query->skip(0)->take($this->pageSize)->get();
-                //执行fn
-                $fn($list);
+                $convert = [];
+
+                //处理匹配数据
+                foreach ($list as $item){
+                    $unionUser = $this->unionUserData->setParams([
+                        'n8_guid'   => $item['n8_guid'],
+                        'channel_id'=> $item['channel_id']
+                    ])->read();
+
+                    $tmp = $this->getConvertMatchData($item,$unionUser);
+
+                    // 无需匹配
+                    if(!$this->isCanMatch($item,$unionUser)){
+                        $this->updateActionData([
+                            'click_id'   => 0,
+                            'convert_id' => $tmp['convert_id']
+                        ]);
+                        continue;
+                    }
+
+                    $extend = $item->extend ? $item->extend->toArray() : [];
+                    array_push($convert,array_merge($tmp,$extend));
+                }
+
+
+                // 匹配
+                if(!empty($convert)) {
+                    echo "\r   匹配数:".count($convert)."\n";
+
+                    $matchList = [];
+                    if($this->advAlias == AdvAliasEnum::OCEAN){
+                        // 巨量匹配
+                        $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
+
+                    }elseif ($this->advAlias == AdvAliasEnum::BAI_DU){
+                        // 百度匹配
+                        $matchList = (new AdvBdApiService())->apiConvertMatch($convert);
+                    }
+
+                    // 匹配结果处理
+                    foreach ($matchList as $match){
+
+                        $this->updateActionData($match);
+                    }
+                }
 
                 DB::commit();
 
@@ -150,16 +164,82 @@ class UserActionMatchService extends BaseService
 
                 DB::rollBack();
 
-                throw $e;
+                //日志
+                (new ErrorLogService())->catch($e);
+
+
+                // echo
+                (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
             }catch (\Exception $e){
 
                 DB::rollBack();
 
-                throw $e;
+                //日志
+                (new ErrorLogService())->catch($e);
+
+                // echo
+                (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
+
             }
 
         }while(!$list->isEmpty());
+
     }
+
+
+    public function getQuery(){
+        throw new CustomException([
+            'code' => 'PLEASE_WRITE_CODE',
+            'message' => '请书写代码 getQuery',
+        ]);
+    }
+
+
+    // 是否可以匹配
+    public function isCanMatch($item,$unionUser){
+
+        if(empty($unionUser['click_id'])){
+            echo "没有click id 不进行匹配 \n";
+            return  false;
+        }
+
+        return true;
+    }
+
+
+
+    // 更新行为数据
+    public function updateActionData($match){
+        throw new CustomException([
+            'code' => 'PLEASE_WRITE_CODE',
+            'message' => '请书写代码 updateActionData',
+        ]);
+    }
+
+
+
+    /**
+     * @param $item
+     * @param $unionUser
+     * @return array
+     * 转化匹配数据
+     */
+    public function getConvertMatchData($item,$unionUser){
+        return array(
+            'convert_type' => $this->convertType,
+            'convert_id'   => $item['id'],
+            'convert_at'   => $item['action_time'],
+            'convert_times'=> 1,
+            'click_id'     => $unionUser['click_id'],
+            'n8_union_user'=> [
+                'guid'          => $unionUser['n8_guid'],
+                'channel_id'    => $unionUser['channel_id'],
+                'created_at'    => $unionUser['created_time'],
+                'click_source'  => $this->getAdvClickSourceEnum($unionUser['matcher'])
+            ]
+        );
+    }
+
 
 
     /**
