@@ -93,7 +93,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
             $userService->delAllowChangeField('channel_id');
 
             // 修改 union_user 注册时间、request_id  兼容渠道变更用户 行为上报顺序问题
-            if($unionUser['created_time'] > $data['action_time']){
+            if($unionUser['created_time'] >= $data['action_time']){
                 $unionUserModelData = new N8UnionUserData();
                 $unionUserModelData->update([
                         'n8_guid'      => $unionUser['n8_guid'],
