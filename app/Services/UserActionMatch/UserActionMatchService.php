@@ -146,7 +146,7 @@ class UserActionMatchService extends BaseService
                         // 巨量匹配
                         $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
 
-                    }elseif ($this->advAlias == AdvAliasEnum::BAI_DU){
+                    }elseif ($this->advAlias == AdvAliasEnum::BU){
                         // 百度匹配
                         $matchList = (new AdvBdApiService())->apiConvertMatch($convert);
                     }
