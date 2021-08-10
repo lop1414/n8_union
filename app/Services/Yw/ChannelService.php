@@ -4,6 +4,9 @@ namespace App\Services\Yw;
 
 
 use App\Common\Enums\ProductTypeEnums;
+use App\Common\Enums\ResponseCodeEnum;
+use App\Common\Enums\SystemAliasEnum;
+use App\Common\Tools\CustomException;
 use App\Models\ChannelModel;
 use App\Sdks\Yw\YwSdk;
 
@@ -42,7 +45,17 @@ class ChannelService extends YwService
                     }
                 }
 
-                if($product['type'] == ProductTypeEnums::H5){}
+                if($product['type'] == ProductTypeEnums::H5){
+                    $repData['product_id'] = $product['id'];
+                    $url = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.url').'/open/sync_yw_channel?'. http_build_query($repData);
+                    $res = json_decode(file_get_contents($url),true);
+                    if($res['code'] != ResponseCodeEnum::SUCCESS){
+                        throw new CustomException([
+                            'code' => $res['code'],
+                            'message' => '请联系管理员!'
+                        ]);
+                    }
+                }
 
                 $date = date('Y-m-d',  strtotime('+1 day',strtotime($date)) );
             }while($date <= $endDate);
