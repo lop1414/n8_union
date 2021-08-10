@@ -37,7 +37,7 @@ class ConvertCallbackMapService extends BaseService
     }
 
 
-    public function baiDu($convert){
+    public function bd($convert){
         $tmp = (new AdvBdApiService())->apiGetConvertCallbacks($convert);
         return array_column($tmp,null,'convert_id');
     }
