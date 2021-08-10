@@ -48,8 +48,8 @@ class ChannelService extends YwService
                 if($product['type'] == ProductTypeEnums::H5){
                     $repData = [
                         'product_id'    => $product['id'],
-                        'start_date'    => $startTime,
-                        'end_date'      => $endTime
+                        'start_date'    => $date,
+                        'end_date'      => $date
                     ];
                     $url = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.url').'/open/sync_yw_channel?'. http_build_query($repData);
                     $res = json_decode(file_get_contents($url),true);
