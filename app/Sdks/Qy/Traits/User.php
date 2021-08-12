@@ -8,7 +8,7 @@ trait User
 
 
 
-    public function getUser($date,$page = 1, $pageSize = 100){
+    public function getUsers($date,$page = 1, $pageSize = 100){
         $uri = 'v1/users';
         $param = [
             'date'  => $date,
