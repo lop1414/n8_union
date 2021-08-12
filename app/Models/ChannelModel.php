@@ -37,7 +37,7 @@ class ChannelModel extends BaseModel
         $extends = $this->attributes['extends'] ?? [];
         if(empty($extends)) return '';
         $extends = $this->getExtendsAttribute($extends);
-        return $extends->hap_url;
+        return $extends->hap_url ?? '';
     }
 
 
