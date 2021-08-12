@@ -73,7 +73,7 @@ class ChannelService extends QyService
 
 
                 $channel->product_id = $product['id'];
-                $channel->cp_channel_id = $item['channel_id'];
+                $channel->cp_channel_id = $item['id'];
                 $channel->name = $item['dispatch_channel'];
                 $channel->book_id = $book['id'];
                 $channel->chapter_id = $chapter['id'] ?? 0;
