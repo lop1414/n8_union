@@ -5,11 +5,15 @@ namespace App\Sdks\Qy;
 
 use App\Sdks\Qy\Traits\Channel;
 use App\Sdks\Qy\Traits\Request;
+use App\Sdks\Qy\Traits\User;
+use App\Sdks\Qy\Traits\Order;
 
 class QySdk
 {
     use Request;
     use Channel;
+    use User;
+    use Order;
 
     /**
      * 公共接口地址
