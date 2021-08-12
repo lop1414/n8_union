@@ -123,12 +123,6 @@ class ProductController extends BaseController
 
             $this->curdService->handleData['secret'] = Functions::makeSecret();
 
-            if($this->curdService->getModel()->exist('name', $this->curdService->handleData['name'])){
-                throw new CustomException([
-                    'code' => 'PRODUCT_NAME_EXIST',
-                    'message' => '产品名称已存在'
-                ]);
-            }
             if($this->curdService->getModel()->uniqueExist([
                 'cp_type' => $this->curdService->handleData['cp_type'],
                 'cp_product_alias' => $this->curdService->handleData['cp_product_alias']
