@@ -287,3 +287,6 @@ $router->group([
     $router->post('open_user/bind', 'Front\OpenUserController@bind');
     $router->post('open_user/info', 'Front\OpenUserController@info');
 });
+
+// 测试
+$router->post('test', 'TestController@test');
