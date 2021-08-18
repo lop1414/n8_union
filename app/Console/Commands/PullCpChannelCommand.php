@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
 use App\Common\Enums\CpTypeEnums;
+use App\Common\Enums\ProductTypeEnums;
 use App\Common\Helpers\Functions;
 
 class PullCpChannelCommand extends BaseCommand
@@ -80,7 +81,7 @@ class PullCpChannelCommand extends BaseCommand
 
         if(empty($this->cpType) || $this->cpType == CpTypeEnums::YW){
             echo "阅文\n";
-            (new \App\Services\Yw\ChannelService())->sync($this->startDate,$this->endDate);
+            (new \App\Services\Yw\ChannelService())->sync($this->startDate,$this->endDate,null, [], ProductTypeEnums::KYY);
         }
 
     }
