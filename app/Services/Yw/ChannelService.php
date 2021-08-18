@@ -24,8 +24,9 @@ class ChannelService extends YwService
     }
 
 
-    public function sync($startDate,$endDate,$productId = null,$channelIds = []){
+    public function sync($startDate,$endDate,$productId = null,$channelIds = [],$productType = ProductTypeEnums::KYY){
         $where = $productId ? ['id'=>$productId] : [];
+        $where['product_type'] = $productType;
         $productList = $this->getProductList($where);
 
 
