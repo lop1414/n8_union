@@ -101,7 +101,7 @@ class RegActionDataToDbService extends UserActionDataToDbService
                     ],[
                         'created_time'  => $data['action_time']
                     ]);
-                if(isset($data['request_id']) && !empty($data['request_id'])){
+                if(!empty($data['request_id'])){
                     $unionUser =  $unionUserModelData->setParams([
                             'n8_guid'      => $unionUser['n8_guid'],
                             'channel_id'   => $unionUser['channel_id']
