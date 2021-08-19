@@ -11,12 +11,20 @@ use App\Enums\QueueEnums;
 use App\Services\ChannelService;
 use App\Services\GlobalOrderService;
 use App\Services\GlobalUserService;
+use App\Services\UserService;
 use Illuminate\Support\Facades\DB;
 
 class SaveUserActionService extends BaseService
 {
 
     protected $queueEnum;
+
+    public $userService;
+
+    public function __construct(){
+        parent::__construct();
+        $this->userService = new UserService();
+    }
 
 
     public function run(){
@@ -30,21 +38,22 @@ class SaveUserActionService extends BaseService
             try{
                 DB::beginTransaction();
 
+                $data['action_type'] = $this->queueEnum;
+
                 $globalUser = $globalUserService->make($data['product_id'],$data['open_id']);
                 $data['n8_guid'] = $globalUser['n8_guid'];
 
-                $channel = [
-                    'channel_id' => 0,
-                    'adv_alias'  => AdvAliasEnum::UNKNOWN
-                ];
+                $data['channel_id'] = 0;
+                $data['adv_alias'] = AdvAliasEnum::UNKNOWN;
                 if(!empty($data['cp_channel_id'])){
                     $channel = $this->getChannel($data['product_id'],$data['cp_channel_id']);
+                    $data['channel_id'] = $channel['id'];
+                    $data['adv_alias'] = $channel['channel_extend']['adv_alias'];
                 }
-                $data['channel_id'] = $channel['id'];
-                $data['adv_alias'] = $channel['channel_extend']['adv_alias'];
 
+                $user = $this->userService->read($data['n8_guid']);
 
-                $this->item($data);
+                $this->item($user,$data);
 
                 DB::commit();
 
@@ -115,7 +124,8 @@ class SaveUserActionService extends BaseService
         return $channel;
     }
 
-    public function item($data){}
+    public function item($user,$data){}
+
 
     public function failItem($data){
         // 事务回滚 删除缓存

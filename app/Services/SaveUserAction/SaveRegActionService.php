@@ -6,8 +6,8 @@ namespace App\Services\UserActionDataToDb;
 use App\Datas\N8UnionUserData;
 use App\Enums\QueueEnums;
 use App\Models\N8UnionUserExtendModel;
-use App\Models\UserExtendModel;
 use App\Models\UserModel;
+use App\Services\N8UnionUserService;
 use App\Services\UnionUserService;
 use App\Services\UserService;
 
@@ -29,9 +29,9 @@ class SaveRegActionService extends SaveUserActionService
 
 
 
-    public function item($data){
+    public function item($user,$data){
 
-        $user = $this->userService->read($data['n8_guid']);
+        $n8UnionUserService  = new N8UnionUserService();
 
         // 用户存在
         if(!empty($user)){
@@ -39,9 +39,22 @@ class SaveRegActionService extends SaveUserActionService
             $this->changeUserItem($user,$data);
         }else{
 
-            $this->saveUserItem($data);
-        }
+            // 创建用户
+            $userData = array_merge([
+                'n8_guid'    => $data['n8_guid'],
+                'product_id' => $data['product_id'],
+                'reg_time'   => $data['action_time'],
+                'channel_id' => $data['channel_id'],
+                'phone'      => $data['phone'] ?? '',
+            ],$n8UnionUserService->filterDeviceInfo($data));
+            $userInfo = $this->userService->create($userData);
 
+
+            // 创建union用户
+            $n8UnionUserService->updateSave($user,$data);
+
+            return $userInfo;
+        }
     }
 
     public function changeUserItem($user,$data){
@@ -82,29 +95,7 @@ class SaveRegActionService extends SaveUserActionService
         return $userService->setUser($user)->update($data);
     }
 
-    public function saveUserItem($data){
-
-        $unionUserService  = new UnionUserService();
-        $unionUserService->setChannelIdByCpChannelId($data['product_id'],$data['cp_channel_id']);
-//        $unionUserService->closeVerify(); //关闭验证
 
 
-        // 创建用户
-        $userData = array_merge([
-            'n8_guid'    => $data['n8_guid'],
-            'product_id' => $data['product_id'],
-            'reg_time'   => $data['action_time'],
-            'channel_id' => $unionUserService->getChannelId(),
-            'phone'      => $data['phone'] ?? '',
-        ],$unionUserService->filterDeviceInfo($data));
-        $this->userService->create($userData);
-
-
-        // 创建union用户
-        $unionUserService->setUser($saveData);
-        $unionUserService->create($data);
-
-        return $userInfo;
-    }
 
 }
