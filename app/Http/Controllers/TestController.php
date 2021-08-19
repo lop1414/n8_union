@@ -29,6 +29,10 @@ class TestController extends FrontController
             return $this->forbidden();
         }
 
+        $data = ['cp_channel_id' => ''];
+        dd(empty($data['cp_channel_id']));
+
+
         $product = (new ProductModel())->where('cp_type',CpTypeEnums::QY)->first();
 
         (new ChannelService())->sync('2021-08-08','2021-08-11',$product['id'],[4943]);

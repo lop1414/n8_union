@@ -117,7 +117,7 @@ class UserService extends BaseService
     // =============================
 
 
-    public function get($n8Guid){
+    public function read($n8Guid){
 
         return (new UserData())->setParams(['n8_guid'=>$n8Guid])->read();
     }
