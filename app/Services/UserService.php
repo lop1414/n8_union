@@ -4,10 +4,11 @@ namespace App\Services;
 
 use App\Common\Services\BaseService;
 use App\Datas\UserData;
+use App\Models\UserExtendModel;
 use App\Models\UserInfoChangeLogModel;
 use App\Models\UserModel;
 
-class UpdateUserService extends BaseService
+class UserService extends BaseService
 {
 
     protected $user;
@@ -107,5 +108,27 @@ class UpdateUserService extends BaseService
             $model->created_at      = date('Y-m-d H:i:s');
             $model->save();
         }
+    }
+
+
+
+
+
+    // =============================
+
+
+    public function get($n8Guid){
+
+        return (new UserData())->setParams(['n8_guid'=>$n8Guid])->read();
+    }
+
+
+    public function create($data){
+
+        $userInfo = $this->getModel()->create($data);
+
+        $userInfo['extend'] = (new UserExtendModel())->create($data);
+
+        return $userInfo;
     }
 }

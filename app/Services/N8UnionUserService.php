@@ -11,104 +11,26 @@ use App\Datas\N8UnionUserData;
 use App\Datas\ProductData;
 use App\Enums\QueueEnums;
 
-class UnionUserService extends BaseService
+class N8UnionUserService extends BaseService
 {
-
-    /**
-     * @var
-     * 渠道ID
-     */
-    protected $channelId = 0;
-
-
-    /**
-     * @var
-     * 有效渠道ID
-     */
-    protected $validChannelId;
-
-
-    protected $user;
-
-
-    /**
-     * @var
-     * 验证是否活期
-     */
-    protected $verify;
-
-
 
     public function __construct(){
         parent::__construct();
-
-        // 默认开启验证
-        $this->openVerify();
-    }
-
-
-    /**
-     * 开启验证
-     */
-    public function openVerify(){
-        $this->verify = true;
-    }
-
-
-    /**
-     * 关闭验证
-     */
-    public function closeVerify(){
-        $this->verify = false;
     }
 
 
 
-    public function setUser($info){
-        $this->user = $info;
-    }
-
-
-    public function getUser(){
-        return $this->user;
-    }
-
-
-    public function setChannelId($id){
-        $this->channelId = $id;
-    }
-
-
-
-    /**
-     * @param $productId
-     * @param $cpChannelId
-     * @throws CustomException
-     * 通过cp渠道ID设置 联运渠道ID
-     */
-    public function setChannelIdByCpChannelId($productId,$cpChannelId){
-
-        if(empty($cpChannelId)){
-            return;
-        }
-
-        $channel = (new ChannelData())
-            ->setParams([
-                'product_id'    => $productId,
-                'cp_channel_id' => $cpChannelId
-            ])
-            ->read();
-
+    public function getChannel($productId,$cpChannelId){
+        $channel = (new ChannelService())->getChannelByCpChannelId($productId,$cpChannelId);
         if(empty($channel)){
-
             throw new CustomException([
                 'code'       => 'NO_CHANNEL',
                 'message'    => "找不到渠道（产品ID:{$productId},N8CP渠道ID:{$cpChannelId}）",
                 '#admin_id#' => 0
             ]);
         }
-        $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $channel['id']])->read();
-        if(empty($channelExtend)){
+
+        if(empty($channel['channel_extend'])){
 
             throw new CustomException([
                 'code'       => 'NO_CHANNEL_EXTEND',
@@ -116,19 +38,14 @@ class UnionUserService extends BaseService
                 '#admin_id#' => 0
             ]);
         }
-        $this->setChannelId($channel['id']);
+        return $channel;
     }
 
 
 
-    public function getChannelId(){
-        return $this->channelId;
-    }
 
+    public function get($actionType,$actionData){
 
-
-    public function getValidChannelId(){
-        return $this->validChannelId;
     }
 
 
@@ -226,7 +143,29 @@ class UnionUserService extends BaseService
         }
     }
 
-
+    /**
+     * @param $data
+     * @return array
+     * 过滤设备信息
+     */
+    public function filterDeviceInfo($data){
+        return array(
+            'ip'                    => $data['ip'] ?? '',
+            'ua'                    => $data['ua'] ?? '',
+            'muid'                  => $data['muid'] ?? '',
+            'oaid'                  => $data['oaid'] ?? '',
+            'device_brand'          => $data['device_brand'] ?? '',
+            'device_manufacturer'   => $data['device_manufacturer'] ?? '',
+            'device_model'          => $data['device_model'] ?? '',
+            'device_product'        => $data['device_product'] ?? '',
+            'device_os_version_name'=> $data['device_os_version_name'] ?? '',
+            'device_os_version_code'=> $data['device_os_version_code'] ?? '',
+            'device_platform_version_name' => $data['device_platform_version_name'] ?? '',
+            'device_platform_version_code' => $data['device_platform_version_code'] ?? '',
+            'android_id'            => $data['android_id'] ?? '',
+            'request_id'            => $data['request_id'] ?? ''
+        );
+    }
 
     /**
      * @param $uuid
@@ -253,33 +192,6 @@ class UnionUserService extends BaseService
         return (new N8UnionUserData())->update(
             ['id'=>$uuid],
             $changeData
-        );
-    }
-
-
-
-
-    /**
-     * @param $data
-     * @return array
-     * 过滤设备信息
-     */
-    public function filterDeviceInfo($data){
-        return array(
-            'ip'                    => $data['ip'] ?? '',
-            'ua'                    => $data['ua'] ?? '',
-            'muid'                  => $data['muid'] ?? '',
-            'oaid'                  => $data['oaid'] ?? '',
-            'device_brand'          => $data['device_brand'] ?? '',
-            'device_manufacturer'   => $data['device_manufacturer'] ?? '',
-            'device_model'          => $data['device_model'] ?? '',
-            'device_product'        => $data['device_product'] ?? '',
-            'device_os_version_name'=> $data['device_os_version_name'] ?? '',
-            'device_os_version_code'=> $data['device_os_version_code'] ?? '',
-            'device_platform_version_name' => $data['device_platform_version_name'] ?? '',
-            'device_platform_version_code' => $data['device_platform_version_code'] ?? '',
-            'android_id'            => $data['android_id'] ?? '',
-            'request_id'            => $data['request_id'] ?? ''
         );
     }
 
