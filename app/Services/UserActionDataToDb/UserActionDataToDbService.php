@@ -2,6 +2,7 @@
 
 namespace App\Services\UserActionDataToDb;
 
+use App\Common\Enums\AdvAliasEnum;
 use App\Common\Services\BaseService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
@@ -119,7 +120,7 @@ class UserActionDataToDbService extends BaseService
         $channel = (new ChannelExtendData())
             ->setParams(['channel_id'=>$id])
             ->read();
-        return $channel['adv_alias'];
+        return $channel['adv_alias'] ?? AdvAliasEnum::UNKNOWN;
     }
 
 

@@ -5,6 +5,7 @@ namespace App\Datas;
 
 
 use App\Common\Datas\BaseData;
+use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Tools\CustomException;
 use App\Models\N8UnionUserExtendModel;
@@ -66,7 +67,7 @@ class N8UnionUserData extends BaseData
             ];
             $channelExtend = [
                 'admin_id'  => 0,
-                'adv_alias' => ''
+                'adv_alias' => AdvAliasEnum::UNKNOWN
             ];
 
             if(!empty($data['channel_id'])){
