@@ -7,6 +7,7 @@ use App\Common\Services\BaseService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomQueue;
+use App\Datas\N8UnionUserData;
 use App\Enums\QueueEnums;
 use App\Services\ChannelService;
 use App\Services\GlobalOrderService;
@@ -81,18 +82,18 @@ class SaveUserActionService extends BaseService
                 DB::rollBack();
 
                 $this->failItem($data);
-                //未命中唯一索引
-                if($e->getCode() != 23000){
-                    //日志
-                    (new ErrorLogService())->catch($e);
-                    $queue->item['exception'] = $e->getMessage();
-                    $queue->item['code'] = $e->getCode();
-                    $rePushData[] = $queue->item;
-                    echo $e->getMessage()."\n";
-
-                }else{
+                //命中唯一索引
+                if($e->getCode() == 23000){
                     echo "  命中唯一索引 \n";
+                    continue;
                 }
+
+                //日志
+                (new ErrorLogService())->catch($e);
+                $queue->item['exception'] = $e->getMessage();
+                $queue->item['code'] = $e->getCode();
+                $rePushData[] = $queue->item;
+                echo $e->getMessage()."\n";
             }
         }
 
@@ -130,6 +131,8 @@ class SaveUserActionService extends BaseService
     public function failItem($data){
         // 事务回滚 删除缓存
         (new GlobalUserService())->clearCache($data['product_id'],$data['open_id']);
+
+        (new N8UnionUserData())->setParams($data)->clear();
 
         if($this->queueEnum ==  QueueEnums::USER_ORDER_ACTION){
             (new GlobalOrderService())->clearCache($data['product_id'],$data['order_id']);

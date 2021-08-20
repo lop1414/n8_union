@@ -5,13 +5,8 @@ namespace App\Datas;
 
 
 use App\Common\Datas\BaseData;
-use App\Common\Enums\AdvAliasEnum;
-use App\Common\Enums\PlatformEnum;
-use App\Common\Tools\CustomException;
-use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
-use App\Models\UserExtendModel;
-use Jenssegers\Agent\Agent;
+
 
 class N8UnionUserData extends BaseData
 {

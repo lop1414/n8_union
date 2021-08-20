@@ -11,9 +11,6 @@ use App\Models\UserModel;
 class UserService extends BaseService
 {
 
-    protected $user;
-
-
     protected $userModelData;
 
     public function __construct(){
@@ -23,54 +20,34 @@ class UserService extends BaseService
     }
 
 
-    /**
-     * 用户信息 可变更字段
-     * @var string[]
-     */
-    protected $userAllowChangeField = array(
-        'channel_id',
-        'phone'
-    );
-
-
-
-    /**
-     * @param $field
-     * @return $this
-     * 删除允许修改字段
-     */
-    public function delAllowChangeField($field){
-        $this->userAllowChangeField = array_diff($this->userAllowChangeField,[$field]);
-        return $this;
-    }
-
-    /**
-     * @param $field
-     * @return $this
-     * 增加允许修改字段
-     */
-    public function addAllowChangeField($field){
-        $this->userAllowChangeField = array_merge($this->userAllowChangeField,[$field]);
-        return $this;
+    public function read($n8Guid){
+        return (new UserData())->setParams(['n8_guid'=>$n8Guid])->read();
     }
 
 
-    public function setUser($info){
-        $this->user = $info;
-        return $this;
+    public function create($data){
+
+        $userInfo = $this->getModel()->create($data);
+        $userInfo['extend'] = (new UserExtendModel())->create($data);
+        return $userInfo;
     }
 
 
 
-    public function update($data){
+
+    public function update($n8Guid,$data){
+        $user = $this->read($n8Guid);
         $changeLogData = $changeData = [];
 
-        foreach ($this->userAllowChangeField as $field){
-            if(isset($data[$field]) && $this->user[$field] != $data[$field]){
+        // 可变更字段
+        $userAllowChangeField = ['channel_id', 'phone'];
+
+        foreach ($userAllowChangeField as $field){
+            if(isset($data[$field]) && $user[$field] != $data[$field]){
                 $changeLogData[] = [
-                    'n8_guid'       => $this->user['n8_guid'],
+                    'n8_guid'       => $user['n8_guid'],
                     'field'         => $field,
-                    'change_before' => $this->user[$field],
+                    'change_before' => $user[$field],
                     'change_after'  => $data[$field],
                     'change_time'   => $data['action_time']
                 ];
@@ -80,7 +57,7 @@ class UserService extends BaseService
 
 
         $userInfo = $this->userModelData->update([
-            'n8_guid' => $this->user['n8_guid']
+            'n8_guid' => $user['n8_guid']
         ],$changeData);
 
         // 日志
@@ -110,25 +87,4 @@ class UserService extends BaseService
         }
     }
 
-
-
-
-
-    // =============================
-
-
-    public function read($n8Guid){
-
-        return (new UserData())->setParams(['n8_guid'=>$n8Guid])->read();
-    }
-
-
-    public function create($data){
-
-        $userInfo = $this->getModel()->create($data);
-
-        $userInfo['extend'] = (new UserExtendModel())->create($data);
-
-        return $userInfo;
-    }
 }

@@ -50,14 +50,14 @@ class N8UnionUserService extends BaseService
 
 
         $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
-        // 系统匹配
+        // 无效渠道变更
         if($product['matcher'] == MatcherEnum::SYS && !$this->isValidChange($user,$actionData['channel_id'],$actionData['action_time'])){
             $actionData['channel_id'] = $user['channel_id'];
         }
 
         $unionUser = $this->read($user['n8_guid'],$actionData['channel_id']);
 
-        // 更新union user
+        //有渠道的更新
         if(!empty($unionUser)){
             // 兼容行为上报顺序问题
             if($unionUser['created_time'] >= $actionData['action_time']){
@@ -66,7 +66,7 @@ class N8UnionUserService extends BaseService
             return $this->read($user['n8_guid'],$actionData['channel_id']);
         }
 
-        // 更新空渠道的union user
+        //空渠道的更新
         $noChannelUnionUser = $this->read($user['n8_guid'],0);
         if(!empty($noChannelUnionUser)){
             if(!empty($actionData['channel_id']) && $noChannelUnionUser['created_time'] >= $actionData['action_time']){
