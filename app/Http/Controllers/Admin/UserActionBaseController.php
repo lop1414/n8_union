@@ -160,6 +160,7 @@ class UserActionBaseController extends BaseController
                     $item->channel;
                     if($this->mapUnionUser){
                         $item->union_user;
+                        $item->channel = $item->union_user->channel;
                         $item->admin_name = $this->adminMap[$item->union_user->admin_id]['name'];
                     }
                     $this->itemPrepare($item);
@@ -203,10 +204,11 @@ class UserActionBaseController extends BaseController
             $this->curdService->responseData->user;
             $this->curdService->responseData->global_user;
             $this->curdService->responseData->channel;
+
             if($this->mapUnionUser) {
                 $this->curdService->responseData->union_user;
                 $this->curdService->responseData->admin_name = $this->adminMap[$this->curdService->responseData->admin_id]['name'];
-
+                $this->curdService->responseData->channel = $this->curdService->responseData->union_user->channel;
             }
         });
     }
