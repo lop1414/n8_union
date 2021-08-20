@@ -12,6 +12,7 @@ use App\Enums\QueueEnums;
 use App\Services\ChannelService;
 use App\Services\GlobalOrderService;
 use App\Services\GlobalUserService;
+use App\Services\N8UnionUserService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\DB;
 
@@ -21,10 +22,13 @@ class SaveUserActionService extends BaseService
     protected $queueEnum;
 
     public $userService;
+    public $n8UnionUserService;
 
     public function __construct(){
         parent::__construct();
         $this->userService = new UserService();
+        $this->n8UnionUserService  = new N8UnionUserService();
+
     }
 
 
@@ -137,14 +141,6 @@ class SaveUserActionService extends BaseService
         if($this->queueEnum ==  QueueEnums::USER_ORDER_ACTION){
             (new GlobalOrderService())->clearCache($data['product_id'],$data['order_id']);
         }
-    }
-
-    /**
-     * @return mixed
-     * 获取队列枚举
-     */
-    public function getQueueEnum(){
-        return $this->queueEnum;
     }
 
 }
