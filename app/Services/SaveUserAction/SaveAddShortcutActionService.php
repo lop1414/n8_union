@@ -5,7 +5,6 @@ namespace App\Services\UserActionDataToDb;
 
 use App\Enums\QueueEnums;
 use App\Models\UserShortcutActionModel;
-use App\Services\UnionUserService;
 
 
 class SaveAddShortcutActionService extends SaveUserActionService
