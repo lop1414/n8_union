@@ -41,6 +41,7 @@ class SaveReadActionService extends SaveUserActionService
 
         $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
 
+        return $unionUser;
     }
 
 }

@@ -82,7 +82,7 @@ class SaveOrderActionService extends SaveUserActionService
 
         (new OrderExtendModel())->create($extendData);
 
-
+        return $unionUser;
     }
 
 }

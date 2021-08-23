@@ -35,6 +35,7 @@ class SaveFollowActionService extends SaveUserActionService
             'created_at'    => date('Y-m-d H:i:s')
         ],$this->n8UnionUserService->filterDeviceInfo($data));
         $this->getModel()->create($createData);
+        return $unionUser;
 
     }
 

@@ -61,7 +61,7 @@ class SaveUserActionService extends BaseService
                 $unionUser = $this->item($user,$data);
 
                 //更新user 渠道
-                if($unionUser['channel_id'] != $user['channel_id']){
+                if(!empty($unionUser) && $unionUser['channel_id'] != $user['channel_id']){
                     $this->userService->update($data['n8_guid'],$data);
                 }
                 DB::commit();
