@@ -3,10 +3,10 @@
 namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Console\Commands\SaveUserActionCommand;
 use App\Console\Commands\TestCommand;
 use App\Console\Commands\Yw\UpdateBookCommand;
 use App\Console\Commands\CreateTableCommand;
-use App\Console\Commands\UserActionDataToDbCommand;
 use App\Console\Commands\UserActionMatchCommand;
 use App\Console\Commands\PullCpChannelCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         CreateTableCommand::class,
 
         // 用户行为数据
-        UserActionDataToDbCommand::class,
+        SaveUserActionCommand::class,
 
         // 用户行为匹配
         UserActionMatchCommand::class,
@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel
         //行为数据入库
         $userAction = ['reg','follow','add_shortcut','order','complete_order','login','read'];
         foreach ($userAction as $action){
-            $matchCommand = "user_action_data_to_db --action={$action}";
+            $matchCommand = "save_user_action --action={$action}";
             $schedule->command($matchCommand)->cron('* * * * *');
         }
 
