@@ -69,8 +69,18 @@ class N8UnionUserService extends BaseService
         //空渠道的更新
         $noChannelUnionUser = $this->read($user['n8_guid'],0);
         if(!empty($noChannelUnionUser)){
-            if(!empty($actionData['channel_id']) && $noChannelUnionUser['created_time'] >= $actionData['action_time']){
+            //24小时内可修改渠道
+            $tmpTime = date('Y-m-d H:i:s',strtotime($actionData['action_time']) - 60*60*24);
+            if(!empty($actionData['channel_id']) && $noChannelUnionUser['created_time'] >= $tmpTime){
                 $changeData = ['channel_id' => $actionData['channel_id']];
+                if(!empty($actionData['ip'])){
+                    $changeData['ip'] = $actionData['ip'];
+                }
+
+                if(!empty($actionData['ua'])){
+                    $changeData['ua'] = $actionData['ua'];
+                    $changeData['platform'] = $this->getPlatformByUa($actionData['ua']);
+                }
 
                 // 关注行为不更新注册时间
                 if($actionData['action_type'] != QueueEnums::USER_FOLLOW_ACTION){
@@ -84,7 +94,7 @@ class N8UnionUserService extends BaseService
                 $changeData['force_chapter_id'] = $channel['force_chapter_id'];
                 $changeData['admin_id'] = $channelExtend['admin_id'];
                 $changeData['adv_alias'] = $channelExtend['adv_alias'];
-                $this->unionUserModelData->update(['id' => $noChannelUnionUser['id']],$changeData);
+                $this->update($noChannelUnionUser['id'],$changeData);
                 return $this->read($user['n8_guid'],$actionData['channel_id']);
             }
         }
@@ -101,9 +111,16 @@ class N8UnionUserService extends BaseService
 
     public function update($uuid,$actionData){
         $updateData = [];
+
+        if(!empty($actionData['ua'])){
+            $actionData['platform'] = $this->getPlatformByUa($actionData['ua']);
+        }
+
         // 可修改字段
-        $allowChangeField = ['created_time','request_id','ip','ua'];
-        foreach ($allowChangeField as $field){
+        $unionUserAllowChangeField = [
+            'channel_id','book_id','chapter_id','force_chapter_id','admin_id','adv_alias','created_time','platform'
+        ];
+        foreach ($unionUserAllowChangeField as $field){
             if(!empty($actionData[$field])){
                 $updateData[$field] = $actionData[$field];
             }
@@ -111,9 +128,20 @@ class N8UnionUserService extends BaseService
 
         if(!empty($updateData)){
             $this->unionUserModelData->update(['id' => $uuid],$updateData);
-            (new N8UnionUserExtendModel())->where('uuid',$uuid)->update($updateData);
         }
 
+        // 可修改扩展信息字段
+        $unionUserExtendAllowChangeField = ['request_id','ip','ua'];
+        $extendUpdateData = [];
+        foreach ($unionUserExtendAllowChangeField as $field){
+            if(!empty($actionData[$field])){
+                $extendUpdateData[$field] = $actionData[$field];
+            }
+        }
+
+        if(!empty($extendUpdateData)){
+            (new N8UnionUserExtendModel())->where('uuid',$uuid)->update($extendUpdateData);
+        }
     }
 
 
@@ -146,12 +174,10 @@ class N8UnionUserService extends BaseService
         $ua = $data['ua'] ?: $this->getUserUa($data['n8_guid']);
         $platform = PlatformEnum::UNKNOWN;
         if(!empty($ua)){
-            $agent = new Agent();
-            $agent->setUserAgent($ua);
-            $platform = $agent->isiOS() ? PlatformEnum::IOS : PlatformEnum::ANDROID;
+            $platform = $this->getPlatformByUa($ua);
         }
 
-        $ret = (new N8UnionUserModel())->create([
+        $unionUser = (new N8UnionUserModel())->create([
             'n8_guid'       => $data['n8_guid'],
             'product_id'    => $data['product_id'],
             'channel_id'    => $data['channel_id'],
@@ -167,7 +193,7 @@ class N8UnionUserService extends BaseService
         ]);
 
         (new N8UnionUserExtendModel())->create([
-            'uuid'                  => $ret->id,
+            'uuid'                  => $unionUser['id'],
             'ip'                    => $data['ip'],
             'ua'                    => $data['ua'],
             'muid'                  => $data['muid'],
@@ -184,9 +210,9 @@ class N8UnionUserService extends BaseService
             'request_id'            => $data['request_id']
         ]);
 
-        $ret->extend;
+        $unionUser->extend;
 
-        return $ret;
+        return $unionUser;
     }
 
 
@@ -305,6 +331,14 @@ class N8UnionUserService extends BaseService
     public function getUserUa($n8Guid){
         $info = (new UserExtendModel())->where('n8_guid',$n8Guid)->first();
         return $info['ua'];
+    }
+
+
+
+    public function getPlatformByUa($ua){
+        $agent = new Agent();
+        $agent->setUserAgent($ua);
+        return $agent->isiOS() ? PlatformEnum::IOS : PlatformEnum::ANDROID;
     }
 
 }

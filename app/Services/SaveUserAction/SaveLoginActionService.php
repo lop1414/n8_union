@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\UserActionDataToDb;
+namespace App\Services\SaveUserAction;
 
 
 use App\Enums\QueueEnums;

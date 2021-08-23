@@ -55,15 +55,19 @@ class UserService extends BaseService
             }
         }
 
+        if(!empty($changeData)){
+            $changeData['updated_at'] = date('Y-m-d H:i:s');
+            $user = $this->userModelData->update([
+                'n8_guid' => $n8Guid
+            ],$changeData);
 
-        $userInfo = $this->userModelData->update([
-            'n8_guid' => $user['n8_guid']
-        ],$changeData);
+            // 日志
+            $this->saveChangeLog($changeLogData);
+        }
 
-        // 日志
-        $this->saveChangeLog($changeLogData);
 
-        return $userInfo;
+
+        return $user;
 
     }
 
