@@ -90,6 +90,11 @@ class ChannelController extends BaseController
                 return $builder->whereIn('product_id',array_column($productIds,'id'));
             }
 
+            $keyword = $this->curdService->requestData['keyword'] ?? '';
+            if(!empty($keyword)){
+                $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `cp_channel_id` LIKE '%{$keyword}%')");
+            }
+
         });
 
     }

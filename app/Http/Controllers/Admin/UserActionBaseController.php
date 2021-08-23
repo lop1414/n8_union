@@ -70,6 +70,11 @@ class UserActionBaseController extends BaseController
                     $unionWhere .= " AND platform = '{$platform}'";
                 }
 
+                $channelId = $requestData['channel_id'] ?? '';
+                if(!empty($channelId)){
+                    $unionWhere .= " AND channel_id = '{$channelId}'";
+                }
+
 
                 $createdTime = $requestData['created_time'] ?? [];
 
