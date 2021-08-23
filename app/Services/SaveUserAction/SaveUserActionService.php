@@ -40,7 +40,7 @@ class SaveUserActionService extends BaseService
         $rePushData = [];
         while ($data = $queue->pull()) {
 
-//            try{
+            try{
                 DB::beginTransaction();
 
                 $data['action_type'] = $this->queueEnum;
@@ -66,43 +66,43 @@ class SaveUserActionService extends BaseService
                 }
                 DB::commit();
 
-//            }catch (CustomException $e){
-//
-//                DB::rollBack();
-//                $this->failItem($data);
-//                $errInfo = $e->getErrorInfo(true);
-//
-//                //订单已存
-//                if($errInfo['code'] == 'EXIST_ORDER'){
-//                    continue;
-//                }
-//
-//                //日志
-//                (new ErrorLogService())->catch($e);
-//
-//                $queue->item['exception'] = $e->getErrorInfo();
-//                $queue->item['code'] = $e->getCode();
-//                $rePushData[] = $queue->item;
-//
-//
-//            }catch (\Exception $e){
-//
-//                DB::rollBack();
-//
-//                $this->failItem($data);
-//                //命中唯一索引
-//                if($e->getCode() == 23000){
-//                    echo "  命中唯一索引 \n";
-//                    continue;
-//                }
-//
-//                //日志
-//                (new ErrorLogService())->catch($e);
-//                $queue->item['exception'] = $e->getMessage();
-//                $queue->item['code'] = $e->getCode();
-//                $rePushData[] = $queue->item;
-//                echo $e->getMessage()."\n";
-//            }
+            }catch (CustomException $e){
+
+                DB::rollBack();
+                $this->failItem($data);
+                $errInfo = $e->getErrorInfo(true);
+
+                //订单已存
+                if($errInfo['code'] == 'EXIST_ORDER'){
+                    continue;
+                }
+
+                //日志
+                (new ErrorLogService())->catch($e);
+
+                $queue->item['exception'] = $e->getErrorInfo();
+                $queue->item['code'] = $e->getCode();
+                $rePushData[] = $queue->item;
+
+
+            }catch (\Exception $e){
+
+                DB::rollBack();
+
+                $this->failItem($data);
+                //命中唯一索引
+                if($e->getCode() == 23000){
+                    echo "  命中唯一索引 \n";
+                    continue;
+                }
+
+                //日志
+                (new ErrorLogService())->catch($e);
+                $queue->item['exception'] = $e->getMessage();
+                $queue->item['code'] = $e->getCode();
+                $rePushData[] = $queue->item;
+                echo $e->getMessage()."\n";
+            }
         }
 
         // 数据重回队列
