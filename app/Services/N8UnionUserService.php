@@ -69,24 +69,10 @@ class N8UnionUserService extends BaseService
         //空渠道的更新
         $noChannelUnionUser = $this->read($user['n8_guid'],0);
         if(!empty($noChannelUnionUser)){
-            //24小时内可修改渠道
+            //24小时内的行为可覆盖修改union user渠道
             $tmpTime = date('Y-m-d H:i:s',strtotime($actionData['action_time']) - 60*60*24);
             if(!empty($actionData['channel_id']) && $noChannelUnionUser['created_time'] >= $tmpTime){
                 $changeData = ['channel_id' => $actionData['channel_id']];
-                if(!empty($actionData['ip'])){
-                    $changeData['ip'] = $actionData['ip'];
-                }
-
-                if(!empty($actionData['ua'])){
-                    $changeData['ua'] = $actionData['ua'];
-                    $changeData['platform'] = $this->getPlatformByUa($actionData['ua']);
-                }
-
-                // 关注行为不更新注册时间
-                if($actionData['action_type'] != QueueEnums::USER_FOLLOW_ACTION){
-                    $changeData['created_time'] = $actionData['action_time'];
-                }
-
                 $channel = (new ChannelData())->setParams(['id' => $actionData['channel_id']])->read();
                 $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $actionData['channel_id']])->read();
                 $changeData['book_id'] = $channel['book_id'];
@@ -94,6 +80,24 @@ class N8UnionUserService extends BaseService
                 $changeData['force_chapter_id'] = $channel['force_chapter_id'];
                 $changeData['admin_id'] = $channelExtend['admin_id'];
                 $changeData['adv_alias'] = $channelExtend['adv_alias'];
+
+                // 注册、加桌 行为可更新ip ua
+                if(in_array($actionData['action_type'],[QueueEnums::USER_REG_ACTION,QueueEnums::USER_ADD_SHORTCUT_ACTION])){
+                    if(!empty($actionData['ip'])){
+                        $changeData['ip'] = $actionData['ip'];
+                    }
+
+                    if(!empty($actionData['ua'])){
+                        $changeData['ua'] = $actionData['ua'];
+                        $changeData['platform'] = $this->getPlatformByUa($actionData['ua']);
+                    }
+                }
+
+                // 关注行为不更新注册时间
+                if($actionData['action_type'] != QueueEnums::USER_FOLLOW_ACTION){
+                    $changeData['created_time'] = $actionData['action_time'];
+                }
+
                 $this->update($noChannelUnionUser['id'],$changeData);
                 return $this->read($user['n8_guid'],$actionData['channel_id']);
             }

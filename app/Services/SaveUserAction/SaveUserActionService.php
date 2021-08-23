@@ -58,8 +58,12 @@ class SaveUserActionService extends BaseService
 
                 $user = $this->userService->read($data['n8_guid']);
                 $data = array_merge($data,$this->n8UnionUserService->filterDeviceInfo($data));
-                $this->item($user,$data);
+                $unionUser = $this->item($user,$data);
 
+                //更新user 渠道
+                if($unionUser['channel_id'] != $user['channel_id']){
+                    $this->userService->update($data['n8_guid'],$data);
+                }
                 DB::commit();
 
 //            }catch (CustomException $e){

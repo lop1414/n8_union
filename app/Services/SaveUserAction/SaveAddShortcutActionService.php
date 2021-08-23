@@ -36,6 +36,7 @@ class SaveAddShortcutActionService extends SaveUserActionService
         ],$this->n8UnionUserService->filterDeviceInfo($data));
         $this->getModel()->create($createData);
 
+        return $unionUser;
     }
 
 

@@ -40,12 +40,7 @@ class SaveRegActionService extends SaveUserActionService
         }
 
         // 创建union用户
-        $unionUser = $this->n8UnionUserService->updateSave($user,$data);
-
-        if($unionUser['channel_id'] != $user['channel_id']){
-            $this->userService->update($data['n8_guid'],$data);
-        }
-
+        return $this->n8UnionUserService->updateSave($user,$data);
     }
 
 
