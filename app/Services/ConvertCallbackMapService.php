@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Common\Enums\AdvAliasEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Services\SystemApi\AdvBdApiService;
@@ -21,7 +22,7 @@ class ConvertCallbackMapService extends BaseService
         }
         $result = [];
         foreach ($convertList as $adv => $convert){
-            if(!empty($adv)){
+            if(!empty($adv) && $adv != AdvAliasEnum::UNKNOWN){
                 $adv = Functions::camelize($adv);
                 $result += $this->$adv($convert);
             }
