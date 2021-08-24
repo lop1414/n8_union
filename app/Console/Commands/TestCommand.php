@@ -6,7 +6,11 @@ use App\Common\Console\BaseCommand;
 use App\Common\Enums\OrderStatusEnums;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
+use App\Datas\ChannelData;
+use App\Datas\ChannelExtendData;
+use App\Models\N8UnionUserModel;
 use App\Models\OrderModel;
+use App\Services\N8UnionUserService;
 
 class TestCommand extends BaseCommand
 {
@@ -38,7 +42,30 @@ class TestCommand extends BaseCommand
 
 
     public function handle(){
-        $this->updateOrderTimes();
+        $this->updateAdvAlias();
+    }
+
+
+
+    public function updateAdvAlias(){
+        do{
+            $list = (new N8UnionUserModel())
+                ->where('created_time','>','2021-08-23 15:00:00')
+                ->where('channel_id','>',0)
+                ->skip(0)
+                ->take(1000)
+                ->get();
+
+            foreach ($list as $item){
+                $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $item['channel_id']])->read();
+
+                (new N8UnionUserService())->update($item['id'],[
+                    'adv_alias' => $channelExtend['adv_alias']
+                ]);
+            }
+
+        }while(!$list->isEmpty());
+
     }
 
 
