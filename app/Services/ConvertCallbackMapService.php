@@ -15,7 +15,13 @@ class ConvertCallbackMapService extends BaseService
         $convertList = [];
         foreach ($list as $item){
             if(empty($item['click_id'])) continue;
-            $convertList[$item['adv_alias']][] = array(
+
+            $advAlias = $item['adv_alias'];
+            if(!empty($item->union_user)){
+                $advAlias = $item->union_user['adv_alias'];
+            }
+
+            $convertList[$advAlias][] = array(
                 'convert_type' => $convertType,
                 'convert_id'   => $item[$convertId]
             );
