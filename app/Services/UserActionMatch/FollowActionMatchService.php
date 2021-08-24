@@ -7,6 +7,7 @@ use App\Common\Enums\ConvertTypeEnum;
 use App\Datas\N8UnionUserData;
 use App\Datas\UserFollowActionData;
 use App\Models\UserFollowActionModel;
+use Illuminate\Support\Facades\DB;
 
 
 class FollowActionMatchService extends UserActionMatchService
@@ -28,14 +29,16 @@ class FollowActionMatchService extends UserActionMatchService
         $before = $this->getMatchCycleTime();
 
         return $this->model
-            ->where('adv_alias',$this->advAlias)
+            ->select(DB::raw("user_follow_actions.*"))
+            ->leftJoin('n8_union_users AS u','user_follow_actions.uuid','=','u.id')
+            ->where('u.adv_alias',$this->advAlias)
             ->when($this->timeRange,function ($query){
-                $query->whereBetween('action_time',$this->timeRange);
+                $query->whereBetween('user_follow_actions.action_time',$this->timeRange);
             })
-            ->where('click_id',0)
-            ->where('channel_id','>',0)
-            ->whereRaw(" (last_match_time IS NULL OR last_match_time <= '{$before}')")
-            ->orderBy('action_time');
+            ->where('user_follow_actions.click_id',0)
+            ->where('u.channel_id','>',0)
+            ->whereRaw(" (user_follow_actions.last_match_time IS NULL OR user_follow_actions.last_match_time <= '{$before}')")
+            ->orderBy('user_follow_actions.action_time');
     }
 
 

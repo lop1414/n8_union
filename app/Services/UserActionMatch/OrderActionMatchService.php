@@ -6,6 +6,7 @@ namespace App\Services\UserActionMatch;
 use App\Common\Enums\ConvertTypeEnum;
 use App\Datas\OrderData;
 use App\Models\OrderModel;
+use Illuminate\Support\Facades\DB;
 
 
 class OrderActionMatchService extends UserActionMatchService
@@ -27,14 +28,16 @@ class OrderActionMatchService extends UserActionMatchService
         $before = $this->getMatchCycleTime();
 
         return $this->model
-            ->where('adv_alias',$this->advAlias)
+            ->select(DB::raw("orders.*"))
+            ->leftJoin('n8_union_users AS u','orders.uuid','=','u.id')
+            ->where('u.adv_alias',$this->advAlias)
             ->when($this->timeRange,function ($query){
-                $query->whereBetween('order_time',$this->timeRange);
+                $query->whereBetween('orders.order_time',$this->timeRange);
             })
-            ->where('click_id',0)
-            ->where('channel_id','>',0)
-            ->whereRaw(" (order_last_match_time IS NULL OR order_last_match_time <= '{$before}')")
-            ->orderBy('order_time');
+            ->where('orders.click_id',0)
+            ->where('u.channel_id','>',0)
+            ->whereRaw(" (orders.order_last_match_time IS NULL OR orders.order_last_match_time <= '{$before}')")
+            ->orderBy('orders.order_time');
     }
 
 

@@ -7,6 +7,7 @@ use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Enums\OrderStatusEnums;
 use App\Datas\OrderData;
 use App\Models\OrderModel;
+use Illuminate\Support\Facades\DB;
 
 
 class CompleteOrderActionMatchService extends UserActionMatchService
@@ -29,15 +30,17 @@ class CompleteOrderActionMatchService extends UserActionMatchService
         $before = $this->getMatchCycleTime();
 
         return $this->model
-            ->where('adv_alias',$this->advAlias)
-            ->where('status',OrderStatusEnums::COMPLETE)
+            ->select(DB::raw("orders.*"))
+            ->leftJoin('n8_union_users AS u','orders.uuid','=','u.id')
+            ->where('u.adv_alias',$this->advAlias)
+            ->where('orders.status',OrderStatusEnums::COMPLETE)
             ->when($this->timeRange,function ($query){
-                $query->whereBetween('complete_time',$this->timeRange);
+                $query->whereBetween('orders.complete_time',$this->timeRange);
             })
-            ->where('complete_click_id',0)
-            ->where('channel_id','>',0)
-            ->whereRaw(" (complete_last_match_time IS NULL OR complete_last_match_time <= '{$before}')")
-            ->orderBy('complete_time');
+            ->where('orders.complete_click_id',0)
+            ->where('u.channel_id','>',0)
+            ->whereRaw(" (orders.complete_last_match_time IS NULL OR orders.complete_last_match_time <= '{$before}')")
+            ->orderBy('orders.complete_time');
     }
 
 
