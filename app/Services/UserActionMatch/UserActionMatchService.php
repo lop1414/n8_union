@@ -4,6 +4,7 @@ namespace App\Services\UserActionMatch;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\AdvClickSourceEnum;
+use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Enums\MatcherEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
@@ -116,10 +117,11 @@ class UserActionMatchService extends BaseService
 
                 //处理匹配数据
                 foreach ($list as $item){
+                    $id = $this->convertType == ConvertTypeEnum::REGISTER ? $item['id'] : $item['uuid'];
                     $unionUser = $this->unionUserData->setParams([
-                        'n8_guid'   => $item['n8_guid'],
-                        'channel_id'=> $item['channel_id']
+                        'id'   => $id
                     ])->read();
+
 
                     $tmp = $this->getConvertMatchData($item,$unionUser);
 
