@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Services\SystemApi\AdvBdApiService;
@@ -17,7 +18,7 @@ class ConvertCallbackMapService extends BaseService
             if(empty($item['click_id'])) continue;
 
             $advAlias = $item['adv_alias'];
-            if(!empty($item->union_user)){
+            if( $convertType != ConvertTypeEnum::REGISTER && !empty($item->union_user)){
                 $advAlias = $item->union_user['adv_alias'];
             }
 
