@@ -92,7 +92,7 @@ class ChannelController extends BaseController
 
             $keyword = $this->curdService->requestData['keyword'] ?? '';
             if(!empty($keyword)){
-                $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `cp_channel_id` LIKE '%{$keyword}%')");
+                $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `channel_id` LIKE '%{$keyword}%')");
             }
 
         });
