@@ -57,10 +57,13 @@ class N8UnionUserService extends BaseService
 
         $unionUser = $this->read($user['n8_guid'],$actionData['channel_id']);
 
+
+        $tmpTime = date('Y-m-d H:i:s',strtotime($actionData['action_time']) - 60*60*24);
+
         //有渠道的更新
         if(!empty($unionUser)){
             // 兼容行为上报顺序问题
-            if($unionUser['created_time'] >= $actionData['action_time']){
+            if($unionUser['created_time'] >= $tmpTime){
                 $this->update($unionUser['id'],$actionData);
             }
             return $this->read($user['n8_guid'],$actionData['channel_id']);
@@ -70,7 +73,6 @@ class N8UnionUserService extends BaseService
         $noChannelUnionUser = $this->read($user['n8_guid'],0);
         if(!empty($noChannelUnionUser)){
             //24小时内的行为可覆盖修改union user渠道
-            $tmpTime = date('Y-m-d H:i:s',strtotime($actionData['action_time']) - 60*60*24);
             if(!empty($actionData['channel_id']) && $noChannelUnionUser['created_time'] >= $tmpTime){
                 $changeData = ['channel_id' => $actionData['channel_id']];
                 $channel = (new ChannelData())->setParams(['id' => $actionData['channel_id']])->read();
