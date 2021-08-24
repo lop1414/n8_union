@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
+use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\OrderStatusEnums;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
@@ -52,16 +53,22 @@ class TestCommand extends BaseCommand
             $list = (new N8UnionUserModel())
                 ->where('created_time','>','2021-08-23 15:00:00')
                 ->where('channel_id','>',0)
+                ->where('adv_alias',AdvAliasEnum::UNKNOWN)
                 ->skip(0)
                 ->take(1000)
                 ->get();
 
             foreach ($list as $item){
+                $channel = (new ChannelData())->setParams(['id' => $item['channel_id']])->read();
                 $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $item['channel_id']])->read();
 
-                (new N8UnionUserService())->update($item['id'],[
-                    'adv_alias' => $channelExtend['adv_alias']
-                ]);
+                $changeData['book_id'] = $channel['book_id'];
+                $changeData['chapter_id'] = $channel['chapter_id'];
+                $changeData['force_chapter_id'] = $channel['force_chapter_id'];
+                $changeData['admin_id'] = $channelExtend['admin_id'];
+                $changeData['adv_alias'] = $channelExtend['adv_alias'];
+
+                (new N8UnionUserService())->update($item['id'],$changeData);
             }
 
         }while(!$list->isEmpty());
