@@ -65,7 +65,7 @@ class N8UnionUserService extends BaseService
             $tmpTime = $actionData['action_time'];
 
             // 兼容关注行为比注册行为先上报问题
-            if($product['type'] == ProductTypeEnums::H5){
+            if($actionData['action_type'] == QueueEnums::USER_FOLLOW_ACTION){
                 $tmpTime = date('Y-m-d H:i:s',strtotime($actionData['action_time']) - 60*30);
             }
 
