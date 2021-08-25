@@ -13,6 +13,8 @@ use App\Sdks\Yw\YwSdk;
 class BookService extends YwService
 {
 
+    public $bookModelData;
+
     /**
      * constructor.
      */
@@ -20,16 +22,30 @@ class BookService extends YwService
         parent::__construct();
 
         $this->setModel(new BookModel());
+        $this->bookModelData = new BookData();
     }
 
 
+    public function readSave($cpBookId,$name){
+        $info = $this->bookModelData->setParams(['cp_type' => CpTypeEnums::YW, 'cp_book_id' => $cpBookId])->read();
+
+        if(empty($info)){
+            $info = $this->bookModelData->save([
+                'cp_type'       => CpTypeEnums::YW,
+                'cp_book_id'    => $cpBookId,
+                'name'          => $name,
+                'author_name'   => '',
+                'all_words'     => 0,
+                'update_time'   => null
+            ])->toArray();
+
+        }
+        return $info;
+    }
 
 
     public function read($cpBookId){
-        $info = $this->model
-            ->where('cp_type',CpTypeEnums::YW)
-            ->where('cp_book_id',$cpBookId)
-            ->first();
+        $info = $this->bookModelData->setParams(['cp_type' => CpTypeEnums::YW, 'cp_book_id' => $cpBookId])->read();
         if(empty($info)){
             $info = $this->sync($cpBookId);
         }
@@ -43,13 +59,12 @@ class BookService extends YwService
      */
     public function sync($cpBookId){
 
-        $bookData = new BookData();
 
         $sdk = new YwSdk($this->product['cp_product_alias'],$this->product['cp_account']['account'],$this->product['cp_account']['cp_secret']);
 
         $info = $sdk->getBookInfo($cpBookId);
 
-        return $bookData->save([
+        return $this->bookModelData->save([
             'cp_type'       => $this->product['cp_type'],
             'cp_book_id'    => $info['cbid'],
             'name'          => $info['title'],

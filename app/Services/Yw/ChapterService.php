@@ -13,6 +13,8 @@ class ChapterService extends YwService
 
     protected $book;
 
+    public $chapterModelData;
+
     /**
      * constructor.
      */
@@ -20,12 +22,27 @@ class ChapterService extends YwService
         parent::__construct();
 
         $this->setModel(new ChapterModel());
+        $this->chapterModelData = new ChapterData();
     }
 
 
     public function setBook($info){
         $this->book = $info;
         return $this;
+    }
+
+
+    public function readSave($cpChapterId,$cpChapterName,$cpChapterIndex){
+        $info = $this->chapterModelData->setParams(['book_id'=>$this->book['id'],'cp_chapter_id' => $cpChapterId])->read();
+        if(empty($info)){
+            $info = $this->chapterModelData->save([
+                'book_id'       => $this->book['id'],
+                'cp_chapter_id' => $cpChapterId,
+                'name'          => $cpChapterName,
+                'seq'           => $cpChapterIndex
+            ])->toArray();
+        }
+        return $info;
     }
 
 
@@ -55,7 +72,6 @@ class ChapterService extends YwService
 
     public function sync(){
 
-        $chapterData = new ChapterData();
 
         $sdk = new YwSdk($this->product['cp_product_alias'],$this->product['cp_account']['account'],$this->product['cp_account']['cp_secret']);
 
@@ -63,7 +79,7 @@ class ChapterService extends YwService
         $list = $list['chapter_list'] ?? [];
 
         foreach ($list as $chapter){
-            $chapterData->save([
+            $this->chapterModelData->save([
                 'book_id'       => $this->book['id'],
                 'cp_chapter_id' => $chapter['ccid'],
                 'name'          => $chapter['chapter_title'],
