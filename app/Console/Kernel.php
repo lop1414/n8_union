@@ -76,9 +76,5 @@ class Kernel extends ConsoleKernel
             }
         }
 
-
-        // 更新阅文书籍信息
-        $schedule->command('yw:update_book')->cron('0 2 * * *');
-
     }
 }
