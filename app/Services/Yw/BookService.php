@@ -38,11 +38,12 @@ class BookService extends YwService
                 'all_words'     => 0,
                 'update_time'   => null
             ];
-        }
-        //检测名称
-        if($info['name'] != $name){
-            $data = $info;
-            $data['name'] = $name;
+        }else{
+            //检测名称
+            if($info['name'] != $name){
+                $data = $info;
+                $data['name'] = $name;
+            }
         }
 
         if(!empty($data)){
