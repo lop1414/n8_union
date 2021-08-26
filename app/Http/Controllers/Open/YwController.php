@@ -24,12 +24,13 @@ class YwController extends BaseController
 
         $product = $this->getProduct($reqData['appflag']);
         $service = new DataToQueueService(QueueEnums::USER_READ_ACTION);
+        $readTime = !empty($reqData['read_time']) ? date('Y-m-d H:i:s',$reqData['read_time']) : date('Y-m-d H:i:s');
         $service->push([
             'product_alias' => $reqData['appflag'],
             'product_id' => $product['id'],
             'cp_type' => CpTypeEnums::YW,
             'open_id' => $reqData['guid'],
-            'action_time' => date('Y-m-d H:i:s',$reqData['read_time']),
+            'action_time' => $readTime,
             'cp_channel_id' => '',
             'cp_book_id'    => $reqData['book_id'],
             'cp_book_name'  => $reqData['book_name'],
