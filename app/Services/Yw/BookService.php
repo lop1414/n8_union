@@ -37,8 +37,13 @@ class BookService extends YwService
                 'author_name'   => '',
                 'all_words'     => 0,
                 'update_time'   => null
-            ])->toArray();
-
+            ]);
+            //检测名称
+            if($info->name != $name){
+                $info->name = $name;
+                $info->save();
+            }
+            return $info->toArray();
         }
         return $info;
     }
