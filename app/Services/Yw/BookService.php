@@ -28,23 +28,27 @@ class BookService extends YwService
 
     public function readSave($cpBookId,$name){
         $info = $this->bookModelData->setParams(['cp_type' => CpTypeEnums::YW, 'cp_book_id' => $cpBookId])->read();
-
+        $data = [];
         if(empty($info)){
-            $info = $this->bookModelData->save([
+            $data = [
                 'cp_type'       => CpTypeEnums::YW,
                 'cp_book_id'    => $cpBookId,
                 'name'          => $name,
                 'author_name'   => '',
                 'all_words'     => 0,
                 'update_time'   => null
-            ]);
-            //检测名称
-            if($info->name != $name){
-                $info->name = $name;
-                $info->save();
-            }
-            return $info->toArray();
+            ];
         }
+        //检测名称
+        if($info['name'] != $name){
+            $data = $info;
+            $data['name'] = $name;
+        }
+
+        if(!empty($data)){
+            $info = $this->bookModelData->save($data)->toArray();
+        }
+
         return $info;
     }
 

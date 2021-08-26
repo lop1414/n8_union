@@ -29,13 +29,10 @@ class UserReadActionModel extends UserActionBaseModel
     protected $fillable = [
         'n8_guid',
         'uuid',
-        'product_id',
-        'channel_id',
         'action_time',
         'cp_book_id',
         'cp_chapter_id',
-        'adv_alias',
-        'last_match_time',
+        'extends',
         'created_at'
     ];
 
@@ -45,6 +42,26 @@ class UserReadActionModel extends UserActionBaseModel
         $name =  'user_read_actions_'. date('Ym',strtotime($dateTime));
         $this->table = $name;
         return $this;
+    }
+
+
+    /**
+     * @param $value
+     * @return array
+     * 属性访问器
+     */
+    public function getExtendsAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    /**
+     * @param $value
+     * 属性修饰器
+     */
+    public function setExtendsAttribute($value)
+    {
+        $this->attributes['extends'] = json_encode($value);
     }
 
 }

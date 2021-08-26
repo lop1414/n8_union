@@ -14,7 +14,7 @@ class BookData extends BaseData
      * @var bool
      * 缓存开关
      */
-    protected $cacheSwitch = false;
+    protected $cacheSwitch = true;
 
 
     /**
@@ -50,6 +50,9 @@ class BookData extends BaseData
 
 
     public function save($data){
+
+        $this->setParams(['cp_type' => $data['cp_type'],'cp_book_id' => $data['cp_book_id']])->clear();
+
         return $this->model->updateOrCreate(
             [
                 'cp_type'    => $data['cp_type'],

@@ -14,7 +14,7 @@ class ChapterData extends BaseData
      * @var bool
      * 缓存开关
      */
-    protected $cacheSwitch = false;
+    protected $cacheSwitch = true;
 
 
     /**
