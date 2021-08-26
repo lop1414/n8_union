@@ -30,8 +30,8 @@ class UserReadActionModel extends UserActionBaseModel
         'n8_guid',
         'uuid',
         'action_time',
-        'cp_book_id',
-        'cp_chapter_id',
+        'book_id',
+        'chapter_id',
         'extends',
         'created_at'
     ];

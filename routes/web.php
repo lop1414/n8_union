@@ -18,11 +18,14 @@ $router->get('/', function () use ($router) {
 // 公开接口
 $router->group([
     'prefix' => 'open',
-    'middleware' => ['access_control_allow_origin','open_api_sign_valid']
+    'middleware' => ['access_control_allow_origin']
 ], function () use ($router) {
 
     //行为上报
-    $router->group(['prefix' => 'action_report'], function () use ($router) {
+    $router->group([
+        'prefix' => 'action_report',
+        'middleware' => 'open_api_sign_valid'
+    ], function () use ($router) {
         $router->post('read', 'Open\UserController@read');// 阅读行为
         $router->post('login', 'Open\UserController@login');// 登陆行为
         $router->post('add_shortcut', 'Open\UserController@addShortcut');// 加桌行为
@@ -31,7 +34,10 @@ $router->group([
         $router->post('order', 'Open\OrderController@order');// 下单
         $router->post('complete_order', 'Open\OrderController@complete');// 完成订单
     });
+
+    $router->post('yw/action_report/read', 'Open\YwController@read');// 阅文-阅读行为
 });
+
 
 // 后台
 $router->group([

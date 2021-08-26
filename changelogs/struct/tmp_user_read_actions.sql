@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 23/04/2021 11:43:16
+ Date: 26/08/2021 11:37:43
 */
 
 SET NAMES utf8mb4;
@@ -25,13 +25,10 @@ CREATE TABLE `tmp_user_read_actions` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `n8_guid` bigint(20) NOT NULL,
   `uuid` bigint(20) NOT NULL COMMENT '联运用户ID',
-  `product_id` int(11) NOT NULL COMMENT '产品ID',
-  `channel_id` bigint(20) DEFAULT NULL COMMENT '渠道ID',
   `action_time` datetime NOT NULL COMMENT '行为时间',
-  `cp_book_id` varchar(64) NOT NULL DEFAULT '0' COMMENT '平台书籍id',
-  `cp_chapter_id` varchar(64) NOT NULL DEFAULT '0' COMMENT '平台章节id',
-  `adv_alias` varchar(50) DEFAULT NULL COMMENT '广告商标识',
-  `last_match_time` datetime DEFAULT NULL COMMENT '最后匹配时间',
+  `book_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '书籍id',
+  `chapter_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '章节id',
+  `extends` text,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `n8_guid` (`n8_guid`,`action_time`) USING BTREE,
