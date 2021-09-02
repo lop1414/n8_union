@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\MatcherEnum;
+use App\Common\Enums\OperatorEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
@@ -118,6 +119,7 @@ class CpAccountController extends BaseController
                 $pro->secret = md5(uniqid());
                 $pro->status = StatusEnum::DISABLE;
                 $pro->matcher = MatcherEnum::SYS;
+                $pro->operator = OperatorEnum::SYS;
             }
             $pro->name = $item['name'];
             $pro->save();
