@@ -11,6 +11,7 @@ use App\Common\Services\BaseService;
 use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Services\SystemApi\AdvBdApiService;
+use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\N8UnionUserData;
@@ -151,6 +152,9 @@ class UserActionMatchService extends BaseService
                     }elseif ($this->advAlias == AdvAliasEnum::BD){
                         // 百度匹配
                         $matchList = (new AdvBdApiService())->apiConvertMatch($convert);
+                    }elseif ($this->advAlias == AdvAliasEnum::KS){
+                        // 快手匹配
+                        $matchList = (new AdvKsApiService())->apiConvertMatch($convert);
                     }
 
                     // 匹配结果处理
