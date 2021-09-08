@@ -222,7 +222,7 @@ class ChannelController extends BaseController
         }
 
         $channelIds = $req['channel_ids'] ?? [];
-        $startDate = date('Y-m-d',strtotime('-15 day'));
+        $startDate = date('Y-m-d',strtotime('-5 day'));
         $endDate = date('Y-m-d');
         (new $class)->sync($startDate,$endDate,$productId,$channelIds);
 
