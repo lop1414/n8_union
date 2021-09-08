@@ -43,9 +43,11 @@ class N8UnionUserController extends UserActionBaseController
 
         $this->curdService->selectQueryBefore(function(){
             $this->curdService->customBuilder(function ($builder){
+
                 if(!$this->isDataAuth()) {
-                    $builder->where('admin_id', $this->adminUser['admin_user']['id']);
+                    $builder->where('admin_id', $this->getPermissionAdminIds());
                 }
+
                 $adminId = $this->curdService->requestData['admin_id'] ?? 0;
                 if(!empty($adminId)){
                     $builder->where('admin_id',$adminId);

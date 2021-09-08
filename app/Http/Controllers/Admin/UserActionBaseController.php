@@ -55,8 +55,9 @@ class UserActionBaseController extends BaseController
 
                 $requestData = $this->curdService->requestData;
                 $unionWhere = '1';
-                if(!$this->isDataAuth()){
-                    $unionWhere .= ' AND admin_id = ' . $this->adminUser['admin_user']['id'];
+
+                if(!$this->isDataAuth()) {
+                    $unionWhere .= ' AND admin_id IN (' . $this->getPermissionAdminIdsStr() .')';
                 }
 
                 $adminId = $requestData['admin_id'] ?? 0;

@@ -45,6 +45,24 @@ class BaseController extends AdminController
         return false;
     }
 
+    /**
+     * @return array|mixed
+     * 获取授权管理员ID
+     */
+    public function getPermissionAdminIds(){
+
+        return $this->adminUser['permission_admin_ids'];
+    }
+
+    /**
+     * @return string
+     * 获取授权管理员ID
+     */
+    public function getPermissionAdminIdsStr(){
+        return implode(',',$this->getPermissionAdminIds());
+    }
+
+
 
     public function getAdminUserMap($filter = []){
         $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
