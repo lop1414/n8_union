@@ -44,10 +44,10 @@ class N8UnionUserController extends UserActionBaseController
         $this->curdService->selectQueryBefore(function(){
             $this->curdService->customBuilder(function ($builder){
                 $adminId = $this->curdService->requestData['admin_id'] ?? 0;
-                $isSelf = $requestData['is_self'] ?? 1;
+                $isSelf = $this->curdService->requestData['is_self'] ?? 1;
 
                 if($isSelf){
-                    $adminId = $this->adminUser['id'];
+                    $adminId = $this->adminUser['admin_user']['id'];
                 }elseif(!$this->isDataAuth()) {
                     $builder->where('admin_id', $this->getPermissionAdminIds());
                 }

@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Common\Controllers\Front\FrontController;
 
 
-use App\Services\SaveUserAction\SaveAddShortcutActionService;
-use App\Services\SaveUserAction\SaveCompleteOrderActionService;
 use App\Services\SaveUserAction\SaveFollowActionService;
-use App\Services\SaveUserAction\SaveOrderActionService;
+use App\Services\SaveUserAction\SaveReadActionService;
 use App\Services\SaveUserAction\SaveRegActionService;
+use App\Services\Yw\BookService;
+use App\Services\Yw\ChapterService;
 use Illuminate\Http\Request;
 
 class TestController extends FrontController
@@ -30,11 +30,9 @@ class TestController extends FrontController
             return $this->forbidden();
         }
 
-//        (new SaveRegActionService())->run();
-//        (new SaveAddShortcutActionService())->run();
-//        (new SaveFollowActionService())->run();
-//        (new SaveOrderActionService())->run();
-        (new SaveCompleteOrderActionService())->run();
+         (new SaveFollowActionService())->run();
+         (new SaveRegActionService())->run();
+
 
     }
 

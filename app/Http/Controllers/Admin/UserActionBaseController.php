@@ -59,7 +59,7 @@ class UserActionBaseController extends BaseController
 
                 $isSelf = $requestData['is_self'] ?? 1;
                 if($isSelf){
-                    $adminId = $this->adminUser['id'];
+                    $adminId = $this->adminUser['admin_user']['id'];
                 }elseif(!$this->isDataAuth()) {
                     $unionWhere .= ' AND admin_id IN (' . $this->getPermissionAdminIdsStr() .')';
                 }

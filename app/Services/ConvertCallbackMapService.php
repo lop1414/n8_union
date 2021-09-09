@@ -7,6 +7,7 @@ use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Services\SystemApi\AdvBdApiService;
+use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 
 class ConvertCallbackMapService extends BaseService
@@ -47,6 +48,11 @@ class ConvertCallbackMapService extends BaseService
 
     public function bd($convert){
         $tmp = (new AdvBdApiService())->apiGetConvertCallbacks($convert);
+        return array_column($tmp,null,'convert_id');
+    }
+
+    public function ks($convert){
+        $tmp = (new AdvKsApiService())->apiGetConvertCallbacks($convert);
         return array_column($tmp,null,'convert_id');
     }
 
