@@ -52,15 +52,18 @@ class UserActionBaseController extends BaseController
 
         $this->curdService->selectQueryBefore(function(){
             $this->curdService->customBuilder(function ($builder){
+                $adminId = $requestData['admin_id'] ?? 0;
 
                 $requestData = $this->curdService->requestData;
                 $unionWhere = '1';
 
-                if(!$this->isDataAuth()) {
+                $isSelf = $requestData['is_self'] ?? 1;
+                if($isSelf){
+                    $adminId = $this->adminUser['id'];
+                }elseif(!$this->isDataAuth()) {
                     $unionWhere .= ' AND admin_id IN (' . $this->getPermissionAdminIdsStr() .')';
                 }
 
-                $adminId = $requestData['admin_id'] ?? 0;
                 if(!empty($adminId)){
                     $unionWhere .= ' AND admin_id = ' . $adminId;
                 }
