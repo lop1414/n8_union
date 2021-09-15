@@ -140,6 +140,7 @@ class ChannelController extends BaseController
                         'url'  => $feedback_url
                     ]
                 ];
+                $productExtends = $item->product->extends;
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
                     if($item->product->type == ProductTypeEnums::H5){
                         $indexPageUrl = urlencode($productExtends['index_page_url'] ?? '');
