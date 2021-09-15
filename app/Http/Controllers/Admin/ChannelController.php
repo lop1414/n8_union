@@ -163,13 +163,22 @@ class ChannelController extends BaseController
     }
 
 
-    public function getJmyForwardUrl($channelId,$indexPageUrl){
+
+    public function getJmyGzhForwardUrl($type,$channelId,$indexPageUrl){
         $company = config('common.company');
         $ret = [];
+        $uri = '';
+        if($type == ProductTypeEnums::KYY){
+            $uri = '/forward/kyy.php';
+        }
+
+        if($type == ProductTypeEnums::H5){
+            $uri = '/forward';
+        }
 
         foreach ($company as $item){
             $url = rtrim($item['page_url'], '/');
-            $url .= '/forward';
+            $url .= $uri;
             $url .= '?a=https://www.taobao.com/';
             $url .= '&channel_id='.$channelId;
             $url .= '&url='.$indexPageUrl;
