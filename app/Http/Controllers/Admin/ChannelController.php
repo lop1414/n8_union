@@ -173,7 +173,7 @@ class ChannelController extends BaseController
             $url = rtrim($item['page_url'], '/');
             $url .= $uri;
             $url .= '?a=https://www.taobao.com/';
-            $url .= '&channel_id='.$item['id'];
+            $url .= '&channel_id='.$data['id'];
             $url .= '&url='.$jumpUrl;
             $ret[] = [
                 'name' => '积木鱼跳转链接-'.$item['name'],
