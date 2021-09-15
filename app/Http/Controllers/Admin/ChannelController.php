@@ -140,7 +140,6 @@ class ChannelController extends BaseController
                         'url'  => $feedback_url
                     ]
                 ];
-                $jmyForwardUrls = $this->getJmyForwardUrl($item['id'],'');
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
                     if($item->product->type == ProductTypeEnums::H5){
                         $indexPageUrl = urlencode($productExtends['index_page_url'] ?? '');
@@ -148,7 +147,7 @@ class ChannelController extends BaseController
                         $copyUrl = array_merge($copyUrl,$jmyForwardUrls);
                     }
                 }
-                $item->copyUrl = $copyUrl;
+                $item->copy_url = $copyUrl;
             }
         });
     }
