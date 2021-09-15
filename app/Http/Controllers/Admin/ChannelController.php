@@ -160,7 +160,7 @@ class ChannelController extends BaseController
         $jumpUrl = '';
         if($data->product->type == ProductTypeEnums::KYY){
             $uri = '/forward/kyy.php';
-            $jumpUrl = urlencode($extends->hap_url ?? '');
+            $jumpUrl = urlencode($extends->h5_url ?? '');
         }
 
         if($data->product->type == ProductTypeEnums::H5){
