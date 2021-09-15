@@ -118,12 +118,10 @@ class ChannelController extends BaseController
             $advFeedBack = Advs::getFeedbackUrlMap();
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
-            $jmyForwardUrl = $this->getJmyForwardUrl();
-
             foreach ($this->curdService->responseData['list'] as $item){
                 $url = $advFeedBack[$item['adv_alias']] ?? '';
                 $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
-                $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
+                $feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
 
                 $pageUrl = $advPageFeedBack[$item['adv_alias']] ?? '';
                 $pageUrl = str_replace('__N8_MULTI_CHANNEL_ID__',0,$pageUrl);
@@ -135,24 +133,43 @@ class ChannelController extends BaseController
                 $item->force_chapter;
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
+
+                $copyUrl = [
+                    [
+                        'name' => '检测链接',
+                        'url'  => $feedback_url
+                    ]
+                ];
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
                     if($item->product->type == ProductTypeEnums::H5){
-                        $productExtends = $item->product->extends;
                         $indexPageUrl = urlencode($productExtends['index_page_url'] ?? '');
-                        $item->jmy_forward_url = str_replace('__CHANNEL_ID__',$item['id'],$jmyForwardUrl). '&url='.$indexPageUrl;
+                        $jmyForwardUrls = $this->getJmyForwardUrl($item['id'],$indexPageUrl);
+                        $copyUrl = array_merge($copyUrl,$jmyForwardUrls);
                     }
                 }
+                $item->copyUrl = $copyUrl;
             }
         });
     }
 
 
-    public function getJmyForwardUrl(){
-        $url = rtrim(config('common.system_api.'.SystemAliasEnum::ADV_BD.'.url'), '/');
-        $url .= '/forward';
-        $url .= '?a=https://www.taobao.com/';
-        $url .= '&channel_id=__CHANNEL_ID__';
-        return $url;
+    public function getJmyForwardUrl($channelId,$indexPageUrl){
+        $company = config('company');
+        $ret = [];
+
+        foreach ($company as $item){
+            $url = rtrim($item['page_url'], '/');
+            $url .= '/forward';
+            $url .= '?a=https://www.taobao.com/';
+            $url .= '&channel_id='.$channelId;
+            $url .= '&url='.$indexPageUrl;
+            $ret = array_merge($ret,[
+                'name' => '积木鱼跳转链接-'.$item['name'],
+                'url'  => $url
+            ]);
+        }
+
+        return $ret;
     }
 
 
