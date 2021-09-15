@@ -141,10 +141,19 @@ class ChannelController extends BaseController
                     ]
                 ];
                 $productExtends = $item->product->extends;
+                $extends = $item->extends;
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
+                    $jumpUrl = '';
                     if($item->product->type == ProductTypeEnums::H5){
-                        $indexPageUrl = urlencode($productExtends['index_page_url'] ?? '');
-                        $jmyForwardUrls = $this->getJmyForwardUrl($item['id'],$indexPageUrl);
+                        $jumpUrl = urlencode($productExtends['index_page_url'] ?? '');
+                    }
+
+                    if($item->product->type == ProductTypeEnums::KYY){
+                        $jumpUrl = urlencode($extends['hap_url'] ?? '');
+                    }
+
+                    if(!empty($jumpUrl)){
+                        $jmyForwardUrls = $this->getJmyForwardUrl($item['id'],$jumpUrl);
                         $copyUrl = array_merge($copyUrl,$jmyForwardUrls);
                     }
                 }
