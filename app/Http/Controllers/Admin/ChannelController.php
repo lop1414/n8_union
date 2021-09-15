@@ -4,7 +4,10 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\PlatformEnum;
+use App\Common\Enums\ProductTypeEnums;
+use App\Common\Enums\SystemAliasEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Helpers\Platform;
@@ -36,10 +39,6 @@ class ChannelController extends BaseController
         $this->adminUser = Functions::getGlobalData('admin_user_info');
 
     }
-
-
-
-
 
 
 
@@ -119,6 +118,8 @@ class ChannelController extends BaseController
             $advFeedBack = Advs::getFeedbackUrlMap();
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
+            $jmyForwardUrl = $this->getJmyForwardUrl();
+
             foreach ($this->curdService->responseData['list'] as $item){
                 $url = $advFeedBack[$item['adv_alias']] ?? '';
                 $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
@@ -134,8 +135,20 @@ class ChannelController extends BaseController
                 $item->force_chapter;
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
+                if($item->product->type == ProductTypeEnums::H5 && $item['adv_alias'] == AdvAliasEnum::BD ){
+                    $item->jmy_forward_url =  str_replace('__CHANNEL_ID__',$item['id'],$jmyForwardUrl);
+                }
             }
         });
+    }
+
+
+    public function getJmyForwardUrl(){
+        $url = rtrim(config('common.system_api.'.SystemAliasEnum::ADV_BD.'.url'), '/');
+        $url .= '/forward';
+        $url .= '?a=https://www.taobao.com/';
+        $url .= '&channel_id=__CHANNEL_ID__';
+        return $url;
     }
 
 
