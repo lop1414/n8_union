@@ -134,29 +134,15 @@ class ChannelController extends BaseController
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
 
-                $copyUrl = [
-                    [
+                $copyUrl = [[
                         'name' => '检测链接',
                         'url'  => $feedback_url
-                    ]
-                ];
-                $productExtends = $item->product->extends;
-                $extends = $item->extends;
+                    ]];
+
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
-                    $jumpUrl = '';
-                    if($item->product->type == ProductTypeEnums::H5){
-                        $jumpUrl = urlencode($productExtends['index_page_url'] ?? '');
-                    }
-
-                    if($item->product->type == ProductTypeEnums::KYY){
-                        $jumpUrl = urlencode($extends->hap_url ?? '');
-                    }
-
-                    if(!empty($jumpUrl)){
-                        $jmyForwardUrls = $this->getJmyForwardUrl($item['id'],$jumpUrl);
-                        $copyUrl = array_merge($copyUrl,$jmyForwardUrls);
-                    }
+                    $copyUrl = array_merge($copyUrl,$this->getJmyForwardUrl($item));
                 }
+
                 $item->copy_url = $copyUrl;
             }
         });
@@ -164,26 +150,33 @@ class ChannelController extends BaseController
 
 
 
-    public function getJmyGzhForwardUrl($type,$channelId,$indexPageUrl){
+    public function getJmyForwardUrl($item){
+        $productExtends = $item->product->extends;
+        $extends = $item->extends;
+
         $company = config('common.company');
         $ret = [];
         $uri = '';
-        if($type == ProductTypeEnums::KYY){
+        $jumpUrl = '';
+        if($item->product->type == ProductTypeEnums::KYY){
             $uri = '/forward/kyy.php';
+            $jumpUrl = urlencode($extends->hap_url ?? '');
         }
 
-        if($type == ProductTypeEnums::H5){
+        if($item->product->type == ProductTypeEnums::H5){
             $uri = '/forward';
+            $jumpUrl = urlencode($productExtends['index_page_url'] ?? '');
         }
+
 
         foreach ($company as $item){
             $url = rtrim($item['page_url'], '/');
             $url .= $uri;
             $url .= '?a=https://www.taobao.com/';
-            $url .= '&channel_id='.$channelId;
-            $url .= '&url='.$indexPageUrl;
+            $url .= '&channel_id='.$item->id;
+            $url .= '&url='.$jumpUrl;
             $ret[] = [
-                'name' => '积木鱼跳转链接-'.$item['name'],
+                'name' => '积木鱼跳转链接-'.$item->name,
                 'url'  => $url
             ];
         }
