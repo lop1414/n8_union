@@ -150,20 +150,20 @@ class ChannelController extends BaseController
 
 
 
-    public function getJmyForwardUrl($item){
-        $productExtends = $item->product->extends;
-        $extends = $item->extends;
+    public function getJmyForwardUrl($data){
+        $productExtends = $data->product->extends;
+        $extends = $data->extends;
 
         $company = config('common.company');
         $ret = [];
         $uri = '';
         $jumpUrl = '';
-        if($item->product->type == ProductTypeEnums::KYY){
+        if($data->product->type == ProductTypeEnums::KYY){
             $uri = '/forward/kyy.php';
             $jumpUrl = urlencode($extends->hap_url ?? '');
         }
 
-        if($item->product->type == ProductTypeEnums::H5){
+        if($data->product->type == ProductTypeEnums::H5){
             $uri = '/forward';
             $jumpUrl = urlencode($productExtends['index_page_url'] ?? '');
         }
