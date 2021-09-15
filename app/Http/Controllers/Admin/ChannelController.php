@@ -137,7 +137,8 @@ class ChannelController extends BaseController
                 $item->has_extend = $item->admin_id ? true : false;
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
                     if($item->product->type == ProductTypeEnums::H5){
-                        $indexPageUrl = $item->product->extends->index_page_url ?? '';
+                        $productExtends = $item->product->extends;
+                        $indexPageUrl = $productExtends['index_page_url'] ?? '';
                         $item->jmy_forward_url = str_replace('__CHANNEL_ID__',$item['id'],$jmyForwardUrl). '&url='.$indexPageUrl;
                     }
                 }
