@@ -168,6 +168,7 @@ class ChannelController extends BaseController
             $jumpUrl = urlencode($productExtends['index_page_url'] ?? '');
         }
 
+        if(empty($jumpUrl)) return [];
 
         foreach ($company as $item){
             $url = rtrim($item['page_url'], '/');
