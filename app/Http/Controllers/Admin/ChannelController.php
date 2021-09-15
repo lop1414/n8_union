@@ -149,7 +149,7 @@ class ChannelController extends BaseController
                     }
 
                     if($item->product->type == ProductTypeEnums::KYY){
-                        $jumpUrl = urlencode($extends['hap_url'] ?? '');
+                        $jumpUrl = urlencode($extends->hap_url ?? '');
                     }
 
                     if(!empty($jumpUrl)){
