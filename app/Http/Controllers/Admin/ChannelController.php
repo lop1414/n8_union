@@ -135,9 +135,11 @@ class ChannelController extends BaseController
                 $item->force_chapter;
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
-                if($item->product->type == ProductTypeEnums::H5 && $item['adv_alias'] == AdvAliasEnum::BD ){
-                    $indexPageUrl = $item->product->extends->index_page_url ?? '';
-                    $item->jmy_forward_url = str_replace('__CHANNEL_ID__',$item['id'],$jmyForwardUrl). '&url='.$indexPageUrl;
+                if($item['adv_alias'] == AdvAliasEnum::BD ){
+                    if($item->product->type == ProductTypeEnums::H5){
+                        $indexPageUrl = $item->product->extends->index_page_url ?? '';
+                        $item->jmy_forward_url = str_replace('__CHANNEL_ID__',$item['id'],$jmyForwardUrl). '&url='.$indexPageUrl;
+                    }
                 }
             }
         });
