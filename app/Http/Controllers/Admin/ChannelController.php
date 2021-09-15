@@ -164,10 +164,10 @@ class ChannelController extends BaseController
             $url .= '?a=https://www.taobao.com/';
             $url .= '&channel_id='.$channelId;
             $url .= '&url='.$indexPageUrl;
-            $ret = array_merge($ret,[
+            $ret[] = [
                 'name' => '积木鱼跳转链接-'.$item['name'],
                 'url'  => $url
-            ]);
+            ];
         }
 
         return $ret;
