@@ -54,6 +54,7 @@ class N8UnionUserService extends BaseService
         // 无效渠道变更
         if($product['matcher'] == MatcherEnum::SYS && !$this->isValidChange($user,$actionData['channel_id'],$actionData['action_time'])){
             $actionData['channel_id'] = $user['channel_id'];
+            $actionData['adv_alias'] = $user['adv_alias'];
         }
 
         $unionUser = $this->read($user['n8_guid'],$actionData['channel_id']);
