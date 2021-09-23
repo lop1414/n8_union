@@ -51,7 +51,7 @@ class N8UnionUserService extends BaseService
 
 
         $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
-        // 无效渠道变更
+        // 渠道变更无效
         if($product['matcher'] == MatcherEnum::SYS && !$this->isValidChange($user,$actionData['channel_id'],$actionData['action_time'])){
             $actionData['channel_id'] = $user['channel_id'];
             $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $actionData['channel_id']])->read();
