@@ -34,7 +34,6 @@ class ChannelService extends TwService
         $chapterData = new ChapterData();
         $channelData = new ChannelData();
         foreach ($productList as $product){
-            echo "  {$product['name']}\n";
             $sdk = new TwSdk($product['cp_product_alias'],$product['cp_secret']);
 
             $parameter = [
@@ -45,7 +44,6 @@ class ChannelService extends TwService
             $endDate = date('Ymd',strtotime($endDate));
 
             do{
-                echo "    {$date}\n";
                 try {
 
                     $parameter['adate'] = $date;
