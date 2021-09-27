@@ -119,6 +119,9 @@ class UserActionBaseController extends BaseController
                     }elseif($requestData['adv_alias'] == AdvAliasEnum::BD){
                         !empty($requestData['unit_id']) && $builder->whereRaw("{$this->clickField} IN (SELECT id FROM n8_adv_bd.clicks WHERE adgroup_id = {$requestData['unit_id']})");
                         !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$this->convertId} IN (SELECT convert_id FROM n8_adv_bd.convert_callbacks WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
+                    }elseif($requestData['adv_alias'] == AdvAliasEnum::KS){
+                        !empty($requestData['unit_id']) && $builder->whereRaw("{$this->clickField} IN (SELECT id FROM n8_adv_ks.clicks WHERE unit_id = {$requestData['unit_id']})");
+                        !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$this->convertId} IN (SELECT convert_id FROM n8_adv_ks.convert_callbacks WHERE convert_type = '{$this->convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
                     }
 
                 }
