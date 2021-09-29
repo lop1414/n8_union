@@ -5,17 +5,10 @@ namespace App\Http\Controllers;
 use App\Common\Controllers\Front\FrontController;
 
 
-use App\Common\Enums\AdvAliasEnum;
-use App\Datas\ChannelExtendData;
-use App\Datas\N8UnionUserData;
-use App\Models\N8UnionUserModel;
 use App\Models\UserBookReadModel;
-use App\Services\N8UnionUserService;
-use App\Services\SaveUserAction\SaveFollowActionService;
-use App\Services\SaveUserAction\SaveReadActionService;
-use App\Services\SaveUserAction\SaveRegActionService;
-use App\Services\Yw\BookService;
-use App\Services\Yw\ChapterService;
+
+use App\Models\UserReadActionModel;
+use App\Services\UserBookReadService;
 use Illuminate\Http\Request;
 
 class TestController extends FrontController
@@ -35,14 +28,27 @@ class TestController extends FrontController
         if($key != 'aut'){
             return $this->forbidden();
         }
-        $info = (new UserBookReadModel())->create([
-            'n8_guid' => 1,
-            'book_id' => 2,
-            'last_chapter_id' => 1,
-            'start_time' => date('Y-m-d H:i:s'),
-            'last_time' => date('Y-m-d H:i:s')
-        ]);
-        dd($info);
+
+        $tableList = ['user_read_actions_202108','user_read_actions_202109'];
+        $services = new UserBookReadService();
+        foreach ($tableList as $tableName){
+            $lastId = 0;
+            do{
+                $list = (new UserReadActionModel())
+                    ->setTable($tableName)
+                    ->where('id','>',$lastId)
+                    ->skip(0)
+                    ->take(1000)
+                    ->orderBy('id')
+                    ->get();
+                foreach ($list as $item){
+                    echo $lastId."\n";
+                    $services->analysis($item);
+                }
+
+            }while(!$list->isEmpty());
+        }
+
     }
 
 }
