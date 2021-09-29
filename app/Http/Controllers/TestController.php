@@ -42,6 +42,7 @@ class TestController extends FrontController
                     ->orderBy('id')
                     ->get();
                 foreach ($list as $item){
+                    $lastId = $item->id;
                     echo $lastId."\n";
                     $services->analysis($item);
                 }
