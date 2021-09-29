@@ -70,7 +70,7 @@ class SaveReadActionService extends SaveUserActionService
 
         if(!empty($createData['book_id']) && !empty($createData['chapter_id'])){
             $info = $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
-            $this->userReadStatService->analysis($info);
+//            $this->userReadStatService->analysis($info);
         }
 
         return $unionUser;
