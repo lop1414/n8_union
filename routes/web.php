@@ -89,6 +89,11 @@ $router->group([
         $router->post('read', 'Admin\UserController@read');
     });
 
+    // 用户书籍阅读
+    $router->group(['prefix' => 'user_book_read'], function () use ($router) {
+        $router->post('select', 'Admin\UserBookReadController@select');
+    });
+
     // 订单
     $router->group(['prefix' => 'order'], function () use ($router) {
         $router->post('select', 'Admin\OrderController@select');
