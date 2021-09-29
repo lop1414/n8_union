@@ -9,12 +9,12 @@ use App\Models\UserBookReadModel;
 class UserBookReadService extends BaseService
 {
 
-    protected $statUserReadModelData;
+    protected $userBookReadModelData;
 
     public function __construct(){
         parent::__construct();
         $this->model = new UserBookReadModel();
-        $this->statUserReadModelData = new UserBookReadData();
+        $this->userBookReadModelData = new UserBookReadData();
     }
 
     /**
@@ -58,7 +58,7 @@ class UserBookReadService extends BaseService
     }
 
     public function read($n8Guid,$bookId){
-        return $this->statUserReadModelData->setParams(['n8_guid'=>$n8Guid,'book_id' => $bookId])->read();
+        return $this->userBookReadModelData->setParams(['n8_guid'=>$n8Guid,'book_id' => $bookId])->read();
     }
 
     public function create($data){
@@ -77,6 +77,6 @@ class UserBookReadService extends BaseService
             ->update($data);
 
         // 删除缓存
-        $this->statUserReadModelData->setParams(['id' => $id])->clear();
+        $this->userBookReadModelData->setParams(['id' => $id])->clear();
     }
 }
