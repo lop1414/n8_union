@@ -11,7 +11,9 @@ use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Models\N8UnionUserModel;
 use App\Models\OrderModel;
+use App\Models\UserReadActionModel;
 use App\Services\N8UnionUserService;
+use App\Services\UserBookReadService;
 
 class TestCommand extends BaseCommand
 {
@@ -43,9 +45,32 @@ class TestCommand extends BaseCommand
 
 
     public function handle(){
-        $this->updateOrderTimes();
+        $this->userBookRead();
     }
 
+
+    public function userBookRead(){
+        $tableList = ['user_read_actions_202108','user_read_actions_202109'];
+        $services = new UserBookReadService();
+        foreach ($tableList as $tableName){
+            $lastId = 0;
+            do{
+                $list = (new UserReadActionModel())
+                    ->setTable($tableName)
+                    ->where('id','>',$lastId)
+                    ->skip(0)
+                    ->take(1000)
+                    ->orderBy('id')
+                    ->get();
+                foreach ($list as $item){
+                    $lastId = $item->id;
+                    echo $lastId."\n";
+                    $services->analysis($item);
+                }
+
+            }while(!$list->isEmpty());
+        }
+    }
 
 
 
