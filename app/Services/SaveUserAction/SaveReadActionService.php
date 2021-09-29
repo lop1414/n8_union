@@ -8,6 +8,7 @@ use App\Common\Tools\CustomException;
 use App\Enums\QueueEnums;
 use App\Models\UserReadActionModel;
 use App\Services\N8UnionUserService;
+use App\Services\Stat\UserReadStatService;
 use App\Services\Yw\BookService;
 use App\Services\Yw\ChapterService;
 
@@ -24,6 +25,8 @@ class SaveReadActionService extends SaveUserActionService
 
     protected $ywChapterService;
 
+    protected $userReadStatService;
+
 
     public function __construct(){
         parent::__construct();
@@ -32,6 +35,7 @@ class SaveReadActionService extends SaveUserActionService
         $this->unionUserService = new N8UnionUserService();
         $this->ywBookService = new BookService();
         $this->ywChapterService = new ChapterService();
+        $this->userReadStatService = new UserReadStatService();
     }
 
 
@@ -65,7 +69,8 @@ class SaveReadActionService extends SaveUserActionService
         }
 
         if(!empty($createData['book_id']) && !empty($createData['chapter_id'])){
-            $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
+            $info = $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
+            $this->userReadStatService->analysis($info);
         }
 
         return $unionUser;
