@@ -20,8 +20,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for stat_user_reads
 -- ----------------------------
-DROP TABLE IF EXISTS `stat_user_reads`;
-CREATE TABLE `stat_user_reads` (
+DROP TABLE IF EXISTS `user_book_reads`;
+CREATE TABLE `user_book_reads` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `n8_guid` bigint(20) NOT NULL,
   `book_id` bigint(20) NOT NULL COMMENT '书籍id',

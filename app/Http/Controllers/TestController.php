@@ -6,8 +6,11 @@ use App\Common\Controllers\Front\FrontController;
 
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Datas\ChannelExtendData;
 use App\Datas\N8UnionUserData;
 use App\Models\N8UnionUserModel;
+use App\Models\UserBookReadModel;
+use App\Services\N8UnionUserService;
 use App\Services\SaveUserAction\SaveFollowActionService;
 use App\Services\SaveUserAction\SaveReadActionService;
 use App\Services\SaveUserAction\SaveRegActionService;
@@ -32,30 +35,14 @@ class TestController extends FrontController
         if($key != 'aut'){
             return $this->forbidden();
         }
-        $this->demo();
-
+        $info = (new UserBookReadModel())->create([
+            'n8_guid' => 1,
+            'book_id' => 2,
+            'last_chapter_id' => 1,
+            'start_time' => date('Y-m-d H:i:s'),
+            'last_time' => date('Y-m-d H:i:s')
+        ]);
+        dd($info);
     }
-
-    public function demo(){
-        $list = (new N8UnionUserModel())
-            ->whereBetween('created_time',['2021-09-19 00:00:00','2021-09-20 00:00:00'])
-            ->where('channel_id','53098')
-            ->get();
-        $modelData = new N8UnionUserData();
-        foreach ($list as $item){
-            if($item->adv_alias != AdvAliasEnum::BD){
-                $modelData->update(['id' => $item->id],[
-                    'adv_alias' => AdvAliasEnum::BD,
-                    'click_id'  => 0
-                ]);
-                echo $item->id. "\n";
-            }
-
-        }
-
-    }
-
-
-
 
 }

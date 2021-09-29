@@ -5,9 +5,9 @@ namespace App\Datas;
 
 
 use App\Common\Datas\BaseData;
-use App\Models\StatUserReadModel;
+use App\Models\UserBookReadModel;
 
-class StatUserReadData extends BaseData
+class UserBookReadData extends BaseData
 {
 
 
@@ -38,7 +38,7 @@ class StatUserReadData extends BaseData
      * constructor.
      */
     public function __construct(){
-        parent::__construct(StatUserReadModel::class);
+        parent::__construct(UserBookReadModel::class);
     }
 
 }

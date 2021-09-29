@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Services\Stat;
+namespace App\Services;
 
 use App\Common\Services\BaseService;
-use App\Datas\StatUserReadData;
-use App\Models\StatUserReadModel;
+use App\Datas\UserBookReadData;
+use App\Models\UserBookReadModel;
 
-class UserReadStatService extends BaseService
+class UserBookReadService extends BaseService
 {
 
     protected $statUserReadModelData;
 
     public function __construct(){
         parent::__construct();
-        $this->model = new StatUserReadModel();
-        $this->statUserReadModelData = new StatUserReadData();
+        $this->model = new UserBookReadModel();
+        $this->statUserReadModelData = new UserBookReadData();
     }
 
     /**
@@ -62,7 +62,7 @@ class UserReadStatService extends BaseService
     }
 
     public function create($data){
-        $info  = new StatUserReadModel();
+        $info  = new UserBookReadModel();
         $info->n8_guid = $data['n8_guid'];
         $info->book_id = $data['book_id'];
         $info->last_chapter_id = $data['last_chapter_id'];
