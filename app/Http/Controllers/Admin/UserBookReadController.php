@@ -34,6 +34,12 @@ class UserBookReadController extends BaseController
         $this->curdService->addField('n8_guid')->addValidRule('required');
 
 
+        $this->curdService->selectQueryBefore(function(){
+            $this->curdService->customBuilder(function ($builder){
+                $builder->where('n8_guid',$this->curdService->requestData['n8_guid']);
+            });
+        });
+
         $this->curdService->selectQueryAfter(function(){
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->book;
