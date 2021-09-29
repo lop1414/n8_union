@@ -50,11 +50,11 @@ class TestCommand extends BaseCommand
 
 
     public function userBookRead(){
-        $tableList = ['user_read_actions_202108','user_read_actions_202109'];
+        $tableList = ['user_read_actions_202109'];
         $services = new UserBookReadService();
         foreach ($tableList as $tableName){
             echo $tableName ."\n\n\n\n";
-            $lastId = 0;
+            $lastId = 4808788;
             do{
                 $list = (new UserReadActionModel())
                     ->setTable($tableName)
