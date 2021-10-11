@@ -52,7 +52,7 @@ class UserActionBaseController extends BaseController
 
         $this->curdService->selectQueryBefore(function(){
             $this->curdService->customBuilder(function ($builder){
-                $adminId = $requestData['admin_id'] ?? 0;
+                $adminId = $this->curdService->requestData['admin_id'] ?? 0;
 
                 $requestData = $this->curdService->requestData;
                 $unionWhere = '1';
