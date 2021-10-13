@@ -9,6 +9,8 @@ use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
 use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
+use App\Datas\N8UnionUserData;
+use App\Enums\N8UserTypeEnum;
 use App\Models\N8UnionUserModel;
 use App\Models\OrderModel;
 use App\Models\UserReadActionModel;
@@ -45,7 +47,35 @@ class TestCommand extends BaseCommand
 
 
     public function handle(){
-        $this->userBookRead();
+        $this->updateN8UnionUserType();
+    }
+
+
+    // 更新n8_union_user user_type
+    public function updateN8UnionUserType(){
+        $lastId = 0;
+        do{
+            $list = (new N8UnionUserModel())
+                ->where('id','>',$lastId)
+                ->skip(0)
+                ->take(1000)
+                ->orderBy('created_time')
+                ->get();
+            foreach ($list as $item){
+                $lastId = $item->id;
+                $n8UserSum =  (new N8UnionUserModel())
+                    ->where('n8_guid',$item['n8_guid'])
+                    ->where('created_time','<',$item['created_time'])
+                    ->count();
+                $item->user_type = $n8UserSum > 0 ? N8UserTypeEnum::BACKFLOW : N8UserTypeEnum::NEW;
+                $item->save();
+                // 删缓存
+
+                (new N8UnionUserData())->setParams(['id' => $item->id])->clear();
+                echo "\r".$lastId;
+            }
+
+        }while(!$list->isEmpty());
     }
 
 
