@@ -40,6 +40,7 @@ class N8UnionUserModel extends UserActionBaseModel
         'click_id',
         'matcher',
         'last_match_time',
+        'user_type',
         'created_at'
     ];
 

@@ -15,6 +15,7 @@ use App\Datas\ProductData;
 use App\Datas\UserLoginActionData;
 use App\Datas\UserReadActionData;
 use App\Datas\UserShortcutActionData;
+use App\Enums\N8UserTypeEnum;
 use App\Enums\QueueEnums;
 use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
@@ -193,6 +194,8 @@ class N8UnionUserService extends BaseService
             $platform = $this->getPlatformByUa($ua);
         }
 
+        $n8UserSum =  (new N8UnionUserModel())->where('n8_guid',$data['n8_guid'])->count();
+        $userType = $n8UserSum > 1 ? N8UserTypeEnum::BACKFLOW : N8UserTypeEnum::NEW;
         $unionUser = (new N8UnionUserModel())->create([
             'n8_guid'       => $data['n8_guid'],
             'product_id'    => $data['product_id'],
@@ -205,6 +208,7 @@ class N8UnionUserService extends BaseService
             'admin_id'      => $channelExtend['admin_id'],
             'adv_alias'     => $channelExtend['adv_alias'],
             'matcher'       => $data['matcher'],
+            'user_type'     => $userType,
             'created_at'    => date('Y-m-d H:i:s')
         ]);
 
