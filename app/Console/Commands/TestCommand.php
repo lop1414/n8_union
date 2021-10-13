@@ -57,9 +57,10 @@ class TestCommand extends BaseCommand
         do{
             $list = (new N8UnionUserModel())
                 ->where('id','>',$lastId)
+                ->where('user_type','!=','')
                 ->skip(0)
                 ->take(1000)
-                ->orderBy('created_time')
+                ->orderBy('id')
                 ->get();
             foreach ($list as $item){
                 $lastId = $item->id;
