@@ -307,11 +307,11 @@ class N8UnionUserService extends BaseService
         if(!empty($addShortcutInfo)) return true;
 
 
-//        $dateRange = [date('Y-m-d',$startTimestamp), date('Y-m-d',$endTimestamp)];
+        $dateRange = [date('Y-m-d',$startTimestamp), date('Y-m-d',$endTimestamp)];
 
-        //阅读活跃
-//        $readInfo = (new UserReadActionData())->readLastDataByRange($n8Guid,$dateRange);
-//        if(!empty($readInfo)) return true;
+//        阅读活跃
+        $readInfo = (new UserReadActionData())->readLastDataByRange($n8Guid,$dateRange);
+        if(!empty($readInfo)) return true;
 
         //登陆活跃
 //        $loginInfo = (new UserLoginActionData())->readLastDataByRange($n8Guid,$dateRange);
