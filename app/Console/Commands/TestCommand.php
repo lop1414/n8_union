@@ -57,7 +57,7 @@ class TestCommand extends BaseCommand
         do{
             $list = (new N8UnionUserModel())
                 ->where('id','>',$lastId)
-                ->where('user_type','!=','')
+                ->where('user_type','=','')
                 ->skip(0)
                 ->take(1000)
                 ->orderBy('id')
@@ -71,7 +71,6 @@ class TestCommand extends BaseCommand
                 $item->user_type = $n8UserSum > 0 ? N8UserTypeEnum::BACKFLOW : N8UserTypeEnum::NEW;
                 $item->save();
                 // 删缓存
-
                 (new N8UnionUserData())->setParams(['id' => $item->id])->clear();
                 echo "\r".$lastId;
             }
