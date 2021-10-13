@@ -195,7 +195,7 @@ class N8UnionUserService extends BaseService
         }
 
         $n8UserSum =  (new N8UnionUserModel())->where('n8_guid',$data['n8_guid'])->count();
-        $userType = $n8UserSum > 1 ? N8UserTypeEnum::BACKFLOW : N8UserTypeEnum::NEW;
+        $userType = $n8UserSum > 0 ? N8UserTypeEnum::BACKFLOW : N8UserTypeEnum::NEW;
         $unionUser = (new N8UnionUserModel())->create([
             'n8_guid'       => $data['n8_guid'],
             'product_id'    => $data['product_id'],
