@@ -70,6 +70,10 @@ class ChannelController extends BaseController
                 $builder->where('e.admin_id',$req['admin_id']);
             }
 
+            if(!empty($req['status'])){
+                $builder->where('e.status',$req['status']);
+            }
+
             if(!empty($req['adv_alias'])){
                 $builder->where('e.adv_alias',$req['adv_alias']);
             }
