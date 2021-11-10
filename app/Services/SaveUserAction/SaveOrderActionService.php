@@ -48,16 +48,26 @@ class SaveOrderActionService extends SaveUserActionService
 
 
         // 入库
+        $tmpTime = date('Y-m-d H:i:s',strtotime('-24 hours',strtotime($data['action_time'])));
         $orderTimes = (new OrderModel())
-            ->where('n8_guid',$data['n8_guid'])
-            ->where('channel_id',$unionUser['channel_id'])
-            ->where('order_time','<',$data['action_time'])
+            ->whereRaw("
+                n8_guid = {$data['n8_guid']}
+                AND (
+                    ( channel_id = {$unionUser['channel_id']} AND order_time < '{$data['action_time']}')
+                    OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
+                )
+            ")
             ->count();
+        $status = OrderStatusEnums::COMPLETE;
         $completeTimes = (new OrderModel())
-            ->where('n8_guid',$data['n8_guid'])
-            ->where('channel_id',$unionUser['channel_id'])
-            ->where('status',OrderStatusEnums::COMPLETE)
-            ->where('order_time','<',$data['action_time'])
+            ->whereRaw("
+                n8_guid = {$data['n8_guid']}
+                AND status = '{$status}'
+                AND (
+                    ( channel_id = {$unionUser['channel_id']} AND order_time < '{$data['action_time']}')
+                    OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
+                )
+            ")
             ->count();
 
 
