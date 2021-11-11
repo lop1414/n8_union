@@ -47,6 +47,11 @@ class OpenApiSignValid
             ]);
         }
 
+        if(empty($req['muid'])){
+            $req['muid'] = !empty($req['imei']) ? $req['imei'] : '';
+            $req['muid'] = !empty($req['idfa']) ? $req['idfa'] : $req['muid'];
+        }
+
         // 验证
         (new OpenApiAuthService())->valid($req,$product['secret']);
 
