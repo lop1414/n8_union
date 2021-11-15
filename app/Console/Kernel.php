@@ -5,7 +5,6 @@ namespace App\Console;
 use App\Common\Enums\AdvAliasEnum;
 use App\Console\Commands\SaveUserActionCommand;
 use App\Console\Commands\TestCommand;
-use App\Console\Commands\Yw\UpdateBookCommand;
 use App\Console\Commands\CreateTableCommand;
 use App\Console\Commands\UserActionMatchCommand;
 use App\Console\Commands\PullCpChannelCommand;
