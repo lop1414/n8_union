@@ -33,10 +33,6 @@ class Kernel extends ConsoleKernel
 
         // 同步渠道
         PullCpChannelCommand::class,
-
-
-        // 更新书籍信息
-        UpdateBookCommand::class,
     ];
 
     /**

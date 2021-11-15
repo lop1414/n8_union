@@ -84,40 +84,4 @@ class BookService extends YwService
         ]);
     }
 
-
-    public function updateAll(){
-        $lastMinId = 0;
-        do{
-            $list = (new BookModel())
-                ->where('cp_type',CpTypeEnums::YW)
-                ->where('id','>',$lastMinId)
-                ->skip(0)
-                ->take(1000)
-                ->orderBy('id')
-                ->get();
-            foreach ($list as $item){
-                try{
-                    $this->sync($item['cp_book_id']);
-
-                }catch (CustomException $e){
-
-                    $errInfo = $e->getErrorInfo(true);
-
-                    //10010 小说不存在
-                    if(isset($errInfo['data']['result']['code']) && $errInfo['data']['result']['code'] != '10010'){
-                        (new ErrorLogService())->catch($e);
-                    }
-                    echo $errInfo['message']."\n";
-
-                }catch (\Exception $e){
-                    (new ErrorLogService())->catch($e);
-                    echo $e->getMessage()."\n";
-
-                }
-
-                $lastMinId = $item['id'];
-            }
-        }while(!$list->isEmpty());
-
-    }
 }
