@@ -47,9 +47,9 @@ class SaveUserActionService extends BaseService
 
                 $globalUser = $globalUserService->make($data['product_id'],$data['open_id']);
                 $data['n8_guid'] = $globalUser['n8_guid'];
-
                 $data['channel_id'] = 0;
                 $data['adv_alias'] = AdvAliasEnum::UNKNOWN;
+
                 if(!empty($data['cp_channel_id'])){
                     $channel = $this->getChannel($data['product_id'],$data['cp_channel_id']);
                     $data['channel_id'] = $channel['id'];
@@ -69,10 +69,11 @@ class SaveUserActionService extends BaseService
             }catch (CustomException $e){
 
                 DB::rollBack();
+                // 执行异常操作
                 $this->failItem($data);
-                $errInfo = $e->getErrorInfo(true);
 
                 //订单已存
+                $errInfo = $e->getErrorInfo(true);
                 if($errInfo['code'] == 'EXIST_ORDER'){
                     continue;
                 }
@@ -80,6 +81,7 @@ class SaveUserActionService extends BaseService
                 //日志
                 (new ErrorLogService())->catch($e);
 
+                //重回队列
                 $queue->item['exception'] = $e->getErrorInfo();
                 $queue->item['code'] = $e->getCode();
                 $rePushData[] = $queue->item;
@@ -88,9 +90,10 @@ class SaveUserActionService extends BaseService
             }catch (\Exception $e){
 
                 DB::rollBack();
-
+                // 执行异常操作
                 $this->failItem($data);
-                //命中唯一索引
+
+                // 执行异常操作
                 if($e->getCode() == 23000){
                     echo "  命中唯一索引 \n";
                     continue;
@@ -98,6 +101,8 @@ class SaveUserActionService extends BaseService
 
                 //日志
                 (new ErrorLogService())->catch($e);
+
+                //重回队列
                 $queue->item['exception'] = $e->getMessage();
                 $queue->item['code'] = $e->getCode();
                 $rePushData[] = $queue->item;
