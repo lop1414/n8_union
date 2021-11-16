@@ -53,6 +53,7 @@ class ChannelData extends BaseData
                 'book_id'        => $data['book_id'],
                 'chapter_id'     => $data['chapter_id'],
                 'force_chapter_id'   => $data['force_chapter_id'],
+                'extends'        => $data['extends'],
                 'create_time'    => $data['create_time'],
                 'updated_time'   => $data['updated_time'],
             ]

@@ -25,16 +25,12 @@ class TwChannelService extends CpChannelBaseService
         $this->channelData = new ChannelData();
     }
 
-    /**
-     * @throws CustomException
-     * 同步
-     */
+
     public function sync(){
         $startDate = $this->getParam('start_date');
         $endDate = $this->getParam('end_date');
 
         $productList = $this->getProductList();
-
 
         foreach ($productList as $product){
             $sdk = new TwSdk($product['cp_product_alias'],$product['cp_secret']);
@@ -50,19 +46,14 @@ class TwChannelService extends CpChannelBaseService
                 try {
 
                     $parameter['adate'] = $date;
-
                     $channels = $sdk->getCpChannel($parameter);
-
                     foreach ($channels as $channel){
-
-                     $this->saveItem($product,$channel);
-
+                        $this->saveItem($product,$channel);
                     }
                 }catch (CustomException $e){
 
                     //日志
                     (new ErrorLogService())->catch($e);
-
 
                     // echo
                     (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
@@ -112,14 +103,19 @@ class TwChannelService extends CpChannelBaseService
             'name'          => $data['follow_num_name'] ?? '',
             'seq'           => $data['follow_num']
         ]);
+
         //渠道
-        $this->channelData->save([
+        $this->save([
             'product_id'     => $product['id'],
             'cp_channel_id'  => $data['id'],
             'name'           => $data['name'],
             'book_id'        => $book['id'],
             'chapter_id'     => $openChapter['id'],
             'force_chapter_id'  => $installChapter['id'],
+            'extends'       => [
+                'hap_url'   => $data['hap_links'],
+                'h5_url'    => $data['links']
+            ],
             'create_time'    => $data['created_at'],
             'updated_time'   => $data['created_at'],
         ]);

@@ -4,7 +4,6 @@ namespace App\Services\Cp\Channel;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Datas\BookData;
-use App\Datas\ChannelData;
 use App\Datas\ChapterData;
 use App\Sdks\Bm\BmSdk;
 
@@ -21,7 +20,6 @@ class BmChannelService extends CpChannelBaseService
 
         $bookData = new BookData();
         $chapterData = new ChapterData();
-        $channelData = new ChannelData();
         foreach ($productList as $product){
             $sdk = new BmSdk($product['cp_product_alias'],$product['cp_secret']);
 
@@ -36,7 +34,7 @@ class BmChannelService extends CpChannelBaseService
             do{
                 $channels = $sdk->getCpChannel($parameter);
 
-                foreach ($channels['list'] as $i => $channel){
+                foreach ($channels['list'] as $channel){
 
                     // 书籍
                     $book = $bookData->save([
@@ -62,13 +60,14 @@ class BmChannelService extends CpChannelBaseService
                         'seq'           => $channel['installChapterNumber']
                     ]);
                     //渠道
-                    $channelData->save([
+                    $this->save([
                         'product_id'     => $product['id'],
                         'cp_channel_id'  => $channel['channelid'],
                         'name'           => $channel['channelName'],
                         'book_id'        => $book['id'],
                         'chapter_id'     => $openChapter['id'],
                         'force_chapter_id'   => $installChapter['id'],
+                        'extends'        => [],
                         'create_time'    => $channel['createTime'],
                         'updated_time'   => $channel['updateTime'],
                     ]);

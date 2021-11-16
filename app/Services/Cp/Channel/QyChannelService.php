@@ -6,7 +6,6 @@ namespace App\Services\Cp\Channel;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Tools\CustomException;
-use App\Models\ChannelModel;
 use App\Sdks\Qy\QySdk;
 use App\Services\Qy\BookService;
 use App\Services\Qy\ChapterService;
@@ -56,15 +55,6 @@ class QyChannelService extends CpChannelBaseService
      * 保存
      */
     public function saveItem($product,$data){
-        $channel = (new ChannelModel())
-            ->where('product_id',$product['id'])
-            ->where('cp_channel_id',$data['channel_id'])
-            ->first();
-
-        if(empty($channel)){
-            $channel = new ChannelModel();
-        }
-
         $bookId = substr($data['entry_page_chapter_id'],0,strlen($data['entry_page_chapter_id'])-5);
         $book = (new BookService())->setProduct($product)->read($bookId,$data['book_name']);
 
@@ -72,17 +62,17 @@ class QyChannelService extends CpChannelBaseService
         $chapter = $chapterService->read($data['entry_page_chapter_id'],'',$data['entry_page_chapter_idx']);
         $forceChapter = $chapterService->readBySeq($data['subscribe_chapter_idx'],'','');
 
-
-        $channel->product_id = $product['id'];
-        $channel->cp_channel_id = $data['id'];
-        $channel->name = $data['dispatch_channel'];
-        $channel->book_id = $book['id'];
-        $channel->chapter_id = $chapter['id'] ?? 0;
-        $channel->force_chapter_id = $forceChapter['id'] ?? 0;
-        $channel->extends = [];
-        $channel->create_time = date('Y-m-d H:i:s',$data['createtime']);
-        $channel->updated_time = date('Y-m-d H:i:s',$data['createtime']);
-        $channel->save();
+        $this->save([
+            'product_id'     => $product['id'],
+            'cp_channel_id'  => $data['id'],
+            'name'           => $data['dispatch_channel'],
+            'book_id'        => $book['id'],
+            'chapter_id'     => $chapter['id'] ?? 0,
+            'force_chapter_id'  => $forceChapter['id'] ?? 0,
+            'extends'       => [],
+            'create_time'    => date('Y-m-d H:i:s',$data['createtime']),
+            'updated_time'   => date('Y-m-d H:i:s',$data['createtime']),
+        ]);
     }
 
 
