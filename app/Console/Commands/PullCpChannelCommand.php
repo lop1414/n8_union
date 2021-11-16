@@ -23,11 +23,6 @@ class PullCpChannelCommand extends BaseCommand
     protected $description = '同步渠道';
 
 
-    protected $startDate,$endDate;
-
-    protected $cpType;
-
-
     /**
      * Create a new command instance.
      *
@@ -40,49 +35,54 @@ class PullCpChannelCommand extends BaseCommand
 
     public function handle(){
 
-        $date = $this->option('date');
-        $this->cpType = $this->option('cp_type');
-        if(!empty($this->cpType)){
-            Functions::hasEnum(CpTypeEnums::class,$this->cpType);
+        $cpTypeParam = $this->option('cp_type');
+        if(!empty($cpTypeParam)){
+            Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
         }
 
-        if(!empty($date)){
-            list($this->startDate,$this->endDate) = Functions::getDateRange($this->option('date'));
+        list($startDate,$endDate) = Functions::getDateRange($this->option('date'));
 
-        }
 
         $expire = env('APP_DEBUG') ? 1 : 60 * 60;
 
-        $this->lockRun(function (){
-            $this->sync();
+        $this->lockRun(function () use ($cpTypeParam,$startDate,$endDate){
+            $services = $this->getServices();
+            foreach ($services as $cpType => $service){
+                if(empty($cpTypeParam) || $cpTypeParam == $cpType){
+                    echo "{$service['name']}\n";
+                    $service = new $service['class'];
+                    $service->setParam('start_date',$startDate);
+                    $service->setParam('end_date',$endDate);
+                    // 阅文只同步快应用
+                    if($cpType == CpTypeEnums::YW){
+                        $service->setParam('product_type',ProductTypeEnums::KYY);
+                    }
+                    $service->sync();
+                }
+            }
         },'pull_channel',$expire,['log' => true]);
 
     }
 
 
-
-    public function sync(){
-
-
-        if(empty($this->cpType) || $this->cpType == CpTypeEnums::BM){
-            echo "笔墨\n";
-            (new \App\Services\Bm\ChannelService())->sync($this->startDate,$this->endDate);
-        }
-
-        if(empty($this->cpType) || $this->cpType == CpTypeEnums::TW){
-            echo "腾文\n";
-            (new \App\Services\Tw\ChannelService())->sync($this->startDate,$this->endDate);
-        }
-
-        if(empty($this->cpType) || $this->cpType == CpTypeEnums::QY){
-            echo "七悦\n";
-            (new \App\Services\Qy\ChannelService())->sync($this->startDate,$this->endDate);
-        }
-
-        if(empty($this->cpType) || $this->cpType == CpTypeEnums::YW){
-            echo "阅文\n";
-            (new \App\Services\Yw\ChannelService())->sync($this->startDate,$this->endDate,null, [], ProductTypeEnums::KYY);
-        }
-
+    public function getServices(){
+        return [
+            CpTypeEnums::BM => [
+                'name' => '笔墨',
+                'class' => \App\Services\Cp\Channel\BmChannelService::class
+            ],
+            CpTypeEnums::TW =>[
+                'name' => '腾文',
+                'class' => \App\Services\Cp\Channel\TwChannelService::class
+            ],
+            CpTypeEnums::QY =>[
+                'name' => '七悦',
+                'class' => \App\Services\Cp\Channel\QyChannelService::class
+            ],
+            CpTypeEnums::YW =>[
+                'name' => '阅文',
+                'class' => \App\Services\Cp\Channel\YwChannelService::class
+            ],
+        ];
     }
 }
