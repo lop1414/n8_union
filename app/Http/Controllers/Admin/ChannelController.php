@@ -10,10 +10,10 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Helpers\Platform;
-use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ProductData;
 use App\Models\ChannelModel;
+use App\Services\ChannelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -252,22 +252,18 @@ class ChannelController extends BaseController
             ->setParams(['id' => $productId])
             ->read();
 
-        if(empty($productInfo)){
-            throw new CustomException([
-                'code' => 'PRODUCT_NOT_EXIST',
-                'message' => '产品不存在',
-            ]);
-        }
-        $cpType = ucfirst(Functions::camelize($productInfo['cp_type']));
-        $class = "App\Services\\{$cpType}\ChannelService";
-        if(!class_exists($class)){
+        $serviceInfo = (new ChannelService())->getCpService($productInfo['cp_type']);
+
+
+        if(empty($serviceInfo)){
             return $this->fail('FAIL','该产品暂无此功能');
         }
 
-        $channelIds = $req['channel_ids'] ?? [];
-        $startDate = date('Y-m-d',strtotime('-5 day'));
-        $endDate = date('Y-m-d');
-        (new $class)->sync($startDate,$endDate,$productId,$channelIds);
+        $service = new $serviceInfo['class'];
+        $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
+        $service->setParam('end_date',date('Y-m-d'));
+        $service->setParam('product_id',$productId);
+        $service->syncWithHook();
 
         return $this->success();
     }
