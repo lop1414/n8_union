@@ -7,10 +7,12 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Enums\QueueEnums;
 use App\Models\UserReadActionModel;
+use App\Services\Cp\Book\QyBookService;
+use App\Services\Cp\Book\YwBookService;
+use App\Services\Cp\Chapter\QyChapterService;
+use App\Services\Cp\Chapter\YwChapterService;
 use App\Services\N8UnionUserService;
 use App\Services\UserBookReadService;
-use App\Services\Yw\BookService;
-use App\Services\Yw\ChapterService;
 
 
 class SaveReadActionService extends SaveUserActionService
@@ -21,11 +23,9 @@ class SaveReadActionService extends SaveUserActionService
 
     protected $unionUserService;
 
-    protected $ywBookService;
-
-    protected $ywChapterService;
-
     protected $userBookReadService;
+
+    protected $cpBookServices,$cpChapterServices;
 
 
     public function __construct(){
@@ -33,9 +33,16 @@ class SaveReadActionService extends SaveUserActionService
         $model = new UserReadActionModel();
         $this->setModel($model);
         $this->unionUserService = new N8UnionUserService();
-        $this->ywBookService = new BookService();
-        $this->ywChapterService = new ChapterService();
         $this->userBookReadService = new UserBookReadService();
+        $this->cpBookServices = [
+            CpTypeEnums::YW => new YwBookService(),
+            CpTypeEnums::QY => new QyBookService()
+        ];
+
+        $this->cpChapterServices = [
+            CpTypeEnums::YW => new YwChapterService(),
+            CpTypeEnums::QY => new QyChapterService()
+        ];
     }
 
 
@@ -53,25 +60,35 @@ class SaveReadActionService extends SaveUserActionService
 
         $unionUser = $this->unionUserService->read($user['n8_guid'],$user['channel_id']);
 
+        if(empty($this->cpBookServices[$data['cp_type']]) || empty($this->cpChapterServices[$data['cp_type']])){
+            throw new CustomException([
+                'code'    => 'NOT_SERVICE',
+                'message' => '该书城没有实现BookService 或 ChapterServices',
+                'log'     => true,
+                'data'    => $data
+            ]);
+        }
+
+        $book = $this->cpBookServices[$data['cp_type']]
+            ->readSave($data['cp_book_id'],$data['cp_book_name']);
+
+        $chapter = $this->cpChapterServices[$data['cp_type']]
+            ->setBook($book)
+            ->readSave($data['cp_chapter_id'],$data['cp_chapter_name'],$data['cp_chapter_index']);
+
+
         $createData = [
             'uuid' => $unionUser['id'],
+            'book_id'   => $book['id'],
+            'chapter_id' => $chapter['id'],
             'created_at' => date('Y-m-d H:i:s'),
             'n8_guid'    => $data['n8_guid'],
             'action_time'=> $data['action_time'],
             'extends'    => $data['extends']
         ];
 
-        if($data['cp_type'] == CpTypeEnums::YW){
-            $book = $this->ywBookService->readSave($data['cp_book_id'],$data['cp_book_name']);
-            $chapter = $this->ywChapterService->setBook($book)->readSave($data['cp_chapter_id'],$data['cp_chapter_name'],$data['cp_chapter_index']);
-            $createData['book_id'] = $book['id'];
-            $createData['chapter_id'] = $chapter['id'];
-        }
-
-        if(!empty($createData['book_id']) && !empty($createData['chapter_id'])){
-            $info = $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
-            $this->userBookReadService->analysis($info);
-        }
+        $info = $this->getModel()->setTableNameWithMonth($createData['action_time'])->create($createData);
+        $this->userBookReadService->analysis($info);
 
         return $unionUser;
     }
