@@ -81,9 +81,11 @@ class CpBaseService extends BaseService
         $this->callHook('sync_before');
 
         //执行
-        $this->sync();
+        $ret = $this->sync();
 
         $this->callHook('sync_after');
+
+        return $ret;
     }
 
 

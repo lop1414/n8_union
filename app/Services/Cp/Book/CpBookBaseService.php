@@ -55,7 +55,7 @@ class CpBookBaseService extends CpBaseService
         $info = $this->bookModelData->setParams(['cp_type' => $this->cpType, 'cp_book_id' => $cpBookId])->read();
         if(empty($info)){
             $this->setParam('cp_book_id',$cpBookId);
-            $info = $this->sync();
+            $info = $this->syncWithHook()->toArray();
         }
         return $info;
     }
