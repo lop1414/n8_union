@@ -64,7 +64,7 @@ class BookData extends BaseData
                 'all_words'     => $data['all_words'],
                 'update_time'   => $data['update_time']
             ]
-        );
+        )->toArray();
     }
 
 }
