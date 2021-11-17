@@ -57,7 +57,7 @@ class PullCpChannelCommand extends BaseCommand
                     if($cpType == CpTypeEnums::YW){
                         $service->setParam('product_type',ProductTypeEnums::KYY);
                     }
-                    $service->sync();
+                    $service->syncWithHook();
                 }
             }
         },'pull_channel',$expire,['log' => true]);
