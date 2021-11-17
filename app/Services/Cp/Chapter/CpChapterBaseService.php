@@ -88,18 +88,17 @@ class CpChapterBaseService extends CpBaseService
     }
 
 
-
-//    public function readBySeq($seq){
-//        $query = $this->model->where('book_id',$this->book['id'])->where('seq',$seq);
-//        $info = $query->first();
-//        if(empty($info)){
-//            $this->setParam('cp_book_id',$this->book['cp_book_id']);
-//            $this->sync();
-//            $info = $query->first();
-//            if(!empty($info)){
-//                $info = $info->toArray();
-//            }
-//        }
-//        return $info;
-//    }
+    public function readBySeq($seq){
+        $query = $this->model->where('book_id',$this->book['id'])->where('seq',$seq);
+        $info = $query->first();
+        if(empty($info)){
+            $this->setParam('cp_book_id',$this->book['cp_book_id']);
+            $this->syncWithHook();
+            $info = $query->first();
+            if(!empty($info)){
+                $info = $info->toArray();
+            }
+        }
+        return $info;
+    }
 }

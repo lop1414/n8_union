@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Admin;
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Enums\ProductTypeEnums;
-use App\Common\Enums\SystemAliasEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Helpers\Platform;
@@ -23,6 +22,8 @@ class ChannelController extends BaseController
 
     protected $defaultOrderBy = 'updated_time';
 
+    protected $cpChannelServices;
+
 
 
     /**
@@ -33,11 +34,8 @@ class ChannelController extends BaseController
         $this->model = new ChannelModel();
         $this->modelData = new ChannelData();
 
-
         parent::__construct();
-
         $this->adminUser = Functions::getGlobalData('admin_user_info');
-
     }
 
 
@@ -52,8 +50,6 @@ class ChannelController extends BaseController
 
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
                 ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
-
-
 
             $req = $this->curdService->requestData;
             if(isset($req['is_bind']) && $req['is_bind'] == 0){
@@ -97,9 +93,7 @@ class ChannelController extends BaseController
             if(!empty($keyword)){
                 $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `channel_id` LIKE '%{$keyword}%')");
             }
-
         });
-
     }
 
 
@@ -113,7 +107,6 @@ class ChannelController extends BaseController
         $this->curdService->selectQueryBefore(function (){
             $this->dataFilter();
         });
-
 
         $this->curdService->selectQueryAfter(function(){
 
@@ -198,7 +191,6 @@ class ChannelController extends BaseController
         $this->curdService->getQueryBefore(function (){
             $this->dataFilter();
         });
-
 
         $this->curdService->getQueryAfter(function(){
             $map = $this->getAdminUserMap();

@@ -6,6 +6,7 @@ use App\Common\Console\BaseCommand;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Helpers\Functions;
+use App\Services\ChannelService;
 
 class PullCpChannelCommand extends BaseCommand
 {
@@ -46,7 +47,7 @@ class PullCpChannelCommand extends BaseCommand
         $expire = env('APP_DEBUG') ? 1 : 60 * 60;
 
         $this->lockRun(function () use ($cpTypeParam,$startDate,$endDate){
-            $services = $this->getServices();
+            $services = (new ChannelService())->getAllCpServices();
             foreach ($services as $cpType => $service){
                 if(empty($cpTypeParam) || $cpTypeParam == $cpType){
                     echo "{$service['name']}\n";
@@ -62,27 +63,5 @@ class PullCpChannelCommand extends BaseCommand
             }
         },'pull_channel',$expire,['log' => true]);
 
-    }
-
-
-    public function getServices(){
-        return [
-            CpTypeEnums::BM => [
-                'name' => '笔墨',
-                'class' => \App\Services\Cp\Channel\BmChannelService::class
-            ],
-            CpTypeEnums::TW =>[
-                'name' => '腾文',
-                'class' => \App\Services\Cp\Channel\TwChannelService::class
-            ],
-            CpTypeEnums::QY =>[
-                'name' => '七悦',
-                'class' => \App\Services\Cp\Channel\QyChannelService::class
-            ],
-            CpTypeEnums::YW =>[
-                'name' => '阅文',
-                'class' => \App\Services\Cp\Channel\YwChannelService::class
-            ],
-        ];
     }
 }
