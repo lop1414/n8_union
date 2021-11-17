@@ -269,4 +269,24 @@ class ChannelController extends BaseController
     }
 
 
+    public function renew(Request $request){
+        $req = $request->all();
+        $this->validRule($req,[
+            'id'    =>  'required',
+        ]);
+        $channelInfo = $this->model->where('id',$req['id'])->first();
+        $serviceInfo = (new ChannelService())->getCpService($channelInfo->product->cp_type);
+        if(empty($serviceInfo)){
+            return $this->fail('FAIL','该产品暂无此功能');
+        }
+        $service = new $serviceInfo['class'];
+        $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
+        $service->setParam('end_date',date('Y-m-d'));
+        $service->setParam('product_id',$channelInfo->product->id);
+        $service->setParam('channel_ids',[$req['id']]);
+        $service->syncWithHook();
+        return $this->success();
+    }
+
+
 }
