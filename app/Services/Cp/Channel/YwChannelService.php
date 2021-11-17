@@ -22,6 +22,11 @@ class YwChannelService extends CpChannelBaseService
 
         $productList = $this->getProductList();
 
+        if($this->getParam('channel_ids')){
+            $this->syncById();
+            return;
+        }
+
         foreach ($productList as $product){
 
             $date = $this->getParam('start_date');

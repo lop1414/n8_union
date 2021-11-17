@@ -3,6 +3,7 @@
 namespace App\Services\Cp\Channel;
 
 use App\Common\Enums\CpTypeEnums;
+use App\Common\Tools\CustomException;
 use App\Datas\BookData;
 use App\Datas\ChapterData;
 use App\Sdks\Bm\BmSdk;
@@ -13,6 +14,11 @@ class BmChannelService extends CpChannelBaseService
     protected $cpType = CpTypeEnums::BM;
 
     public function sync(){
+        if($this->getParam('channel_ids')){
+            $this->syncById();
+            return;
+        }
+
         $startDate = $this->getParam('start_date');
         $endDate = $this->getParam('end_date');
 
@@ -76,5 +82,13 @@ class BmChannelService extends CpChannelBaseService
                 $parameter['page'] += 1;
             }while($channels['totalPage'] >= $parameter['page']);
         }
+    }
+
+
+    public function syncById(){
+        throw new CustomException([
+            'code' => 'NO_SUPPORT',
+            'message' => '该平台不支持根据ID更新',
+        ]);
     }
 }

@@ -27,6 +27,12 @@ class TwChannelService extends CpChannelBaseService
 
 
     public function sync(){
+        if($this->getParam('channel_ids')){
+            $this->syncById();
+            return;
+        }
+
+
         $startDate = $this->getParam('start_date');
         $endDate = $this->getParam('end_date');
 
