@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Common\Controllers\Front\FrontController;
-
-
-use App\Models\UserBookReadModel;
-
-use App\Models\UserReadActionModel;
-use App\Services\UserBookReadService;
+use App\Datas\BookData;
 use Illuminate\Http\Request;
 
 class TestController extends FrontController
@@ -28,9 +23,8 @@ class TestController extends FrontController
         if($key != 'aut'){
             return $this->forbidden();
         }
-
-
-
+        $info = (new BookData())->setParams(['cp_type' => 'YW', 'cp_book_id' => 21520039808040206])->read();
+        dd($info);
     }
 
 }
