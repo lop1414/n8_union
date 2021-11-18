@@ -132,7 +132,7 @@ class ChannelController extends BaseController
                 $item->has_extend = $item->admin_id ? true : false;
 
                 $copyUrl = [[
-                        'name' => '检测链接',
+                        'name' => '监测链接',
                         'url'  => $feedback_url
                     ]];
 
