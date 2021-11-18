@@ -55,23 +55,6 @@ class CpChapterBaseService extends CpBaseService
 
 
 
-//    public function readSaveBySeq($seq,$cpChapterId,$name){
-//        $info = $this->model
-//            ->where('book_id',$this->book['id'])
-//            ->where('seq',$seq)
-//            ->first();
-//        if(empty($info)){
-//            $info = $this->chapterModelData->save([
-//                'book_id'       => $this->book['id'],
-//                'cp_chapter_id' => $cpChapterId,
-//                'name'          => $name,
-//                'seq'           => $seq
-//            ])->toArray();
-//        }
-//        return $info;
-//    }
-
-
     public function read($cpChapterId){
         $info = $this->chapterModelData
             ->setParams(['book_id'=>$this->book['id'],'cp_chapter_id' => $cpChapterId])

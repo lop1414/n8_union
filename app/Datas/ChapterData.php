@@ -50,12 +50,13 @@ class ChapterData extends BaseData
 
 
     public function save($data){
-        return $this->getModel()->updateOrCreate(
-            [
-                'book_id'       => $data['book_id'],
-                'cp_chapter_id' => $data['cp_chapter_id']
-            ],
-            [
+        $where = [
+            'book_id'       => $data['book_id'],
+            'cp_chapter_id' => $data['cp_chapter_id']
+        ];
+        $this->setParams($where)->clear();
+
+        return $this->getModel()->updateOrCreate($where, [
                 'name'          => $data['name'],
                 'seq'           => $data['seq']
             ]
