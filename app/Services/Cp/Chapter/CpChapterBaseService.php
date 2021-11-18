@@ -33,21 +33,34 @@ class CpChapterBaseService extends CpBaseService
     /**
      * @param $cpChapterId
      * @param $cpChapterName
-     * @param $cpChapterIndex
+     * @param $seq
      * @return mixed|null
      * @throws CustomException
      * read 或 save
      */
-    public function readSave($cpChapterId,$cpChapterName,$cpChapterIndex){
-        $info = $this->chapterModelData
-            ->setParams(['book_id'=>$this->book['id'],'cp_chapter_id' => $cpChapterId])
-            ->read();
+    public function readSave($cpChapterId,$cpChapterName,$seq){
+
+        $info = [];
+        if(!empty($cpChapterId)){
+            $info = $this->chapterModelData
+                ->setParams(['book_id' => $this->book['id'],'cp_chapter_id' => $cpChapterId])
+                ->read();
+        }elseif (!empty($seq)){
+            $info = $this->model
+                ->where('book_id',$this->book['id'])
+                ->where('cp_chapter_id', $cpChapterId)
+                ->first();
+            if(!empty($info)){
+                $info = $info->toArray();
+            }
+        }
+
         if(empty($info)){
             $info = $this->chapterModelData->save([
                 'book_id'       => $this->book['id'],
                 'cp_chapter_id' => $cpChapterId,
                 'name'          => $cpChapterName,
-                'seq'           => $cpChapterIndex
+                'seq'           => $seq
             ])->toArray();
         }
         return $info;

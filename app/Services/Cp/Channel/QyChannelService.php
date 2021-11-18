@@ -7,8 +7,8 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Sdks\Qy\QySdk;
-use App\Services\Qy\BookService;
-use App\Services\Qy\ChapterService;
+use App\Services\Cp\Book\QyBookService;
+use App\Services\Cp\Chapter\QyChapterService;
 
 class QyChannelService extends CpChannelBaseService
 {
@@ -58,15 +58,16 @@ class QyChannelService extends CpChannelBaseService
     /**
      * @param $product
      * @param $data
+     * @throws CustomException
      * 保存
      */
     public function saveItem($product,$data){
         $bookId = substr($data['entry_page_chapter_id'],0,strlen($data['entry_page_chapter_id'])-5);
-        $book = (new BookService())->setProduct($product)->read($bookId,$data['book_name']);
+        $book = (new QyBookService())->setProduct($product)->read($bookId);
 
-        $chapterService = (new ChapterService())->setProduct($product)->setBook($book);
-        $chapter = $chapterService->read($data['entry_page_chapter_id'],'',$data['entry_page_chapter_idx']);
-        $forceChapter = $chapterService->readBySeq($data['subscribe_chapter_idx'],'','');
+        $chapterService = (new QyChapterService())->setProduct($product)->setBook($book);
+        $chapter = $chapterService->readSave($data['entry_page_chapter_id'],'',$data['entry_page_chapter_idx']);
+        $forceChapter = $chapterService->readSave('','',$data['subscribe_chapter_idx']);
 
         $this->save([
             'product_id'     => $product['id'],
