@@ -43,12 +43,15 @@ class ProductData extends BaseData
 
 
     public function save($data){
-        $this->model->updateOrCreate(
-            [
-                'cp_product_alias' => $data['cp_product_alias'],
-                'cp_type'          => $data['cp_type']
-            ],
-            [
+        $where = [
+            'cp_product_alias' => $data['cp_product_alias'],
+            'cp_type'          => $data['cp_type']
+        ];
+
+        //清除缓存
+        $this->setParams($where)->clear();
+
+        $this->model->updateOrCreate($where, [
                 'name'          => $data['title'],
                 'author_name'   => $data['author_name'],
                 'all_words'     => $data['all_words'],

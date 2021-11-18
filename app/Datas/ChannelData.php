@@ -43,18 +43,14 @@ class ChannelData extends BaseData
 
 
     public function save($data){
-        //清除缓存
-        $this->setParams([
+        $where = [
             'product_id'    => $data['product_id'],
             'cp_channel_id' => $data['cp_channel_id']
-        ])->clear();
+        ];
+        //清除缓存
+        $this->setParams($where)->clear();
 
-        return $this->model->updateOrCreate(
-            [
-                'product_id'    => $data['product_id'],
-                'cp_channel_id' => $data['cp_channel_id']
-            ],
-            [
+        return $this->model->updateOrCreate($where, [
                 'name'           => $data['name'],
                 'book_id'        => $data['book_id'],
                 'chapter_id'     => $data['chapter_id'],

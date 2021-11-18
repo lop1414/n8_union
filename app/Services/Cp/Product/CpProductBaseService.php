@@ -35,15 +35,4 @@ class CpProductBaseService extends CpBaseService
         $pro->name = $data['name'];
         $pro->save();
     }
-
-
-
-    public function syncPrepare(){
-        $this->syncAfter(function (){
-            // 清除所有产品缓存
-            (new ProductData())->clearAll();
-        });
-    }
-
-
 }

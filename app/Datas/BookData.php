@@ -51,14 +51,13 @@ class BookData extends BaseData
 
     public function save($data){
 
-        $this->setParams(['cp_type' => $data['cp_type'],'cp_book_id' => $data['cp_book_id']])->clear();
+        $where = [
+            'cp_type'    => $data['cp_type'],
+            'cp_book_id' => $data['cp_book_id']
+        ];
+        $this->setParams($where)->clear();
 
-        return $this->model->updateOrCreate(
-            [
-                'cp_type'    => $data['cp_type'],
-                'cp_book_id' => $data['cp_book_id']
-            ],
-            [
+        return $this->model->updateOrCreate($where, [
                 'name'          => $data['name'],
                 'author_name'   => $data['author_name'],
                 'all_words'     => $data['all_words'],
