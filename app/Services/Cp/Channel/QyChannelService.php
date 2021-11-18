@@ -89,7 +89,7 @@ class QyChannelService extends CpChannelBaseService
     public function syncById(){
         throw new CustomException([
             'code' => 'NO_SUPPORT',
-            'message' => '该平台不支持根据ID更新',
+            'message' => '暂不支撑更新',
         ]);
     }
 }
