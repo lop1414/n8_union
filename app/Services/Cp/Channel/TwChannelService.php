@@ -134,7 +134,7 @@ class TwChannelService extends CpChannelBaseService
     public function syncById(){
         throw new CustomException([
             'code' => 'NO_SUPPORT',
-            'message' => '暂不支撑更新',
+            'message' => '暂不支持更新',
         ]);
     }
 }
