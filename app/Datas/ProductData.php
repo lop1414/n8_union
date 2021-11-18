@@ -5,6 +5,9 @@ namespace App\Datas;
 
 
 use App\Common\Datas\BaseData;
+use App\Common\Enums\MatcherEnum;
+use App\Common\Enums\OperatorEnum;
+use App\Common\Enums\StatusEnum;
 use App\Models\ProductModel;
 
 class ProductData extends BaseData
@@ -51,13 +54,21 @@ class ProductData extends BaseData
         //清除缓存
         $this->setParams($where)->clear();
 
-        $this->model->updateOrCreate($where, [
-                'name'          => $data['title'],
-                'author_name'   => $data['author_name'],
-                'all_words'     => $data['all_words'],
-                'update_time'   => $data['update_time']
-            ]
-        );
+        $info = $this->getModel()->where($where)->first();
+
+        if(empty($info)){
+            $info = $this->getModel();
+            $info->cp_account_id = $data['cp_account_id'];
+            $info->cp_product_alias = $data['cp_product_alias'];
+            $info->cp_type = $data['cp_type'];
+            $info->type = $data['type'];
+            $info->secret = md5(uniqid());
+            $info->status = StatusEnum::DISABLE;
+            $info->matcher = MatcherEnum::SYS;
+            $info->operator = OperatorEnum::SYS;
+        }
+        $info->name = $data['name'];
+        $info->save();
     }
 
 }
