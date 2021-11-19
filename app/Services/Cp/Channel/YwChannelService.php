@@ -117,12 +117,6 @@ class YwChannelService extends CpChannelBaseService
      * 根据ID 同步
      */
     public function syncById(){
-        if($this->product['type'] == ProductTypeEnums::H5){
-            throw new CustomException([
-                'code' => 'NO_SUPPORT',
-                'message' => '暂不支持更新',
-            ]);
-        }
 
         $channelIds = $this->getParam('channel_ids');
         $channelList = (new ChannelModel())->whereIn('id',$channelIds)->get();
@@ -130,6 +124,13 @@ class YwChannelService extends CpChannelBaseService
             $startTime = date('Y-m-d H:i:s',strtotime($channel['create_time']) - 60 * 10);
             $endTime = date('Y-m-d H:i:s',strtotime($channel['create_time']) + 60 * 10);
             $product = $channel->product;
+            if($product['type'] == ProductTypeEnums::H5){
+                throw new CustomException([
+                    'code' => 'NO_SUPPORT',
+                    'message' => '暂不支持更新',
+                ]);
+            }
+
             $sdk = $this->getSdk($product);
             $list  = $sdk->getChannelById($startTime,$endTime,$channel['cp_channel_id']);
 
