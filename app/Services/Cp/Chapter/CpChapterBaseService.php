@@ -48,14 +48,14 @@ class CpChapterBaseService extends CpBaseService
         }elseif (!empty($seq)){
             $info = $this->model
                 ->where('book_id',$this->book['id'])
-                ->where('cp_chapter_id', $cpChapterId)
+                ->where('seq', $seq)
                 ->first();
             if(!empty($info)){
                 $info = $info->toArray();
             }
         }
 
-        if(empty($info)){
+        if(empty($info) || $info['seq'] != $seq){
             $info = $this->chapterModelData->save([
                 'book_id'       => $this->book['id'],
                 'cp_chapter_id' => $cpChapterId,
