@@ -117,6 +117,12 @@ class YwChannelService extends CpChannelBaseService
      * 根据ID 同步
      */
     public function syncById(){
+        if($this->product['type'] == ProductTypeEnums::H5){
+            throw new CustomException([
+                'code' => 'NO_SUPPORT',
+                'message' => '暂不支持更新',
+            ]);
+        }
 
         $channelIds = $this->getParam('channel_ids');
         $channelList = (new ChannelModel())->whereIn('id',$channelIds)->get();
