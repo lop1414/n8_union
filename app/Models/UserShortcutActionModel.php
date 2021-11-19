@@ -38,6 +38,7 @@ class UserShortcutActionModel extends UserActionBaseModel
         'ua',
         'muid',
         'oaid',
+        'adv_click_id',
         'device_brand',
         'device_manufacturer',
         'device_model',

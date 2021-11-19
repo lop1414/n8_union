@@ -33,7 +33,7 @@ class N8UnionUserExtendModel extends BaseModel
         'ua',
         'muid',
         'oaid',
-        'click_id',
+        'adv_click_id',
         'device_brand',
         'device_manufacturer',
         'device_model',
