@@ -218,6 +218,7 @@ class N8UnionUserService extends BaseService
             'ua'                    => $data['ua'],
             'muid'                  => $data['muid'],
             'oaid'                  => $data['oaid'],
+            'adv_click_id'          => $data['adv_click_id'],
             'device_brand'          => $data['device_brand'],
             'device_manufacturer'   => $data['device_manufacturer'],
             'device_model'          => $data['device_model'],
