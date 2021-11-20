@@ -33,10 +33,10 @@ class YwController extends BaseController
             'action_time' => $readTime,
             'cp_channel_id' => '',
             'cp_book_id'    => $reqData['book_id'],
-            'cp_book_name'  => $reqData['book_name'],
+            'cp_book_name'  => $reqData['book_name'] ?? '',
             'cp_chapter_id' => $reqData['chapter_id'],
             'cp_chapter_name' => $reqData['chapter_name'] ?? '',
-            'cp_chapter_index'=> $reqData['chapter_index'],
+            'cp_chapter_index'=> $reqData['chapter_index'] ?? 0,
             'extends'         => $reqData
         ]);
 
