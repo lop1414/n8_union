@@ -8,11 +8,15 @@ use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\OperatorEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
+use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Datas\ProductData;
+use App\Models\ProductAdminModel;
 use App\Models\ProductModel;
+use App\Services\ProductAdminService;
+use Illuminate\Http\Request;
 
 class ProductController extends BaseController
 {
@@ -81,6 +85,18 @@ class ProductController extends BaseController
             $this->curdService->responseData;
 
             $this->curdService->responseData->cp_account;
+            $centerApiService = new CenterApiService();
+
+            $admins = [];
+            $this->curdService->responseData->is_public = 0;
+            foreach ($this->curdService->responseData->product_admin as $item){
+                if($item['admin_id'] == 0){
+                    $this->curdService->responseData->is_public = 1;
+                    continue;
+                }
+                array_push($admins,$centerApiService->apiReadAdminUser($item['admin_id']));
+            }
+            $this->curdService->responseData->admins = $admins;
         });
     }
 
@@ -170,5 +186,65 @@ class ProductController extends BaseController
 
             unset($this->curdService->handleData['secret']);
         });
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws CustomException
+     * 分配管理员
+     */
+    public function distribution(Request $request){
+        $requestData = $request->all();
+        $this->validRule($requestData,[
+            'id' => 'required',
+            'is_public' => 'required'
+        ],[
+            'id.required' => 'id 不能为空',
+            'is_public.required' => 'is_public 不能为空'
+        ]);
+
+
+        $productAdminService = new ProductAdminService();
+        $list = (new ProductAdminModel())
+            ->where('product_id', $requestData['id'])
+            ->where('admin_id', '!=',0)
+            ->get();
+
+        if($requestData['is_public'] == 1){
+            foreach ($list as $item){
+                $productAdminService->update([
+                    'product_id' => $requestData['id'],
+                    'admin_id' => $item['admin_id'],
+                    'status'    => StatusEnum::DISABLE
+                ]);
+            }
+
+            $productAdminService->update([
+                'product_id' =>  $requestData['id'],
+                'admin_id' => '0',
+                'status' => StatusEnum::ENABLE,
+            ]);
+        }else {
+            // 获取需禁用的记录
+            $disableAdminIds = $list->isEmpty()
+                ? []
+                : array_diff(array_column($list->toArray(), 'admin_id'), $requestData['admin_ids']);
+            $disableAdminIds[] = 0;
+            $productAdminService->batchUpdate([
+                'product_ids' => [$requestData['id']],
+                'admin_ids' => $disableAdminIds,
+                'status' => StatusEnum::DISABLE
+            ]);
+
+            $productAdminService->batchUpdate([
+                'product_ids' => [$requestData['id']],
+                'admin_ids' => $requestData['admin_ids'],
+                'status' => StatusEnum::ENABLE,
+            ]);
+        }
+        return $this->success();
     }
 }

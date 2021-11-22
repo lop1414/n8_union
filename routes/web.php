@@ -81,6 +81,7 @@ $router->group([
         $router->post('read', 'Admin\ProductController@read');
         $router->post('enable', 'Admin\ProductController@enable');
         $router->post('disable', 'Admin\ProductController@disable');
+        $router->post('distribution', 'Admin\ProductController@distribution');
     });
 
     // 用户

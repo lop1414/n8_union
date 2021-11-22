@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Common\Enums\StatusEnum;
 use App\Common\Models\BaseModel;
 
 class ProductModel extends BaseModel
@@ -70,6 +71,12 @@ class ProductModel extends BaseModel
      */
     public function cp_account(){
         return $this->hasOne('App\Models\CpAccountModel', 'id', 'cp_account_id');
+    }
+
+    public function product_admin(){
+        return $this->hasMany('App\Models\ProductAdminModel','product_id','id')
+            ->where('status',StatusEnum::ENABLE);
+
     }
 
 }
