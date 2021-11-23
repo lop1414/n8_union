@@ -81,12 +81,12 @@ class ProductController extends BaseController
 
                 $admins = [];
                 $item->is_public = 0;
-                foreach ($item->product_admin as $item){
-                    if($item['admin_id'] == 0){
+                foreach ($item->product_admin as $productAdmin){
+                    if($productAdmin['admin_id'] == 0){
                         $item->is_public = 1;
                         continue;
                     }
-                    array_push($admins,$centerApiService->apiReadAdminUser($item['admin_id']));
+                    array_push($admins,$centerApiService->apiReadAdminUser($productAdmin['admin_id']));
                 }
                 $item->admins = $admins;
             }
