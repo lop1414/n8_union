@@ -42,6 +42,11 @@ class ProductAdminService extends BaseService
         $flag = $this->buildFlag($productAdmin);
         if(empty($productAdmin)){
             $productAdmin = new ProductAdminModel();
+            // 初始化记录
+            if($data['admin_id'] == 0){
+                $productAdmin->created_at = '2000-01-01 00:00:00';
+                $productAdmin->updated_at = '2000-01-01 00:00:00';
+            }
         }
 
         $productAdmin->product_id = $data['product_id'];
