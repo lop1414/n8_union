@@ -56,7 +56,7 @@ class ProductController extends BaseController
                 if(!$adminUser['is_admin']) {
                     $adminIds = implode(',',$adminUser['children_admin_ids']);
                     $status = StatusEnum::ENABLE;
-                    $builder->whereRaw("id IN (SELECT product_id FROM product_admins WHERE status = '{$status}' AND (admin_id = 0 OR admin_id IN ({$adminIds}))");
+                    $builder->whereRaw("id IN (SELECT product_id FROM product_admins WHERE status = '{$status}' AND (admin_id = 0 OR admin_id IN ({$adminIds})))");
                 }
             }
         });
@@ -172,6 +172,17 @@ class ProductController extends BaseController
                 ]);
             }
         });
+
+        $this->curdService->saveAfter(function (){
+            // 创建产品所有者记录
+            (new ProductAdminService())->update([
+                'admin_id' => 0,
+                'product_id' => $this->curdService->getModel()->id,
+                'status' => StatusEnum::ENABLE,
+                'created_at' => '2000-01-01 00:00:00',
+                'updated_at' => '2000-01-01 00:00:00'
+            ]);
+        });
     }
 
     /**
@@ -233,7 +244,6 @@ class ProductController extends BaseController
         $productAdminService = new ProductAdminService();
         $list = (new ProductAdminModel())
             ->where('product_id', $requestData['id'])
-            ->where('admin_id', '!=',0)
             ->get();
 
         if($requestData['is_public'] == 1){
