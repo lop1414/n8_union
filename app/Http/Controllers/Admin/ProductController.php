@@ -74,8 +74,21 @@ class ProductController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
 
+            $centerApiService = new CenterApiService();
+
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->cp_account;
+
+                $admins = [];
+                $item->is_public = 0;
+                foreach ($item->product_admin as $item){
+                    if($item['admin_id'] == 0){
+                        $item->is_public = 1;
+                        continue;
+                    }
+                    array_push($admins,$centerApiService->apiReadAdminUser($item['admin_id']));
+                }
+                $item->admins = $admins;
             }
         });
     }
