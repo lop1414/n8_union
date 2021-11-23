@@ -42,6 +42,8 @@ class ProductAdminService extends BaseService
         $flag = $this->buildFlag($productAdmin);
         if(empty($productAdmin)){
             $productAdmin = new ProductAdminModel();
+            $productAdmin->created_at = '2000-01-01 00:00:00';
+            $productAdmin->updated_at = '2000-01-01 00:00:00';
         }
 
         $productAdmin->product_id = $data['product_id'];
@@ -50,12 +52,7 @@ class ProductAdminService extends BaseService
         $ret = $productAdmin->save();
 
         if($ret && !empty($productAdmin->id) && $flag != $this->buildFlag($productAdmin)){
-            $this->createChannelAdLog([
-                'product_admin_id' => $productAdmin->id,
-                'product_id' => $data['product_id'],
-                'admin_id' => $data['admin_id'],
-                'status' => $data['status']
-            ]);
+            $this->createChannelAdLog($productAdmin);
         }
 
         return $ret;
@@ -87,10 +84,12 @@ class ProductAdminService extends BaseService
      */
     protected function createChannelAdLog($data){
         $productAdminLog = new ProductAdminLogModel();
-        $productAdminLog->product_admin_id = $data['product_admin_id'];
+        $productAdminLog->product_admin_id = $data['id'];
         $productAdminLog->product_id = $data['product_id'];
         $productAdminLog->admin_id = $data['admin_id'];
         $productAdminLog->status = $data['status'];
+        $productAdminLog->created_at = $data['created_at'];
+        $productAdminLog->updated_at = $data['updated_at'];
         return $productAdminLog->save();
     }
 }

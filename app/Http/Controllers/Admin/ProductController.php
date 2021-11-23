@@ -44,12 +44,33 @@ class ProductController extends BaseController
     }
 
 
+    /**
+     * 过滤
+     */
+    public function dataFilter(){
+        $this->curdService->customBuilder(function ($builder){
+            $req = $this->curdService->requestData;
+            if(!empty($req['is_self'])){
+                $adminUser = Functions::getGlobalData('admin_user_info');
+                // 非管理员
+                if(!$adminUser['is_admin']) {
+                    $adminIds = implode(',',$adminUser['children_admin_ids']);
+                    $status = StatusEnum::ENABLE;
+                    $builder->whereRaw("id IN (SELECT product_id FROM product_admins WHERE status = '{$status}' AND (admin_id = 0 OR admin_id IN ({$adminIds}))");
+                }
+            }
+        });
+    }
+
+
 
     /**
      * 分页列表预处理
      */
     public function selectPrepare(){
-
+        $this->curdService->selectQueryBefore(function (){
+            $this->dataFilter();
+        });
 
         $this->curdService->selectQueryAfter(function(){
 
@@ -65,7 +86,9 @@ class ProductController extends BaseController
      * 列表预处理
      */
     public function getPrepare(){
-
+        $this->curdService->getQueryBefore(function (){
+            $this->dataFilter();
+        });
 
         $this->curdService->getQueryAfter(function(){
             foreach ($this->curdService->responseData as $item){
@@ -228,11 +251,17 @@ class ProductController extends BaseController
                 'status' => StatusEnum::ENABLE,
             ]);
         }else {
+            if(empty($requestData['admin_ids'])){
+                throw new CustomException([
+                    'code' => 'UNVALID',
+                    'message' => 'admin_ids 不能为空',
+                ]);
+            }
             // 获取需禁用的记录
             $disableAdminIds = $list->isEmpty()
                 ? []
                 : array_diff(array_column($list->toArray(), 'admin_id'), $requestData['admin_ids']);
-            $disableAdminIds[] = 0;
+
             $productAdminService->batchUpdate([
                 'product_ids' => [$requestData['id']],
                 'admin_ids' => $disableAdminIds,
