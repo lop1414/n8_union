@@ -5,6 +5,7 @@ namespace App\Sdks\Fq;
 
 
 use App\Sdks\Fq\Traits\AddDesktop;
+use App\Sdks\Fq\Traits\Book;
 use App\Sdks\Fq\Traits\Channel;
 use App\Sdks\Fq\Traits\Order;
 use App\Sdks\Fq\Traits\Request;
@@ -18,6 +19,7 @@ class FqSdk
     use User;
     use AddDesktop;
     use Order;
+    use Book;
 
     /**
      * 公共接口地址
