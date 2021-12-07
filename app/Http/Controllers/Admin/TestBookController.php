@@ -24,7 +24,11 @@ class TestBookController extends BaseController
      */
     public function selectPrepare(){
         $this->curdService->addField('product_id')->addValidRule('required');
-
+        $this->curdService->selectQueryBefore(function(){
+            $this->curdService->customBuilder(function ($builder){
+                $builder->where('product_id',$this->curdService->requestData['product_id']);
+            });
+        });
         $this->curdService->selectQueryAfter(function(){
 
             foreach ($this->curdService->responseData['list'] as $item){
