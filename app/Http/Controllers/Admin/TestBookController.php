@@ -33,6 +33,7 @@ class TestBookController extends BaseController
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->book;
+                $item->test_book_groups;
             }
         });
     }

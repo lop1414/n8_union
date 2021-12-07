@@ -46,6 +46,16 @@ class BaseController extends AdminController
     }
 
     /**
+     * @return bool
+     * 是否为书城人员
+     */
+    public function isCp(){
+        if($this->adminUser['is_cp']) return true;
+        return false;
+    }
+
+
+    /**
      * @return array|mixed
      * 获取授权管理员ID
      */

@@ -20,4 +20,9 @@ class TestBookGroupModel extends BaseModel
         'status'
     ];
 
+
+    public function test_books(){
+        return $this->belongsToMany('App\Model\TestBookModel');
+    }
+
 }
