@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\StatusEnum;
 use App\Models\TestBookGroupModel;
+use App\Services\TestBookGroupService;
+use Illuminate\Http\Request;
 
 class TestBookGroupController extends BaseController
 {
@@ -41,6 +43,27 @@ class TestBookGroupController extends BaseController
      */
     public function updatePrepare(){
         $this->saveValidRule();
+    }
+
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws \App\Common\Tools\CustomException
+     * 分配
+     */
+    public function assign(Request $request){
+        $this->validRule($request->post(), [
+            'test_book_group_id' => 'required',
+            'test_book_ids' => 'required|array',
+        ]);
+
+        $testBookGroupId = $request->post('test_book_group_id');
+        $testBookIds = $request->post('test_book_ids');
+
+        $adminUserGroupService = new TestBookGroupService();
+        $ret = $adminUserGroupService->batchUpdate($testBookGroupId, $testBookIds);
+        return $this->ret($ret);
     }
 
 }

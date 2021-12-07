@@ -166,6 +166,7 @@ $router->group([
     });
     // 测试书籍组
     $router->group(['prefix' => 'test_book_group'], function () use ($router) {
+        $router->post('assign', 'Admin\TestBookGroupController@assign');
         $router->post('select', 'Admin\TestBookGroupController@select');
         $router->post('read', 'Admin\TestBookGroupController@read');
         $router->post('create', 'Admin\TestBookGroupController@create');
