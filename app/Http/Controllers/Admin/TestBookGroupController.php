@@ -13,12 +13,31 @@ class TestBookGroupController extends BaseController
     /**
      * constructor.
      */
-    public function __construct()
-    {
+    public function __construct(){
         $this->model = new TestBookGroupModel();
 
         parent::__construct();
     }
+
+
+    /**
+     * 分页列表预处理
+     */
+    public function selectPrepare(){
+        $this->curdService->selectQueryAfter(function(){
+            $map = $this->getAdminUserMap();
+
+            foreach ($this->curdService->responseData['list'] as $item){
+                $adminUsers = [];
+                foreach ($item->admin_user_ids as $adminItem){
+                    $adminUsers[] =  $adminItem->admin_id ? $map[$adminItem->admin_id]['name'] : '';
+                }
+                $item->admin_users = $adminUsers;
+            }
+        });
+    }
+
+
 
     /**
      * 创建预处理
@@ -50,19 +69,19 @@ class TestBookGroupController extends BaseController
      * @param Request $request
      * @return mixed
      * @throws \App\Common\Tools\CustomException
-     * 分配
+     * 分配管理员
      */
-    public function assign(Request $request){
+    public function assignAdminUser(Request $request){
         $this->validRule($request->post(), [
             'test_book_group_id' => 'required',
-            'test_book_ids' => 'required|array',
+            'admin_ids' => 'required|array',
         ]);
 
         $testBookGroupId = $request->post('test_book_group_id');
-        $testBookIds = $request->post('test_book_ids');
+        $adminIds = $request->post('admin_ids');
 
         $adminUserGroupService = new TestBookGroupService();
-        $ret = $adminUserGroupService->batchUpdate($testBookGroupId, $testBookIds);
+        $ret = $adminUserGroupService->assignAdminUser($adminIds,[$testBookGroupId]);
         return $this->ret($ret);
     }
 

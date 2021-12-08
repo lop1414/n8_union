@@ -163,16 +163,18 @@ $router->group([
         $router->post('update', 'Admin\TestBookController@update');
         $router->post('enable', 'Admin\TestBookController@enable');
         $router->post('disable', 'Admin\TestBookController@disable');
+        $router->post('assign_test_book_group', 'Admin\TestBookController@assignTestBookGroup');
     });
     // 测试书籍组
     $router->group(['prefix' => 'test_book_group'], function () use ($router) {
-        $router->post('assign', 'Admin\TestBookGroupController@assign');
         $router->post('select', 'Admin\TestBookGroupController@select');
         $router->post('read', 'Admin\TestBookGroupController@read');
         $router->post('create', 'Admin\TestBookGroupController@create');
         $router->post('update', 'Admin\TestBookGroupController@update');
         $router->post('enable', 'Admin\TestBookGroupController@enable');
         $router->post('disable', 'Admin\TestBookGroupController@disable');
+        $router->post('assign_admin_user', 'Admin\TestBookGroupController@assignAdminUser');
+
     });
 
 

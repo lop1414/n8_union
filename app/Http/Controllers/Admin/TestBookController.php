@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\StatusEnum;
 use App\Models\TestBookModel;
+use App\Services\TestBookGroupService;
+use Illuminate\Http\Request;
 
 class TestBookController extends BaseController
 {
@@ -86,6 +88,28 @@ class TestBookController extends BaseController
             $this->curdService->handleData['start_at'] = date('Y-m-d H:00:00',strtotime($this->curdService->handleData['start_at']));
             $this->curdService->handleData['end_at'] = date('Y-m-d H:00:00',strtotime($this->curdService->handleData['end_at']));
         });
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws \App\Common\Tools\CustomException
+     * 分配测试书籍组
+     */
+    public function assignTestBookGroup(Request $request){
+        $this->validRule($request->post(), [
+            'test_book_id' => 'required',
+            'test_book_group_ids' => 'required|array',
+        ]);
+
+        $testBookGroupIds = $request->post('test_book_group_ids');
+        $testBookId = $request->post('test_book_id');
+
+        $adminUserGroupService = new TestBookGroupService();
+        $ret = $adminUserGroupService->assignTestBook([$testBookId],$testBookGroupIds);
+        return $this->ret($ret);
     }
 
 }

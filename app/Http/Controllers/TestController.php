@@ -6,6 +6,8 @@ use App\Common\Controllers\Front\FrontController;
 use App\Datas\BookData;
 use App\Models\ProductModel;
 use App\Sdks\Fq\FqSdk;
+use App\Services\Cp\Book\FqBookService;
+use App\Services\Cp\Channel\FqChannelService;
 use Illuminate\Http\Request;
 
 class TestController extends FrontController
@@ -27,9 +29,21 @@ class TestController extends FrontController
         }
         $productInfo = (new ProductModel())->where('cp_product_alias','1715568083108909')->first();
 //        dd($productInfo);
-        $list = (new FqSdk($productInfo->cp_product_alias,$productInfo->cp_secret))
-            ->getOrders('2021-11-11 00:00:00','2022-11-20 00:00:00');
-        dd($list);
+
+$this->demo($productInfo);
+        $service = new FqChannelService();
+        $service->setProduct($productInfo);
+        $service->setParam('start_date','2021-11-11');
+        $service->setParam('end_date','2022-01-11');
+        $service->setParam('channel_ids',[104,105]);
+        $service->sync();
+//        $service->sync();
+    }
+
+    public function demo($product){
+        $sdk = new FqSdk($product['cp_product_alias'],$product['cp_secret']);
+        $a = $sdk->getUsers('2021-11-11','2022-01-11');
+        dd($a);
     }
 
 }

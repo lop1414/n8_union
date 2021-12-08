@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
+use App\Models\TestBookGroupAdminUserModel;
 use App\Models\TestBookGroupModel;
 use App\Models\TestBookModel;
 use App\Models\TestBookTestBookGroupModel;
@@ -17,28 +18,8 @@ class TestBookGroupService extends BaseService
         parent::__construct();
     }
 
-    /**
-     * @param $testBookGroupId
-     * @param array $testBookIds
-     * @return bool
-     * @throws CustomException
-     * 批量更新
-     */
-    public function batchUpdate($testBookGroupId, array $testBookIds){
-        foreach($testBookIds as $testBookId){
-            $this->update($testBookGroupId, $testBookId);
-        }
-        return true;
-    }
 
-    /**
-     * @param $testBookGroupId
-     * @param $testBookId
-     * @return bool
-     * @throws CustomException
-     * 更新
-     */
-    public function update($testBookGroupId, $testBookId){
+    public function check($testBookGroupId){
         $testBookGroup = TestBookGroupModel::find($testBookGroupId);
         if(empty($testBookGroup)){
             throw new CustomException([
@@ -46,31 +27,66 @@ class TestBookGroupService extends BaseService
                 'message' => '找不到该分组',
             ]);
         }
+    }
 
-        $testBook = TestBookModel::find($testBookId);
-        if(empty($testBook)){
-            throw new CustomException([
-                'code' => 'NOT_FOUND_TEST_BOOK',
-                'message' => '找不到该测试书',
-                'data' => [
-                    'test_book_id' => $testBookId,
-                ],
-            ]);
+
+    /**
+     * @param array $testBookIds
+     * @param array $testBookGroupIds
+     * @return bool
+     * @throws CustomException
+     * 分配测试书籍
+     */
+    public function assignTestBook(array $testBookIds, array $testBookGroupIds){
+
+        foreach($testBookGroupIds as $testBookGroupId){
+            $this->check($testBookGroupId);
+
+            foreach ($testBookIds as $testBookId){
+                $testBook = TestBookModel::find($testBookId);
+                if(empty($testBook)){
+                    throw new CustomException([
+                        'code' => 'NOT_FOUND_TEST_BOOK',
+                        'message' => '找不到该测试书',
+                        'data' => ['test_book_id' => $testBookId,],
+                    ]);
+                }
+
+                (new TestBookTestBookGroupModel())
+                    ->insertOrUpdate([
+                        'test_book_id' => $testBookId,
+                        'test_book_group_id' => $testBookGroupId,
+                    ]);
+            }
         }
-
-        $testBookTestBookGroup = (new TestBookTestBookGroupModel())
-            ->where('test_book_id',$testBookId)
-            ->where('test_group_id',$testBookGroupId)
-            ->first();
-
-        if(!empty($testBookTestBookGroup)){
-            return true;
-        }
-
-        $testBookTestBookGroup = new TestBookTestBookGroupModel();
-        $testBookTestBookGroup->test_book_id = $testBookId;
-        $testBookTestBookGroup->test_group_id = $testBookGroupId;
-        $testBookTestBookGroup->save();
         return true;
     }
+
+
+
+    /**
+     * @param array $adminIds
+     * @param array $testBookGroupIds
+     * @return bool
+     * @throws CustomException
+     * 分配管理员
+     */
+    public function assignAdminUser(array $adminIds, array $testBookGroupIds){
+
+        foreach($testBookGroupIds as $testBookGroupId){
+            $this->check($testBookGroupId);
+
+            foreach ($adminIds as $adminId){
+
+                (new TestBookGroupAdminUserModel())
+                    ->insertOrUpdate([
+                        'admin_id' => $adminId,
+                        'test_book_group_id' => $testBookGroupId
+                    ]);
+            }
+        }
+        return true;
+    }
+
+
 }

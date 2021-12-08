@@ -25,4 +25,8 @@ class TestBookGroupModel extends BaseModel
         return $this->belongsToMany('App\Model\TestBookModel');
     }
 
+    public function admin_user_ids(){
+        return $this->hasMany('App\Models\TestBookGroupAdminUserModel','test_book_group_id','id');
+    }
+
 }
