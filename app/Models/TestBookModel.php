@@ -37,7 +37,7 @@ class TestBookModel extends BaseModel
 
 
     public function test_book_groups(){
-        return $this->belongsToMany('App\Models\TestBookGroupModel', 'test_book_test_book_groups', 'test_book_id', 'test_group_id');
+        return $this->belongsToMany('App\Models\TestBookGroupModel', 'test_book_test_book_groups', 'test_book_id', 'test_book_group_id');
     }
 
 }
