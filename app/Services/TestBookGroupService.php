@@ -31,33 +31,31 @@ class TestBookGroupService extends BaseService
 
 
     /**
-     * @param array $testBookIds
+     * @param string $testBookId
      * @param array $testBookGroupIds
      * @return bool
      * @throws CustomException
      * 分配测试书籍
      */
-    public function assignTestBook(array $testBookIds, array $testBookGroupIds){
+    public function assignTestBook($testBookId, array $testBookGroupIds){
+        $testBook = TestBookModel::find($testBookId);
+        if(empty($testBook)){
+            throw new CustomException([
+                'code' => 'NOT_FOUND_TEST_BOOK',
+                'message' => '找不到该测试书',
+                'data' => ['test_book_id' => $testBookId,],
+            ]);
+        }
+
+        //删除
+        (new TestBookTestBookGroupModel())->where('test_book_id',$testBookId)->delete();
 
         foreach($testBookGroupIds as $testBookGroupId){
             $this->check($testBookGroupId);
-
-            foreach ($testBookIds as $testBookId){
-                $testBook = TestBookModel::find($testBookId);
-                if(empty($testBook)){
-                    throw new CustomException([
-                        'code' => 'NOT_FOUND_TEST_BOOK',
-                        'message' => '找不到该测试书',
-                        'data' => ['test_book_id' => $testBookId,],
-                    ]);
-                }
-
-                (new TestBookTestBookGroupModel())
-                    ->insertOrUpdate([
-                        'test_book_id' => $testBookId,
-                        'test_book_group_id' => $testBookGroupId,
-                    ]);
-            }
+            $info = new TestBookTestBookGroupModel();
+            $info->test_book_id = $testBookId;
+            $info->test_book_group_id = $testBookGroupId;
+            $info->save();
         }
         return true;
     }
@@ -65,26 +63,25 @@ class TestBookGroupService extends BaseService
 
 
     /**
+     * @param string $testBookGroupId
      * @param array $adminIds
-     * @param array $testBookGroupIds
      * @return bool
      * @throws CustomException
      * 分配管理员
      */
-    public function assignAdminUser(array $adminIds, array $testBookGroupIds){
+    public function assignAdminUser( $testBookGroupId,array $adminIds){
 
-        foreach($testBookGroupIds as $testBookGroupId){
-            $this->check($testBookGroupId);
+        $this->check($testBookGroupId);
+        //删除
+        (new TestBookGroupAdminUserModel())->where('test_book_group_id',$testBookGroupId)->delete();
 
-            foreach ($adminIds as $adminId){
-
-                (new TestBookGroupAdminUserModel())
-                    ->insertOrUpdate([
-                        'admin_id' => $adminId,
-                        'test_book_group_id' => $testBookGroupId
-                    ]);
-            }
+        foreach ($adminIds as $adminId){
+            $info = new TestBookGroupAdminUserModel();
+            $info->admin_id = $adminId;
+            $info->test_book_group_id = $testBookGroupId;
+            $info->save();
         }
+
         return true;
     }
 

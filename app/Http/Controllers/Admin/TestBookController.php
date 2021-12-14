@@ -108,7 +108,7 @@ class TestBookController extends BaseController
         $testBookId = $request->post('test_book_id');
 
         $adminUserGroupService = new TestBookGroupService();
-        $ret = $adminUserGroupService->assignTestBook([$testBookId],$testBookGroupIds);
+        $ret = $adminUserGroupService->assignTestBook($testBookId,$testBookGroupIds);
         return $this->ret($ret);
     }
 
