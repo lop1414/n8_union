@@ -50,10 +50,7 @@ trait Request
                 ],
             ]);
         }
-        return [
-            'date' => $result['result'],
-            'next_offset' => $result['next_offset']
-        ];
+        return $result;
     }
 
     /**

@@ -21,4 +21,13 @@ trait Channel
         return $this->apiRequest($uri,$param);
     }
 
+    public function readChannel($id){
+        $uri = 'novelsale/openapi/promotion/list/v1';
+        $param = [
+            'promotion_id'  => $id,
+        ];
+
+        return $this->apiRequest($uri,$param);
+    }
+
 }
