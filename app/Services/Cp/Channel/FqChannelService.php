@@ -33,7 +33,7 @@ class FqChannelService extends CpChannelBaseService
                 $sdk = $this->getSdk($product);
                 $offset = 0;
                 do{
-                    $list  = $sdk->getChannelList($startTime,$endTime,$offset,1);
+                    $list  = $sdk->getChannelList($startTime,$endTime,$offset);
                     foreach ($list['result'] as $item){
                         $this->saveItem($product,$item);
                     }
