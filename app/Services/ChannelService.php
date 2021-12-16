@@ -8,6 +8,7 @@ use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Services\Cp\Channel\BmChannelService;
+use App\Services\Cp\Channel\FqChannelService;
 use App\Services\Cp\Channel\QyChannelService;
 use App\Services\Cp\Channel\TwChannelService;
 use App\Services\Cp\Channel\YwChannelService;
@@ -31,6 +32,10 @@ class ChannelService extends BaseService
         CpTypeEnums::YW =>[
             'name' => '阅文',
             'class' => YwChannelService::class
+        ],
+        CpTypeEnums::FQ =>[
+            'name' => '番茄',
+            'class' => FqChannelService::class
         ]
     ];
 
