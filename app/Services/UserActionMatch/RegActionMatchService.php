@@ -44,6 +44,7 @@ class RegActionMatchService extends UserActionMatchService
         $requestId = $extend['request_id'] ?? '';
 
         if( $item['matcher'] != MatcherEnum::SYS && empty($requestId)){
+            // request id 兼容二版上报过来数据 后面可以去掉
             echo " {$unionUser['n8_guid']} 归因方不是系统 且没有request id不进行匹配\n";
             return false;
         }

@@ -33,7 +33,7 @@ class SaveCompleteOrderActionService extends SaveUserActionService
             throw new CustomException([
                 'code'    => 'NOT_GOID',
                 'message' => '找不到订单',
-                'log'     => false,
+                'log'     => true,
                 'data'    => [
                     'n8_goid' => $globalOrder['n8_goid']
                 ]
