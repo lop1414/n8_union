@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\PlatformEnum;
-use App\Common\Enums\ProductTypeEnums;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
