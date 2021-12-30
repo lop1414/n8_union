@@ -15,6 +15,7 @@ use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\N8UnionUserData;
+use App\Services\ProductService;
 use Illuminate\Support\Facades\DB;
 
 class UserActionMatchService extends BaseService
@@ -241,7 +242,8 @@ class UserActionMatchService extends BaseService
                 'guid'          => $unionUser['n8_guid'],
                 'channel_id'    => $unionUser['channel_id'],
                 'created_at'    => $unionUser['created_time'],
-                'click_source'  => $this->getAdvClickSourceEnum($unionUser['matcher'])
+                'click_source'  => $this->getAdvClickSourceEnum($unionUser['matcher']),
+                'product_type'  => ProductService::readToType($unionUser['product_id']),
             ]
         );
     }
