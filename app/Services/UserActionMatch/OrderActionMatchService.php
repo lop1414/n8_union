@@ -6,6 +6,7 @@ namespace App\Services\UserActionMatch;
 use App\Common\Enums\ConvertTypeEnum;
 use App\Datas\OrderData;
 use App\Models\OrderModel;
+use App\Services\ProductService;
 use Illuminate\Support\Facades\DB;
 
 
@@ -54,7 +55,8 @@ class OrderActionMatchService extends UserActionMatchService
                 'guid'          => $unionUser['n8_guid'],
                 'channel_id'    => $unionUser['channel_id'],
                 'created_at'    => $unionUser['created_time'],
-                'click_source'  => $this->getAdvClickSourceEnum($unionUser['matcher'])
+                'click_source'  => $this->getAdvClickSourceEnum($unionUser['matcher']),
+                'product_type'  => ProductService::readToType($unionUser['product_id'])
             ]
         );
     }
