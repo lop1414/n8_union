@@ -9,6 +9,7 @@ use App\Common\Services\BaseService;
 use App\Common\Services\SystemApi\AdvBdApiService;
 use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
+use App\Common\Services\SystemApi\AdvUcApiService;
 
 class ConvertCallbackMapService extends BaseService
 {
@@ -53,6 +54,11 @@ class ConvertCallbackMapService extends BaseService
 
     public function ks($convert){
         $tmp = (new AdvKsApiService())->apiGetConvertCallbacks($convert);
+        return array_column($tmp,null,'convert_id');
+    }
+
+    public function uc($convert){
+        $tmp = (new AdvUcApiService())->apiGetConvertCallbacks($convert);
         return array_column($tmp,null,'convert_id');
     }
 

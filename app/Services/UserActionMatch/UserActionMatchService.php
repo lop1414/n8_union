@@ -13,6 +13,7 @@ use App\Common\Services\ErrorLogService;
 use App\Common\Services\SystemApi\AdvBdApiService;
 use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
+use App\Common\Services\SystemApi\AdvUcApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\N8UnionUserData;
 use App\Services\ProductService;
@@ -156,6 +157,9 @@ class UserActionMatchService extends BaseService
                     }elseif ($this->advAlias == AdvAliasEnum::KS){
                         // 快手匹配
                         $matchList = (new AdvKsApiService())->apiConvertMatch($convert);
+                    }elseif ($this->advAlias == AdvAliasEnum::UC){
+                        // 快手匹配
+                        $matchList = (new AdvUcApiService())->apiConvertMatch($convert);
                     }
 
                     // 匹配结果处理
