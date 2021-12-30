@@ -12,6 +12,8 @@ class ProductService extends BaseService
 {
     static protected $productMap;
 
+    static protected $productMapByAlias;
+
     static public function readToType($id){
         $product = self::read($id);
         return $product['type'];
@@ -22,5 +24,17 @@ class ProductService extends BaseService
             self::$productMap[$id] = (new ProductData())->setParams(['id' => $id])->read();
         }
         return self::$productMap[$id];
+    }
+
+
+
+    static public function readByAlias($alias,$cpType){
+        $key = $cpType.'-'.$alias;
+        if(empty(self::$productMapByAlias[$key])){
+            self::$productMap[$key] = (new ProductData())
+                ->setParams(['cp_product_alias'  => $alias, 'cp_type' => $cpType])
+                ->read();
+        }
+        return self::$productMap[$key];
     }
 }

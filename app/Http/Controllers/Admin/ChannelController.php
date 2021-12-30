@@ -11,9 +11,10 @@ use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Helpers\Platform;
 use App\Datas\ChannelData;
-use App\Datas\ProductData;
 use App\Models\ChannelModel;
+use App\Models\ProductModel;
 use App\Services\ChannelService;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -81,7 +82,7 @@ class ChannelController extends BaseController
             if(!empty($req['os'])){
                 Functions::hasEnum(PlatformEnum::class,$req['os']);
 
-                $productIds = (new ProductData())
+                $productIds = (new ProductModel())
                     ->whereIn('type',Platform::getOSProductType($req['os']))
                     ->get('id')
                     ->toArray();
@@ -247,13 +248,9 @@ class ChannelController extends BaseController
             'product_id'    =>  'required',
         ]);
 
-        $productId = $req['product_id'];
-        $productInfo = (new ProductData())
-            ->setParams(['id' => $productId])
-            ->read();
+        $productInfo = ProductService::read($req['product_id']);
 
         $serviceInfo = (new ChannelService())->getCpService($productInfo['cp_type']);
-
 
         if(empty($serviceInfo)){
             return $this->fail('FAIL','该产品暂无此功能');
@@ -262,7 +259,7 @@ class ChannelController extends BaseController
         $service = new $serviceInfo['class'];
         $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
         $service->setParam('end_date',date('Y-m-d'));
-        $service->setParam('product_id',$productId);
+        $service->setParam('product_id',$req['product_id']);
         $service->syncWithHook();
 
         return $this->success();

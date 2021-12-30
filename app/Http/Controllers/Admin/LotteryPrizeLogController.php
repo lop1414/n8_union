@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Datas\ProductData;
 use App\Models\LotteryPrizeLogModel;
 use App\Services\OpenUserService;
-use Illuminate\Http\Request;
+use App\Services\ProductService;
 
 class LotteryPrizeLogController extends BaseController
 {
@@ -53,13 +52,8 @@ class LotteryPrizeLogController extends BaseController
         $item['n8_global_user'] = $openUserService->getGlobalUserByGuid($item->n8_guid);
 
         // 关联产品
-        $productData = new ProductData();
-        $product = $productData->setParams([
-            'id' => $item['n8_global_user']['product_id'],
-        ])->read();
-
         $n8GlobalUser = $item['n8_global_user'];
-        $n8GlobalUser['product'] = $product;
+        $n8GlobalUser['product'] = ProductService::read($item['n8_global_user']['product_id']);
 
         $item['n8_global_user'] = $n8GlobalUser;
 

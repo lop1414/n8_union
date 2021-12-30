@@ -11,7 +11,6 @@ use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Datas\N8UnionUserData;
-use App\Datas\ProductData;
 use App\Datas\UserLoginActionData;
 use App\Datas\UserReadActionData;
 use App\Datas\UserShortcutActionData;
@@ -50,8 +49,7 @@ class N8UnionUserService extends BaseService
             ]);
         }
 
-
-        $product = (new ProductData())->setParams(['id' => $user['product_id']])->read();
+        $product = ProductService::read($user['product_id']);
         // 渠道变更无效
         if($product['matcher'] == MatcherEnum::SYS && !$this->isValidChange($user,$actionData['channel_id'],$actionData['action_time'])){
             $actionData['channel_id'] = $user['channel_id'];

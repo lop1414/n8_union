@@ -13,8 +13,8 @@ use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Datas\MultiPlatFormChannelData;
-use App\Datas\ProductData;
 use App\Models\MultiPlatFormChannelModel;
+use App\Services\ProductService;
 
 class MultiPlatFormChannelController extends BaseController
 {
@@ -177,15 +177,11 @@ class MultiPlatFormChannelController extends BaseController
             $androidChannel = (new ChannelData())
                 ->setParams(['id' => $this->curdService->handleData['android_channel_id']])
                 ->read();
-            $androidProduct = (new ProductData())
-                ->setParams(['id' => $androidChannel['product_id']])
-                ->read();
+            $androidProduct = ProductService::read($androidChannel['product_id']);
             $iosChannel = (new ChannelData())
                 ->setParams(['id' => $this->curdService->handleData['ios_channel_id']])
                 ->read();
-            $iosProduct = (new ProductData())
-                ->setParams(['id' => $iosChannel['product_id']])
-                ->read();
+            $iosProduct = ProductService::read($iosChannel['product_id']);
 
 
             if(!in_array($androidProduct['type'],Platform::getAndroidProductType())){
@@ -270,8 +266,6 @@ class MultiPlatFormChannelController extends BaseController
         $channel = (new ChannelData())
             ->setParams(['id' => $channelId])
             ->read();
-        return (new ProductData())
-            ->setParams(['id' => $channel['product_id']])
-            ->read();
+        return ProductService::read($channel['product_id']);
     }
 }

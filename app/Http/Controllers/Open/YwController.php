@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Open;
 
 
 use App\Common\Enums\CpTypeEnums;
-use App\Datas\ProductData;
 use App\Enums\QueueEnums;
 use App\Common\Services\DataToQueueService;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 class YwController extends BaseController
@@ -22,7 +22,7 @@ class YwController extends BaseController
     public function read(Request $request){
         $reqData = $request->all();
 
-        $product = $this->getProduct($reqData['appflag']);
+        $product = ProductService::readByAlias($reqData['appflag'],CpTypeEnums::YW);
         $service = new DataToQueueService(QueueEnums::USER_READ_ACTION);
         $readTime = !empty($reqData['read_time']) ? date('Y-m-d H:i:s',$reqData['read_time']) : date('Y-m-d H:i:s');
         $service->push([
@@ -42,21 +42,5 @@ class YwController extends BaseController
 
         return $this->success();
     }
-
-
-    public function getProduct($productAlias){
-        return (new ProductData())
-            ->setParams([
-                'cp_product_alias'  => $productAlias,
-                'cp_type'           => CpTypeEnums::YW
-            ])
-            ->read();
-    }
-
-
-
-
-
-
 
 }

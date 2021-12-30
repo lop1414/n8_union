@@ -6,8 +6,8 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Common\Traits\ValidRule;
-use App\Datas\ProductData;
 use App\Services\OpenApiAuthService;
+use App\Services\ProductService;
 use Closure;
 
 class OpenApiSignValid
@@ -32,12 +32,7 @@ class OpenApiSignValid
 
         Functions::hasEnum(CpTypeEnums::class, $req['cp_type']);
 
-        $product = (new ProductData())
-            ->setParams([
-                'cp_product_alias'  => $req['product_alias'],
-                'cp_type'           => $req['cp_type']
-            ])
-            ->read();
+        $product = (new ProductService())->readByAlias($req['product_alias'],$req['cp_type']);
 
         if(empty($product)){
             throw new CustomException([
