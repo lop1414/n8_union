@@ -51,7 +51,7 @@ class SaveUserActionService extends BaseService
                 $data['adv_alias'] = AdvAliasEnum::UNKNOWN;
 
                 if(!empty($data['cp_channel_id'])){
-                    $channel = $this->getChannel($data['product_id'],$data['cp_channel_id']);
+                    $channel = ChannelService::readChannelByCpChannelIdAndCheck($data['product_id'],$data['cp_channel_id']);
                     $data['channel_id'] = $channel['id'];
                     $data['adv_alias'] = $channel['channel_extend']['adv_alias'];
                 }
@@ -117,28 +117,9 @@ class SaveUserActionService extends BaseService
         }
     }
 
-    public function getChannel($productId,$cpChannelId){
-        $channel = (new ChannelService())->getChannelByCpChannelId($productId,$cpChannelId);
-        if(empty($channel)){
-            throw new CustomException([
-                'code'       => 'NO_CHANNEL',
-                'message'    => "找不到渠道（产品ID:{$productId},N8CP渠道ID:{$cpChannelId}）",
-                '#admin_id#' => 0
-            ]);
-        }
-
-        if(empty($channel['channel_extend'])){
-
-            throw new CustomException([
-                'code'       => 'NO_CHANNEL_EXTEND',
-                'message'    => "渠道待认领（产品ID:{$productId},N8CP渠道ID:{$cpChannelId}）",
-                '#admin_id#' => 0
-            ]);
-        }
-        return $channel;
-    }
-
     public function item($user,$data){}
+
+
 
 
     public function failItem($data){
