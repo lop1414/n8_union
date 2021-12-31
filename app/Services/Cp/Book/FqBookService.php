@@ -8,7 +8,7 @@ use App\Common\Tools\CustomException;
 use App\Sdks\Fq\FqSdk;
 
 
-class FqBookService extends CpBookBaseService
+class FqBookService extends AbstractCpBookService
 {
     protected $cpType = CpTypeEnums::FQ;
 

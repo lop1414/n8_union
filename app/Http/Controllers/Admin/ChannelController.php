@@ -13,7 +13,7 @@ use App\Common\Helpers\Platform;
 use App\Datas\ChannelData;
 use App\Models\ChannelModel;
 use App\Models\ProductModel;
-use App\Services\Cp\CpChannelFactoryService;
+use App\Services\Cp\CpProviderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -249,13 +249,11 @@ class ChannelController extends BaseController
         ]);
 
         $productInfo = ProductService::read($req['product_id']);
-        $serviceInfo = CpChannelFactoryService::readCpService($productInfo['cp_type']);
+        $service = CpProviderService::readCpChannelService($productInfo['cp_type']);
 
-        if(empty($serviceInfo)){
+        if(is_null($service)){
             return $this->fail('FAIL','该产品暂无此功能');
         }
-
-        $service = new $serviceInfo['class'];
         $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
         $service->setParam('end_date',date('Y-m-d'));
         $service->setParam('product_id',$req['product_id']);
@@ -271,11 +269,10 @@ class ChannelController extends BaseController
             'id'    =>  'required',
         ]);
         $channelInfo = $this->model->where('id',$req['id'])->first();
-        $serviceInfo = CpChannelFactoryService::readCpService($channelInfo->product->cp_type);
-        if(empty($serviceInfo)){
+        $service = CpProviderService::readCpChannelService($channelInfo->product->cp_type);
+        if(is_null($service)){
             return $this->fail('FAIL','该产品暂无此功能');
         }
-        $service = new $serviceInfo['class'];
         $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
         $service->setParam('end_date',date('Y-m-d'));
         $service->setParam('product_id',$channelInfo->product->id);

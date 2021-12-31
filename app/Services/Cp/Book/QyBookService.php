@@ -5,7 +5,7 @@ namespace App\Services\Cp\Book;
 
 use App\Common\Enums\CpTypeEnums;
 
-class QyBookService extends CpBookBaseService
+class QyBookService extends AbstractCpBookService
 {
     protected $cpType = CpTypeEnums::QY;
 

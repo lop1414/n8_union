@@ -5,7 +5,7 @@ namespace App\Services\Cp\Product;
 use App\Datas\ProductData;
 use App\Services\Cp\CpBaseService;
 
-class CpProductBaseService extends CpBaseService
+class AbstractCpProductService extends CpBaseService
 {
 
     public function save($data){

@@ -7,7 +7,7 @@ use App\Datas\ChapterData;
 use App\Models\ChapterModel;
 use App\Services\Cp\CpBaseService;
 
-class CpChapterBaseService extends CpBaseService
+class AbstractCpChapterService extends CpBaseService
 {
 
     public $chapterModelData;

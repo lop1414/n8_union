@@ -7,7 +7,7 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Sdks\Yw\YwSdk;
 
-class YwProductService extends CpProductBaseService
+class YwProductService extends AbstractCpProductService
 {
     protected $cpType = CpTypeEnums::YW;
 

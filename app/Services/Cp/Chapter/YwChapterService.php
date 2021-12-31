@@ -7,7 +7,7 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Sdks\Yw\YwSdk;
 
-class YwChapterService extends CpChapterBaseService
+class YwChapterService extends AbstractCpChapterService
 {
     protected $cpType = CpTypeEnums::YW;
 

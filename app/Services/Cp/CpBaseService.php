@@ -14,15 +14,22 @@ class CpBaseService extends BaseService
     use Hook;
 
     protected $cpType;
-
     protected $product;
-
     protected $param;
+
+
+    public function getCpType(){
+        return $this->cpType;
+    }
+
+
 
     public function setProduct($info){
         $this->product = $info;
         return $this;
     }
+
+
 
     public function checkProduct(){
         if(empty($this->product)){
@@ -33,6 +40,8 @@ class CpBaseService extends BaseService
             ]);
         }
     }
+
+
 
     /**
      * @return mixed
@@ -54,6 +63,9 @@ class CpBaseService extends BaseService
         return $builder->get();
     }
 
+
+
+
     /**
      * @return mixed
      * 获取产品构造器
@@ -63,6 +75,9 @@ class CpBaseService extends BaseService
         return $productModel->where('cp_type',$this->cpType)->where('status',StatusEnum::ENABLE);
     }
 
+
+
+
     public function getParam($key){
         if(empty($this->param[$key])){
             return null;
@@ -70,9 +85,13 @@ class CpBaseService extends BaseService
         return $this->param[$key];
     }
 
+
+
     public function setParam($key,$data){
         $this->param[$key] = $data;
     }
+
+
 
     public function syncWithHook(){
 
@@ -89,6 +108,7 @@ class CpBaseService extends BaseService
     }
 
 
+
     public function syncPrepare(){}
 
 
@@ -100,7 +120,6 @@ class CpBaseService extends BaseService
     public function syncBefore($func){
         $this->setHook('sync_before', $func);
     }
-
 
 
 

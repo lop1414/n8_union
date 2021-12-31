@@ -3,14 +3,10 @@
 namespace App\Services\SaveUserAction;
 
 
-use App\Common\Enums\CpTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Enums\QueueEnums;
 use App\Models\UserReadActionModel;
-use App\Services\Cp\Book\QyBookService;
-use App\Services\Cp\Book\YwBookService;
-use App\Services\Cp\Chapter\QyChapterService;
-use App\Services\Cp\Chapter\YwChapterService;
+use App\Services\Cp\CpProviderService;
 use App\Services\N8UnionUserService;
 use App\Services\UserBookReadService;
 
@@ -25,7 +21,6 @@ class SaveReadActionService extends SaveUserActionService
 
     protected $userBookReadService;
 
-    protected $cpBookServices,$cpChapterServices;
 
 
     public function __construct(){
@@ -34,15 +29,6 @@ class SaveReadActionService extends SaveUserActionService
         $this->setModel($model);
         $this->unionUserService = new N8UnionUserService();
         $this->userBookReadService = new UserBookReadService();
-        $this->cpBookServices = [
-            CpTypeEnums::YW => new YwBookService(),
-            CpTypeEnums::QY => new QyBookService()
-        ];
-
-        $this->cpChapterServices = [
-            CpTypeEnums::YW => new YwChapterService(),
-            CpTypeEnums::QY => new QyChapterService()
-        ];
     }
 
 
@@ -69,10 +55,10 @@ class SaveReadActionService extends SaveUserActionService
             ]);
         }
 
-        $book = $this->cpBookServices[$data['cp_type']]
+        $book = CpProviderService::readCpBookService($data['cp_type'])
             ->readSave($data['cp_book_id'],$data['cp_book_name']);
 
-        $chapter = $this->cpChapterServices[$data['cp_type']]
+        $chapter = CpProviderService::readCpChapterService($data['cp_type'])
             ->setBook($book)
             ->readSave($data['cp_chapter_id'],$data['cp_chapter_name'],$data['cp_chapter_index']);
 

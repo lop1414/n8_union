@@ -7,7 +7,7 @@ use App\Datas\BookData;
 use App\Models\BookModel;
 use App\Services\Cp\CpBaseService;
 
-class CpBookBaseService extends CpBaseService
+abstract class AbstractCpBookService extends CpBaseService
 {
 
     public $bookModelData;

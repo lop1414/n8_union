@@ -158,7 +158,7 @@ class UserActionMatchService extends BaseService
                         // 快手匹配
                         $matchList = (new AdvKsApiService())->apiConvertMatch($convert);
                     }elseif ($this->advAlias == AdvAliasEnum::UC){
-                        // 快手匹配
+                        // UC匹配
                         $matchList = (new AdvUcApiService())->apiConvertMatch($convert);
                     }
 

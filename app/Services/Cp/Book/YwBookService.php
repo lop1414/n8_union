@@ -8,7 +8,7 @@ use App\Common\Tools\CustomException;
 use App\Sdks\Yw\YwSdk;
 
 
-class YwBookService extends CpBookBaseService
+class YwBookService extends AbstractCpBookService
 {
     protected $cpType = CpTypeEnums::YW;
 
