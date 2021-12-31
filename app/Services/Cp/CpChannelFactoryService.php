@@ -3,34 +3,34 @@
 namespace App\Services\Cp;
 
 use App\Common\Enums\CpTypeEnums;
-use App\Services\Cp\Channel\BmChannelServiceAbstract;
-use App\Services\Cp\Channel\FqChannelServiceAbstract;
-use App\Services\Cp\Channel\QyChannelServiceAbstract;
-use App\Services\Cp\Channel\TwChannelServiceAbstract;
-use App\Services\Cp\Channel\YwChannelServiceAbstract;
+use App\Services\Cp\Channel\BmChannelService;
+use App\Services\Cp\Channel\FqChannelService;
+use App\Services\Cp\Channel\QyChannelService;
+use App\Services\Cp\Channel\TwChannelService;
+use App\Services\Cp\Channel\YwChannelService;
 
 class CpChannelFactoryService
 {
     static protected $cpChannelServices = [
         CpTypeEnums::BM => [
             'name' => '笔墨',
-            'class' => BmChannelServiceAbstract::class
+            'class' => BmChannelService::class
         ],
         CpTypeEnums::TW =>[
             'name' => '腾文',
-            'class' => TwChannelServiceAbstract::class
+            'class' => TwChannelService::class
         ],
         CpTypeEnums::QY =>[
             'name' => '七悦',
-            'class' => QyChannelServiceAbstract::class
+            'class' => QyChannelService::class
         ],
         CpTypeEnums::YW =>[
             'name' => '阅文',
-            'class' => YwChannelServiceAbstract::class
+            'class' => YwChannelService::class
         ],
         CpTypeEnums::FQ =>[
             'name' => '番茄',
-            'class' => FqChannelServiceAbstract::class
+            'class' => FqChannelService::class
         ]
     ];
 

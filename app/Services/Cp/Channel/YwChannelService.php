@@ -13,7 +13,7 @@ use App\Services\Cp\Book\YwBookService;
 use App\Services\Cp\Chapter\YwChapterService;
 
 
-class YwChannelServiceAbstract extends AbstractCpChannelService
+class YwChannelService extends AbstractCpChannelService
 {
 
     protected $cpType = CpTypeEnums::YW;

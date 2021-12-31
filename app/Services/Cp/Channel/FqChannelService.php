@@ -11,7 +11,7 @@ use App\Services\Cp\Book\FqBookService;
 use App\Services\Cp\Chapter\FqChapterService;
 
 
-class FqChannelServiceAbstract extends AbstractCpChannelService
+class FqChannelService extends AbstractCpChannelService
 {
 
     protected $cpType = CpTypeEnums::FQ;
