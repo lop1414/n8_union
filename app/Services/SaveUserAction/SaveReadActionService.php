@@ -46,7 +46,9 @@ class SaveReadActionService extends SaveUserActionService
 
         $unionUser = $this->unionUserService->read($user['n8_guid'],$user['channel_id']);
 
-        if(empty($this->cpBookServices[$data['cp_type']]) || empty($this->cpChapterServices[$data['cp_type']])){
+        $cpBookService = CpProviderService::readCpBookService($data['cp_type']);
+        $cpChapterService = CpProviderService::readCpChapterService($data['cp_type']);
+        if(is_null($cpBookService) || is_null($cpChapterService)){
             throw new CustomException([
                 'code'    => 'NOT_SERVICE',
                 'message' => '该书城没有实现BookService 或 ChapterServices',
@@ -55,12 +57,8 @@ class SaveReadActionService extends SaveUserActionService
             ]);
         }
 
-        $book = CpProviderService::readCpBookService($data['cp_type'])
-            ->readSave($data['cp_book_id'],$data['cp_book_name']);
-
-        $chapter = CpProviderService::readCpChapterService($data['cp_type'])
-            ->setBook($book)
-            ->readSave($data['cp_chapter_id'],$data['cp_chapter_name'],$data['cp_chapter_index']);
+        $book = $cpBookService->readSave($data['cp_book_id'],$data['cp_book_name']);
+        $chapter = $cpChapterService->setBook($book)->readSave($data['cp_chapter_id'],$data['cp_chapter_name'],$data['cp_chapter_index']);
 
 
         $createData = [
