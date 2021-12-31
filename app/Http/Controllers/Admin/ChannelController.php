@@ -13,7 +13,7 @@ use App\Common\Helpers\Platform;
 use App\Datas\ChannelData;
 use App\Models\ChannelModel;
 use App\Models\ProductModel;
-use App\Services\ChannelService;
+use App\Services\Cp\CpChannelFactoryService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -249,8 +249,7 @@ class ChannelController extends BaseController
         ]);
 
         $productInfo = ProductService::read($req['product_id']);
-
-        $serviceInfo = (new ChannelService())->getCpService($productInfo['cp_type']);
+        $serviceInfo = CpChannelFactoryService::readCpService($productInfo['cp_type']);
 
         if(empty($serviceInfo)){
             return $this->fail('FAIL','该产品暂无此功能');
@@ -272,7 +271,7 @@ class ChannelController extends BaseController
             'id'    =>  'required',
         ]);
         $channelInfo = $this->model->where('id',$req['id'])->first();
-        $serviceInfo = (new ChannelService())->getCpService($channelInfo->product->cp_type);
+        $serviceInfo = CpChannelFactoryService::readCpService($channelInfo->product->cp_type);
         if(empty($serviceInfo)){
             return $this->fail('FAIL','该产品暂无此功能');
         }

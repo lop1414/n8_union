@@ -6,7 +6,7 @@ use App\Common\Console\BaseCommand;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Helpers\Functions;
-use App\Services\ChannelService;
+use App\Services\Cp\CpChannelFactoryService;
 
 class PullCpChannelCommand extends BaseCommand
 {
@@ -47,7 +47,7 @@ class PullCpChannelCommand extends BaseCommand
         $expire = env('APP_DEBUG') ? 1 : 60 * 60;
 
         $this->lockRun(function () use ($cpTypeParam,$startDate,$endDate){
-            $services = (new ChannelService())->getAllCpServices();
+            $services = CpChannelFactoryService::getCpServices();
             foreach ($services as $cpType => $service){
                 if(empty($cpTypeParam) || $cpTypeParam == $cpType){
                     echo "{$service['name']}\n";

@@ -8,7 +8,7 @@ use App\Datas\BookData;
 use App\Datas\ChapterData;
 use App\Sdks\Bm\BmSdk;
 
-class BmChannelService extends CpChannelBaseService
+class BmChannelServiceAbstract extends AbstractCpChannelService
 {
 
     protected $cpType = CpTypeEnums::BM;

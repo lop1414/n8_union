@@ -7,7 +7,7 @@ use App\Datas\ChannelData;
 use App\Models\ChannelModel;
 use App\Services\Cp\CpBaseService;
 
-class CpChannelBaseService extends CpBaseService
+abstract class AbstractCpChannelService extends CpBaseService
 {
     /**
      * constructor.
@@ -18,6 +18,21 @@ class CpChannelBaseService extends CpBaseService
         $this->setModel(new ChannelModel());
     }
 
+
+
+    /**
+     * @return mixed
+     * 同步
+     */
+    abstract protected function sync();
+
+
+
+    /**
+     * @return mixed
+     * 根据ID同步
+     */
+    abstract protected function syncById();
 
 
 

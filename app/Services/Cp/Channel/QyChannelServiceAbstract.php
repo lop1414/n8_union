@@ -10,7 +10,7 @@ use App\Sdks\Qy\QySdk;
 use App\Services\Cp\Book\QyBookService;
 use App\Services\Cp\Chapter\QyChapterService;
 
-class QyChannelService extends CpChannelBaseService
+class QyChannelServiceAbstract extends AbstractCpChannelService
 {
 
     protected $cpType = CpTypeEnums::QY;

@@ -12,7 +12,7 @@ use App\Datas\ChapterData;
 use App\Sdks\Tw\TwSdk;
 
 
-class TwChannelService extends CpChannelBaseService
+class TwChannelServiceAbstract extends AbstractCpChannelService
 {
 
     public $bookData,$chapterData,$channelData;
