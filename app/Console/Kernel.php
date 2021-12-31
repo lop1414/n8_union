@@ -62,7 +62,7 @@ class Kernel extends ConsoleKernel
 
 
         //行为匹配
-        $matchAdv = [AdvAliasEnum::OCEAN,AdvAliasEnum::BD,AdvAliasEnum::KS];
+        $matchAdv = [AdvAliasEnum::OCEAN,AdvAliasEnum::BD,AdvAliasEnum::KS,AdvAliasEnum::UC];
         $matchAction = ['reg','follow','add_shortcut','order','complete_order'];
         foreach ($matchAdv as $advAlias){
             foreach ($matchAction as $action){
