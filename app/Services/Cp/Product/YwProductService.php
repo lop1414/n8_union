@@ -14,22 +14,20 @@ class YwProductService extends AbstractCpProductService
 
     public function sync(){
         $cpAccount = $this->getParam('cp_account');
-        $startTime = strtotime($this->getParam('start_date'));
-        $endTime = strtotime($this->getParam('end_date'));
         $sdk = new YwSdk('',$cpAccount->account,$cpAccount->cp_secret);
 
         // 快应用产品
         $data = $sdk->getKyyProduct([
-            'start_time'  => $startTime,
-            'end_time'    => $endTime
+            'start_time'  => strtotime('2020-06-01'),
+            'end_time'    => time()
         ]);
         $this->saveData($data['list'],$cpAccount->id,ProductTypeEnums::KYY);
 
 
         // h5产品
         $h5Data = $sdk->getH5Product([
-            'start_time'  => $startTime,
-            'end_time'    => $endTime
+            'start_time'  => strtotime('2019-06-01'),
+            'end_time'    => time()
         ]);
         $this->saveData($h5Data['list'],$cpAccount->id,ProductTypeEnums::H5);
     }
