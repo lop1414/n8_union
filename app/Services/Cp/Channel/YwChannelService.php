@@ -34,7 +34,7 @@ class YwChannelService extends AbstractCpChannelService
             do{
                 $startTime = $date.' 00:00:00';
                 $endTime = $date.' 23:59:59';
-                if($product['type'] == ProductTypeEnums::KYY){
+                if($product['type'] == ProductTypeEnums::KYY || $product['type'] == ProductTypeEnums::APP){
                     $currentTotal = 0;
                     $page = 1;
                     $sdk = $this->getSdk($product);
