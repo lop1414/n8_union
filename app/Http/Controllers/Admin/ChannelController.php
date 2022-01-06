@@ -132,6 +132,13 @@ class ChannelController extends BaseController
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
 
+                //下载链接
+                if($item->product->type == ProductTypeEnums::KYY){
+                    $item->href_url = $item->extends->hap_url ?? '';
+                }elseif($item->product->type == ProductTypeEnums::APP){
+                    $item->href_url = $item->extends->apk_url ?? '';
+                }
+
                 $copyUrl = [[
                         'name' => '监测链接',
                         'url'  => $feedback_url
