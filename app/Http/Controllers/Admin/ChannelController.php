@@ -264,6 +264,7 @@ class ChannelController extends BaseController
         $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
         $service->setParam('end_date',date('Y-m-d'));
         $service->setParam('product_id',$req['product_id']);
+        $service->setParam('channel_ids',$req['channel_ids'] ?? []);
         $service->syncWithHook();
 
         return $this->success();
