@@ -55,11 +55,10 @@ class CpBaseService extends BaseService
             $builder->where('id',$productId);
         }
 
-        $productId = $this->getParam('product_type');
-        if($productId){
-            $builder->where('type',$productId);
+        $productType = $this->getParam('product_type');
+        if($productType){
+            $builder->where('type',$productType);
         }
-
         return $builder->get();
     }
 
