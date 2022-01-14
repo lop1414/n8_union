@@ -252,15 +252,6 @@ $router->group([
         $router->post('read', 'Front\CpAccountController@read');
     });
 
-    // 书籍
-    $router->group(['prefix' => 'book'], function () use ($router) {
-        $router->post('create', 'Front\BookController@create');
-    });
-
-    // 章节
-    $router->group(['prefix' => 'chapter'], function () use ($router) {
-        $router->post('create', 'Front\ChapterController@create');
-    });
 
     // 多平台渠道
     $router->group(['prefix' => 'multi_platform_channel'], function () use ($router) {
@@ -269,15 +260,10 @@ $router->group([
 
     // 渠道
     $router->group(['prefix' => 'channel'], function () use ($router) {
-        $router->post('create', 'Front\ChannelController@create');
         $router->post('get', 'Front\ChannelController@get');
         $router->post('read', 'Front\ChannelController@read');
     });
 
-    // 渠道扩展
-    $router->group(['prefix' => 'channel_extend'], function () use ($router) {
-        $router->post('create', 'Front\ChannelExtendController@create');
-    });
 
     //用户行为
     $router->group(['prefix' => 'user_action'], function () use ($router) {
