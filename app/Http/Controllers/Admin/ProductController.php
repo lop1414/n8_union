@@ -76,6 +76,8 @@ class ProductController extends BaseController
 
             $centerApiService = new CenterApiService();
 
+            $n8UnionUrl = config('common.system_api.'.SystemAliasEnum::UNION.'.url');
+            $n8TransferDataUrl = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.data_url');
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->cp_account;
 
@@ -89,6 +91,28 @@ class ProductController extends BaseController
                     array_push($admins,$centerApiService->apiReadAdminUser($productAdmin['admin_id']));
                 }
                 $item->admins = $admins;
+
+                $copyUrl = [];
+
+                if($item->cp_type == CpTypeEnums::YW){
+                    $copyUrl[] = [
+                        'name' => '阅读数据接收地址',
+                        'url'  => $n8UnionUrl.'/open/yw/action_report/read'
+                    ];
+
+                    if($item->type == ProductTypeEnums::KYY){
+                        $copyUrl[] = [
+                            'name' => '用户数据接收地址',
+                            'url'  => $n8TransferDataUrl.'/open/yw_kyy/user'
+                        ];
+                    }elseif ($item->type == ProductTypeEnums::H5){
+                        $copyUrl[] = [
+                            'name' => '用户数据接收地址',
+                            'url'  => $n8TransferDataUrl.'/open/yw_h5/user'
+                        ];
+                    }
+                }
+                $item->copy_url = $copyUrl;
             }
         });
     }
