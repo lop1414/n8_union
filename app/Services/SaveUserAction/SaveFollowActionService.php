@@ -12,6 +12,7 @@ class SaveFollowActionService extends SaveUserActionService
 
     protected $queueEnum = QueueEnums::USER_FOLLOW_ACTION;
 
+    protected $isCreatedUser = true;// 关注行为通常比注册行为早
 
     public function __construct(){
         parent::__construct();
@@ -21,19 +22,6 @@ class SaveFollowActionService extends SaveUserActionService
 
 
     public function item($user,$data){
-        // 关注行为比注册行为早
-        if(empty($user)){
-            $userData = array_merge([
-                'n8_guid'    => $data['n8_guid'],
-                'product_id' => $data['product_id'],
-                'reg_time'   => $data['action_time'],
-                'channel_id' => $data['channel_id'],
-                'phone'      => $data['phone'] ?? '',
-            ],$this->n8UnionUserService->filterDeviceInfo($data));
-            $user = $this->userService->create($userData);
-        }
-
-        //union用户
         $unionUser = $this->n8UnionUserService->updateSave($user,$data);
 
         $createData = array_merge([

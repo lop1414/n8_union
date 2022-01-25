@@ -21,8 +21,6 @@ class SaveAddShortcutActionService extends SaveUserActionService
 
 
     public function item($user,$data){
-
-        //union用户
         $unionUser = $this->n8UnionUserService->updateSave($user,$data);
 
         $createData = array_merge([

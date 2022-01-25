@@ -24,6 +24,13 @@ class SaveUserActionService extends BaseService
     public $userService;
     public $n8UnionUserService;
 
+    /**
+     * @var bool
+     * 是否创建用户
+     */
+    protected $isCreatedUser = false;
+
+
     public function __construct(){
         parent::__construct();
         $this->userService = new UserService();
@@ -56,8 +63,9 @@ class SaveUserActionService extends BaseService
                     $data['adv_alias'] = $channel['channel_extend']['adv_alias'];
                 }
 
-                $user = $this->userService->read($data['n8_guid']);
+                $user = $this->getUser($data);
                 $data = array_merge($data,$this->n8UnionUserService->filterDeviceInfo($data));
+
                 $unionUser = $this->item($user,$data);
 
                 //更新user 渠道
@@ -131,6 +139,44 @@ class SaveUserActionService extends BaseService
         if($this->queueEnum ==  QueueEnums::USER_ORDER_ACTION){
             (new GlobalOrderService())->clearCache($data['product_id'],$data['order_id']);
         }
+    }
+
+
+    /**
+     * @param $data
+     * @return mixed
+     * @throws CustomException
+     * 获取用户 没有且可创建 则创建用户
+     */
+    public function getUser($data){
+        $user = $this->userService->read($data['n8_guid']);
+
+        if(empty($user) && $this->isCreatedUser){
+            // 创建用户
+            $userData = array_merge([
+                'n8_guid'    => $data['n8_guid'],
+                'product_id' => $data['product_id'],
+                'reg_time'   => $data['action_time'],
+                'channel_id' => $data['channel_id'],
+                'phone'      => $data['phone'] ?? '',
+            ],$this->n8UnionUserService->filterDeviceInfo($data));
+            $user = $this->userService->create($userData);
+        }
+
+
+        if(empty($user)){
+            throw new CustomException([
+                'code'    => 'NOT_USER',
+                'message' => '没有用户',
+                'log'     => false,
+                'data'    => [
+                    'product_id' => $data['product_id'],
+                    'open_id'   => $data['open_id']
+                ]
+            ]);
+        }
+
+        return $user;
     }
 
 }
