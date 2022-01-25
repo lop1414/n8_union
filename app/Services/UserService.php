@@ -40,10 +40,13 @@ class UserService extends BaseService
         $changeLogData = $changeData = [];
 
         // 可变更字段
-        $userAllowChangeField = ['channel_id', 'phone'];
+        $userAllowChangeField = ['channel_id', 'phone','reg_time'];
 
         foreach ($userAllowChangeField as $field){
-            if(isset($data[$field]) && $user[$field] != $data[$field]){
+            // 行为时间比当前用户注册时间早 则更新注册时间
+            if($field == 'reg_time' && $user['reg_time'] > $data['action_time']){
+                $changeData['reg_time'] = $data['action_time'];
+            }elseif (isset($data[$field]) && $user[$field] != $data[$field]){
                 $changeLogData[] = [
                     'n8_guid'       => $user['n8_guid'],
                     'field'         => $field,
