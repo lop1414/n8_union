@@ -39,15 +39,6 @@ class N8UnionUserService extends BaseService
 
 
     public function updateSave($user,$actionData){
-        if(empty($user)){
-            throw new CustomException([
-                'code'    => 'NOT_USER',
-                'message' => '没有用户',
-                'log'     => false,
-                'data'    => ['n8_guid' => $actionData['n8_guid']]
-            ]);
-        }
-
         $product = ProductService::read($user['product_id']);
         // 渠道变更无效
         if($product['matcher'] == MatcherEnum::SYS && !$this->isValidChange($user,$actionData['channel_id'],$actionData['action_time'])){
@@ -91,7 +82,7 @@ class N8UnionUserService extends BaseService
                 $changeData['admin_id'] = $channelExtend['admin_id'];
                 $changeData['adv_alias'] = $channelExtend['adv_alias'];
 
-                // 注册、加桌 行为可更新ip ua
+                // 注册、加桌行为可更新ip ua
                 if(in_array($actionData['action_type'],[QueueEnums::USER_REG_ACTION,QueueEnums::USER_ADD_SHORTCUT_ACTION])){
                     if(!empty($actionData['ip'])){
                         $changeData['ip'] = $actionData['ip'];
