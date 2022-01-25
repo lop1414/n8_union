@@ -35,15 +35,6 @@ class SaveReadActionService extends SaveUserActionService
 
     public function item($user,$data){
 
-        if(empty($user)){
-            throw new CustomException([
-                'code'    => 'NOT_USER',
-                'message' => '没有用户',
-                'log'     => false,
-                'data'    => ['n8_guid' => $data['n8_guid']]
-            ]);
-        }
-
         $unionUser = $this->unionUserService->read($user['n8_guid'],$user['channel_id']);
 
         $cpBookService = CpProviderService::readCpBookService($data['cp_type']);
