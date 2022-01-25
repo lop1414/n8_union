@@ -123,7 +123,7 @@ class N8UnionUserService extends BaseService
 
         // 可修改字段
         $unionUserAllowChangeField = [
-            'channel_id','book_id','chapter_id','force_chapter_id','admin_id','adv_alias','created_time','platform'
+            'channel_id','book_id','chapter_id','force_chapter_id','admin_id','adv_alias','platform'
         ];
         foreach ($unionUserAllowChangeField as $field){
             if(!empty($actionData[$field])){
