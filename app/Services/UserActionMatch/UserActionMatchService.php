@@ -40,7 +40,7 @@ class UserActionMatchService extends BaseService
      * @var int
      * 每页数量
      */
-    protected $pageSize = 20;
+    protected $pageSize = 10;
 
 
     /**
