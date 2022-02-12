@@ -79,6 +79,11 @@ class UserActionBaseController extends BaseController
                     $unionWhere .= " AND channel_id = '{$channelId}'";
                 }
 
+                $userType = $requestData['user_type'] ?? '';
+                if(!empty($userType)){
+                    $unionWhere .= " AND user_type = '{$userType}'";
+                }
+
 
                 $createdTime = $requestData['created_time'] ?? [];
 
