@@ -81,9 +81,9 @@ class UserActionMatchService extends BaseService
      */
     public function setAdvClickSource(){
         $this->advClickSourceMap = array(
-            MatcherEnum::SYS => AdvClickSourceEnum::ADV_CLICK_API,
-            MatcherEnum::SECOND_VERSION => AdvClickSourceEnum::N8_TRANSFER,
-            MatcherEnum::CP => AdvClickSourceEnum::N8_TRANSFER,
+            MatcherEnum::SYS => [AdvClickSourceEnum::ADV_CLICK_API,AdvClickSourceEnum::N8_AD_PAGE],
+            MatcherEnum::SECOND_VERSION => [AdvClickSourceEnum::N8_TRANSFER],
+            MatcherEnum::CP => [AdvClickSourceEnum::N8_TRANSFER],
         );
     }
 
@@ -285,7 +285,7 @@ class UserActionMatchService extends BaseService
      * 获取归因方 对应的 点击数据来源枚举
      */
     public function getAdvClickSourceEnum($matcherEnum){
-        return $this->advClickSourceMap[$matcherEnum] ?? '';
+        return $this->advClickSourceMap[$matcherEnum] ?? [];
     }
 
 
