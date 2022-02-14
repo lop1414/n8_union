@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\ProductTypeEnums;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Platform;
@@ -101,11 +102,27 @@ class MultiPlatFormChannelController extends BaseController
                 $item->android_channel->book;
                 $item->android_channel->chapter;
                 $item->android_channel->force_chapter;
+                //安卓下载链接
+                if($item->android_channel->product->type == ProductTypeEnums::KYY){
+                    $item->android_channel->href_url = $item->android_channel->extends->hap_url ?? '';
+                }elseif($item->android_channel->product->type == ProductTypeEnums::APP){
+                    $item->android_channel->href_url = $item->android_channel->extends->apk_url ?? '';
+                }
+
+
                 $item->ios_channel->product;
                 $item->ios_channel->book;
                 $item->ios_channel->chapter;
                 $item->ios_channel->force_chapter;
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
+                //iOS下载链接
+                if($item->ios_channel->product->type == ProductTypeEnums::KYY){
+                    $item->ios_channel->href_url = $item->ios_channel->extends->hap_url ?? '';
+                }elseif($item->ios_channel->product->type == ProductTypeEnums::APP){
+                    $item->ios_channel->href_url = $item->ios_channel->extends->apk_url ?? '';
+                }
+
+
             }
         });
     }
