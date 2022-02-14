@@ -105,9 +105,9 @@ class MultiPlatFormChannelController extends BaseController
                 //安卓下载链接
 
                 if($item->android_channel->product->type == ProductTypeEnums::KYY){
-                    $item->android_channel->href_url = base64_encode($item->android_channel->extends->hap_url ?? '');
+                    $item->android_channel->href_url = $item->android_channel->extends->hap_url ?? '';
                 }elseif($item->android_channel->product->type == ProductTypeEnums::APP){
-                    $item->android_channel->href_url = base64_encode($item->android_channel->extends->apk_url ?? '');
+                    $item->android_channel->href_url = $item->android_channel->extends->apk_url ?? '';
                 }
 
 
@@ -119,9 +119,9 @@ class MultiPlatFormChannelController extends BaseController
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
                 //iOS下载链接
                 if($item->ios_channel->product->type == ProductTypeEnums::KYY){
-                    $item->ios_channel->href_url = base64_encode($item->ios_channel->extends->hap_url ?? '');
+                    $item->ios_channel->href_url = $item->ios_channel->extends->hap_url ?? '';
                 }elseif($item->ios_channel->product->type == ProductTypeEnums::APP){
-                    $item->ios_channel->href_url = base64_encode($item->ios_channel->extends->apk_url ?? '');
+                    $item->ios_channel->href_url = $item->ios_channel->extends->apk_url ?? '';
                 }
 
 
