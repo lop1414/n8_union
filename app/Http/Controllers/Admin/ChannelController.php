@@ -134,9 +134,9 @@ class ChannelController extends BaseController
 
                 //下载链接
                 if($item->product->type == ProductTypeEnums::KYY){
-                    $item->href_url = $item->extends->hap_url ?? '';
+                    $item->href_url = base64_encode($item->extends->hap_url ?? '');
                 }elseif($item->product->type == ProductTypeEnums::APP){
-                    $item->href_url = $item->extends->apk_url ?? '';
+                    $item->href_url = base64_encode($item->extends->apk_url ?? '');
                 }
 
                 $copyUrl = [[
