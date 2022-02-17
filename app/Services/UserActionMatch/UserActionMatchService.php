@@ -208,7 +208,7 @@ class UserActionMatchService extends BaseService
 
     // 是否可以匹配
     public function isCanMatch($item,$unionUser){
-
+        //注册匹配不上 无需再匹配
         if(empty($unionUser['click_id'])){
             echo "没有click id 不进行匹配 \n";
             return  false;
