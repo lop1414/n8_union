@@ -73,7 +73,10 @@ class BmChannelService extends AbstractCpChannelService
                         'book_id'        => $book['id'],
                         'chapter_id'     => $openChapter['id'],
                         'force_chapter_id'   => $installChapter['id'],
-                        'extends'        => [],
+                        'extends'        => [
+                            'hap_url'   => $channel['hapLink'],
+                            'h5_url'    => $channel['webLink'],
+                        ],
                         'create_time'    => $channel['createTime'],
                         'updated_time'   => $channel['updateTime'],
                     ]);
