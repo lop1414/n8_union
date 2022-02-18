@@ -35,6 +35,7 @@ class FollowActionMatchService extends UserActionMatchService
             ->when($this->timeRange,function ($query){
                 $query->whereBetween('user_follow_actions.action_time',$this->timeRange);
             })
+            ->where('u.click_id','>',0)
             ->where('user_follow_actions.click_id',0)
             ->where('u.channel_id','>',0)
             ->whereRaw(" (user_follow_actions.last_match_time IS NULL OR user_follow_actions.last_match_time <= '{$before}')")

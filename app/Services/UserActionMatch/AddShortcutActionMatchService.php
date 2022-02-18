@@ -34,6 +34,7 @@ class AddShortcutActionMatchService extends UserActionMatchService
             ->when($this->timeRange,function ($query){
                 $query->whereBetween('user_shortcut_actions.action_time',$this->timeRange);
             })
+            ->where('u.click_id','>',0)
             ->where('user_shortcut_actions.click_id',0)
             ->where('u.channel_id','>',0)
             ->whereRaw(" (user_shortcut_actions.last_match_time IS NULL OR user_shortcut_actions.last_match_time <= '{$before}')")
