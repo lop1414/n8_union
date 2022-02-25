@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Services\ConvertCallbackMapService;
+use App\Services\CustomConvertCallbackMapService;
 
 class UserActionBaseController extends BaseController
 {
@@ -149,16 +151,30 @@ class UserActionBaseController extends BaseController
             $convertType = $convertType ? : $this->convertType;
 
             if(!empty($this->curdService->responseData['list'])){
+                //转化回传
                 $convertList = (new ConvertCallbackMapService())
                     ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
 
+                //自定义转化回传
+                $customConvertList = (new CustomConvertCallbackMapService())
+                    ->listMap([$this->curdService->responseData],$convertType,$this->convertId);
+
                 foreach ($this->curdService->responseData['list'] as $item){
+
+                    $convertCallback = [];
                     if(isset($convertList[$item[$this->convertId]])){
                         $convertCallback = $convertList[$item[$this->convertId]]['convert_callback'] ?? [];
-
-                    }else{
-                        $convertCallback = [];
                     }
+
+                    $customConvertCallbackMap = [];
+                    if(isset($customConvertList[$item[$this->convertId]])){
+                        $tmp = $customConvertList[$item[$this->convertId]]['custom_convert_callbacks'] ?? [];
+                        $customConvertCallbackMap = array_column($tmp,null,'convert_type');
+                    }
+
+                    $item->has_custom_convert_callback = [
+                        ConvertTypeEnum::PAY => isset($customConvertCallbackMap[ConvertTypeEnum::PAY])
+                    ];
 
                     // 映射回传信息
                     if($this->isConvertCallbackKey){
