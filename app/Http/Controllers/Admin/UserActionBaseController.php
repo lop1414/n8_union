@@ -174,7 +174,7 @@ class UserActionBaseController extends BaseController
 
                     $item->custom_convert_callbacks = $customConvertCallbackMap;
                     $item->has_custom_convert_callback = [
-                        ConvertTypeEnum::PAY => isset($customConvertCallbackMap[ConvertTypeEnum::PAY])
+                        ConvertTypeEnum::PAY => !isset($customConvertCallbackMap[ConvertTypeEnum::PAY])
                     ];
 
                     // 映射回传信息
