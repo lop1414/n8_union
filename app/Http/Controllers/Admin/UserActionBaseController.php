@@ -166,13 +166,13 @@ class UserActionBaseController extends BaseController
                         $convertCallback = $convertList[$item[$this->convertId]]['convert_callback'] ?? [];
                     }
 
-                    $customConvertCallbackMap = [];
+                    $item->custom_convert_callbacks = $customConvertCallbackMap = [];
                     if(isset($customConvertList[$item[$this->convertId]])){
                         $tmp = $customConvertList[$item[$this->convertId]]['custom_convert_callbacks'] ?? [];
+                        $item->custom_convert_callbacks = $tmp;
                         $customConvertCallbackMap = array_column($tmp,null,'custom_convert_type');
                     }
 
-                    $item->custom_convert_callbacks = $customConvertCallbackMap;
                     $item->has_custom_convert_callback = [
                         ConvertTypeEnum::PAY => !isset($customConvertCallbackMap[ConvertTypeEnum::PAY])
                     ];
