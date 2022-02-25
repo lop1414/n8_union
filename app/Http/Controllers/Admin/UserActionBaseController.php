@@ -169,7 +169,7 @@ class UserActionBaseController extends BaseController
                     $customConvertCallbackMap = [];
                     if(isset($customConvertList[$item[$this->convertId]])){
                         $tmp = $customConvertList[$item[$this->convertId]]['custom_convert_callbacks'] ?? [];
-                        $customConvertCallbackMap = array_column($tmp,null,'convert_type');
+                        $customConvertCallbackMap = array_column($tmp,null,'custom_convert_type');
                     }
 
                     $item->custom_convert_callbacks = $customConvertCallbackMap;
