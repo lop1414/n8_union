@@ -172,6 +172,7 @@ class UserActionBaseController extends BaseController
                         $customConvertCallbackMap = array_column($tmp,null,'convert_type');
                     }
 
+                    $item->custom_convert_callbacks = $customConvertCallbackMap;
                     $item->has_custom_convert_callback = [
                         ConvertTypeEnum::PAY => isset($customConvertCallbackMap[ConvertTypeEnum::PAY])
                     ];
