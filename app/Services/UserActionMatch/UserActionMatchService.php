@@ -283,16 +283,26 @@ class UserActionMatchService extends BaseService
     public function filterUnionUser($item,$unionUser){
         $book = $this->readBook($unionUser['book_id']);
         $product = ProductService::read($unionUser['product_id']);
-        return  [
-            'guid'  => $item['n8_guid'],
-            'channel_id' => $item['channel_id'],
-            'created_at' => $item['created_time'],
+
+        $data = [
             'click_source'  => $this->getAdvClickSourceEnum($item['matcher']),
             'product_type'  => $product['type'],
             'cp_type'       => $product['cp_type'],
             'cp_book_id'    => $book['cp_book_id'] ?? 0,
             'book_name'     => $book['name'] ?? '',
         ];
+
+        if($this->convertType == ConvertTypeEnum::REGISTER){
+            $data['guid'] = $item['n8_guid'];
+            $data['channel_id'] = $item['channel_id'];
+            $data['created_at'] = $item['created_time'];
+        }else{
+            $data['guid'] = $unionUser['n8_guid'];
+            $data['channel_id'] = $unionUser['channel_id'];
+            $data['created_at'] = $unionUser['created_time'];
+        }
+
+        return $data;
     }
 
 
