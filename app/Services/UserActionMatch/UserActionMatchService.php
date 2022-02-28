@@ -285,7 +285,6 @@ class UserActionMatchService extends BaseService
         $product = ProductService::read($unionUser['product_id']);
 
         $data = [
-            'click_source'  => $this->getAdvClickSourceEnum($item['matcher']),
             'product_type'  => $product['type'],
             'cp_type'       => $product['cp_type'],
             'cp_book_id'    => $book['cp_book_id'] ?? 0,
@@ -293,10 +292,12 @@ class UserActionMatchService extends BaseService
         ];
 
         if($this->convertType == ConvertTypeEnum::REGISTER){
+            $data['click_source'] = $this->getAdvClickSourceEnum($item['matcher']);
             $data['guid'] = $item['n8_guid'];
             $data['channel_id'] = $item['channel_id'];
             $data['created_at'] = $item['created_time'];
         }else{
+            $data['click_source'] = $this->getAdvClickSourceEnum($unionUser['matcher']);
             $data['guid'] = $unionUser['n8_guid'];
             $data['channel_id'] = $unionUser['channel_id'];
             $data['created_at'] = $unionUser['created_time'];
