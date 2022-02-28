@@ -255,32 +255,6 @@ class UserActionMatchService extends BaseService
     }
 
 
-
-    /**
-     * @param $data
-     * @return array
-     * 获取匹配所需设备信息
-     */
-    public function getDeviceInfo($data){
-        return array(
-            'ip'                    => $data['ip'] ?? '',
-            'ua'                    => $data['ua'] ?? '',
-            'muid'                  => $data['muid'] ?? '',
-            'oaid'                  => $data['oaid'] ?? '',
-            'device_brand'          => $data['device_brand'] ?? '',
-            'device_manufacturer'   => $data['device_manufacturer'] ?? '',
-            'device_model'          => $data['device_model'] ?? '',
-            'device_product'        => $data['device_product'] ?? '',
-            'device_os_version_name'=> $data['device_os_version_name'] ?? '',
-            'device_os_version_code'=> $data['device_os_version_code'] ?? '',
-            'device_platform_version_name' => $data['device_platform_version_name'] ?? '',
-            'device_platform_version_code' => $data['device_platform_version_code'] ?? '',
-            'android_id'            => $data['android_id'] ?? '',
-            'request_id'            => $data['request_id'] ?? ''
-        );
-    }
-
-
     /**
      * @param $matcherEnum
      * @return mixed|string
