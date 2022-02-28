@@ -15,6 +15,7 @@ use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Common\Services\SystemApi\AdvUcApiService;
 use App\Common\Tools\CustomException;
+use App\Datas\BookData;
 use App\Datas\N8UnionUserData;
 use App\Services\ProductService;
 use Illuminate\Support\Facades\DB;
@@ -235,6 +236,13 @@ class UserActionMatchService extends BaseService
      * @return array
      * 转化匹配数据
      */
+    /**
+     * @param $item
+     * @param $unionUser
+     * @return array
+     * @throws CustomException
+     * 转化匹配数据
+     */
     public function getConvertMatchData($item,$unionUser){
         return array(
             'convert_type' => $this->convertType,
@@ -242,13 +250,7 @@ class UserActionMatchService extends BaseService
             'convert_at'   => $item['action_time'],
             'convert_times'=> 1,
             'click_id'     => $unionUser['click_id'],
-            'n8_union_user'=> [
-                'guid'          => $unionUser['n8_guid'],
-                'channel_id'    => $unionUser['channel_id'],
-                'created_at'    => $unionUser['created_time'],
-                'click_source'  => $this->getAdvClickSourceEnum($unionUser['matcher']),
-                'product_type'  => ProductService::readToType($unionUser['product_id']),
-            ]
+            'n8_union_user'=>  $this->filterUnionUser($item,$unionUser)
         );
     }
 
@@ -295,6 +297,43 @@ class UserActionMatchService extends BaseService
      */
     public function getMatchCycleTime(){
         return  date('Y-m-d H:i:s',TIMESTAMP - $this->matchCycle);
+    }
+
+
+    /**
+     * @param $item
+     * @param $unionUser
+     * @return array
+     * @throws CustomException
+     */
+    public function filterUnionUser($item,$unionUser){
+        $book = $this->readBook($unionUser->book_id);
+        return  [
+            'guid'  => $item['n8_guid'],
+            'channel_id' => $item['channel_id'],
+            'created_at' => $item['created_time'],
+            'click_source'  => $this->getAdvClickSourceEnum($item['matcher']),
+            'product_type'  => ProductService::readToType($unionUser['product_id']),
+            'cp_type'       => $book['cp_type'],
+            'cp_book_id'    => $book['cp_book_id'],
+            'book_name'     => $book['name'],
+        ];
+    }
+
+
+    /**
+     * @param $id
+     * @return mixed|null
+     * @throws CustomException
+     * 获取数据信息
+     */
+    public function readBook($id){
+        $info = [];
+
+        if($id){
+            $info = (new BookData())->setParams(['id' => $id])->read();
+        }
+        return $info;
     }
 
 }

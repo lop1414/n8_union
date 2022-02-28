@@ -7,7 +7,6 @@ use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Enums\MatcherEnum;
 use App\Datas\N8UnionUserData;
 use App\Models\N8UnionUserModel;
-use App\Services\ProductService;
 
 
 class RegActionMatchService extends UserActionMatchService
@@ -60,13 +59,7 @@ class RegActionMatchService extends UserActionMatchService
             'convert_id'   => $item['id'],
             'convert_at'   => $item['created_time'],
             'convert_times'=> 1,
-            'n8_union_user'=> [
-                'guid'  => $item['n8_guid'],
-                'channel_id' => $item['channel_id'],
-                'created_at' => $item['created_time'],
-                'click_source'  => $this->getAdvClickSourceEnum($item['matcher']),
-                'product_type'  => ProductService::readToType($unionUser['product_id'])
-            ]
+            'n8_union_user'=> $this->filterUnionUser($item,$unionUser)
         ];
     }
 
