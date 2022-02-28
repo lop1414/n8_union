@@ -281,7 +281,7 @@ class UserActionMatchService extends BaseService
      * @throws CustomException
      */
     public function filterUnionUser($item,$unionUser){
-        $book = $this->readBook($unionUser->book_id);
+        $book = $this->readBook($unionUser['book_id']);
         $product = ProductService::read($unionUser['product_id']);
         return  [
             'guid'  => $item['n8_guid'],
