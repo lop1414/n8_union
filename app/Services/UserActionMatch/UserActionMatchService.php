@@ -11,6 +11,7 @@ use App\Common\Services\BaseService;
 use App\Common\Services\ConsoleEchoService;
 use App\Common\Services\ErrorLogService;
 use App\Common\Services\SystemApi\AdvBdApiService;
+use App\Common\Services\SystemApi\AdvGdtApiService;
 use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
 use App\Common\Services\SystemApi\AdvUcApiService;
@@ -161,6 +162,9 @@ class UserActionMatchService extends BaseService
                     }elseif ($this->advAlias == AdvAliasEnum::UC){
                         // UC匹配
                         $matchList = (new AdvUcApiService())->apiConvertMatch($convert);
+                    }elseif ($this->advAlias == AdvAliasEnum::GDT){
+                        // 广点通
+                        $matchList = (new AdvGdtApiService())->apiConvertMatch($convert);
                     }
 
                     // 匹配结果处理
