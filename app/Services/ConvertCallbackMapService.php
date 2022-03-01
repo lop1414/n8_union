@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\ConvertTypeEnum;
+use App\Common\Enums\OrderStatusEnums;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Services\SystemApi\AdvBdApiService;
@@ -22,6 +23,11 @@ class ConvertCallbackMapService extends BaseService
             $advAlias = $item['adv_alias'];
             if( $convertType != ConvertTypeEnum::REGISTER && !empty($item->union_user)){
                 $advAlias = $item->union_user['adv_alias'];
+            }
+
+            // 未完成订单无需映射
+            if($convertType == ConvertTypeEnum::PAY && $item->status != OrderStatusEnums::COMPLETE){
+                continue;
             }
 
             $convertList[$advAlias][] = array(
