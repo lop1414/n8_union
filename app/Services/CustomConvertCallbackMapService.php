@@ -65,4 +65,8 @@ class CustomConvertCallbackMapService extends BaseService
         return [];
     }
 
+    public function gdt($convert){
+        return [];
+    }
+
 }
