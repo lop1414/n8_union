@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\PlatformEnum;
+use App\Common\Enums\ProductTypeEnums;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -107,6 +109,8 @@ class N8UnionUserService extends BaseService
 
         // 创建
         $actionData['matcher'] = $product['matcher'];
+        $actionData['cp_type'] = $product['cp_type'];
+        $actionData['product_type'] = $product['type'];
         return $this->create($actionData);
     }
 
@@ -199,6 +203,14 @@ class N8UnionUserService extends BaseService
             'user_type'     => $userType,
             'created_at'    => date('Y-m-d H:i:s')
         ]);
+
+
+        // 阅文快应用实际接受广点通click_id,但是统一用了request_id返回，这里对调下
+        if($channelExtend['adv_alias'] == AdvAliasEnum::GDT && $data['cp_type'] == CpTypeEnums::YW && $data['product_type'] == ProductTypeEnums::KYY){
+            $requestId = $data['request_id'];
+            $data['request_id'] = $data['adv_click_id'];
+            $data['adv_click_id'] = $requestId;
+        }
 
         (new N8UnionUserExtendModel())->create([
             'uuid'                  => $unionUser['id'],
