@@ -141,6 +141,7 @@ class ChannelController extends BaseController
                 isset($item->extends->h5_url) && $copyUrl[] = ['name' => 'h5链接', 'url'  => $item->extends->h5_url];
                 isset($item->extends->http_url) && $copyUrl[] = ['name' => 'http链接', 'url'  => $item->extends->http_url];
                 isset($item->extends->apk_url) && $copyUrl[] = ['name' => 'APK兜底链接', 'url'  => $item->extends->hap_url];
+                unset($item->extends);
 
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
                     $copyUrl = array_merge($copyUrl,$this->getJmyForwardUrl($item));
