@@ -117,14 +117,6 @@ class ChannelController extends BaseController
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
             foreach ($this->curdService->responseData['list'] as $item){
-                $url = $advFeedBack[$item['adv_alias']] ?? '';
-                $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
-                $feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
-
-                $pageUrl = $advPageFeedBack[$item['adv_alias']] ?? '';
-                $pageUrl = str_replace('__N8_MULTI_CHANNEL_ID__',0,$pageUrl);
-                $pageUrl = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$pageUrl);
-                $item->page_feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$pageUrl);
                 $item->product;
                 $item->book;
                 $item->chapter;
@@ -133,7 +125,16 @@ class ChannelController extends BaseController
                 $item->has_extend = $item->admin_id ? true : false;
 
                 //监测链接
-                $item->feedback_url = $feedback_url;
+                $url = $advFeedBack[$item['adv_alias']] ?? '';
+                $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
+                $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
+
+                // n8页面监测链接
+                $pageUrl = $advPageFeedBack[$item['adv_alias']] ?? '';
+                $pageUrl = str_replace('__N8_MULTI_CHANNEL_ID__',0,$pageUrl);
+                $pageUrl = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$pageUrl);
+                $item->page_feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$pageUrl);
+
 
                 //下载链接
                 $popularizeUrl = [];
