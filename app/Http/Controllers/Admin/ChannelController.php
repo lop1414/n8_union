@@ -132,17 +132,15 @@ class ChannelController extends BaseController
                 $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
                 $item->has_extend = $item->admin_id ? true : false;
 
-                //下载链接
-                if($item->product->type == ProductTypeEnums::KYY){
-                    $item->href_url = $item->extends->hap_url ?? '';
-                }elseif($item->product->type == ProductTypeEnums::APP){
-                    $item->href_url = $item->extends->apk_url ?? '';
-                }
+                //监测链接
+                $item->feedback_url = $feedback_url;
 
-                $copyUrl = [[
-                        'name' => '监测链接',
-                        'url'  => $feedback_url
-                    ]];
+                //下载链接
+                $copyUrl = [];
+                isset($item->extends->hap_url) && $copyUrl[] = ['name' => 'hap链接', 'url'  => $item->extends->hap_url];
+                isset($item->extends->h5_url) && $copyUrl[] = ['name' => 'h5链接', 'url'  => $item->extends->h5_url];
+                isset($item->extends->http_url) && $copyUrl[] = ['name' => 'http链接', 'url'  => $item->extends->http_url];
+                isset($item->extends->apk_url) && $copyUrl[] = ['name' => 'APK兜底链接', 'url'  => $item->extends->hap_url];
 
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
                     $copyUrl = array_merge($copyUrl,$this->getJmyForwardUrl($item));
