@@ -136,18 +136,18 @@ class ChannelController extends BaseController
                 $item->feedback_url = $feedback_url;
 
                 //下载链接
-                $copyUrl = [];
-                isset($item->extends->hap_url) && $copyUrl[] = ['name' => 'hap链接', 'url'  => $item->extends->hap_url];
-                isset($item->extends->h5_url) && $copyUrl[] = ['name' => 'h5链接', 'url'  => $item->extends->h5_url];
-                isset($item->extends->http_url) && $copyUrl[] = ['name' => 'http链接', 'url'  => $item->extends->http_url];
-                isset($item->extends->apk_url) && $copyUrl[] = ['name' => 'APK兜底链接', 'url'  => $item->extends->hap_url];
+                $popularizeUrl = [];
+                isset($item->extends->hap_url) && $popularizeUrl[] = ['name' => 'hap链接', 'url'  => $item->extends->hap_url];
+                isset($item->extends->h5_url) && $popularizeUrl[] = ['name' => 'h5链接', 'url'  => $item->extends->h5_url];
+                isset($item->extends->http_url) && $popularizeUrl[] = ['name' => 'http链接', 'url'  => $item->extends->http_url];
+                isset($item->extends->apk_url) && $popularizeUrl[] = ['name' => 'APK兜底链接', 'url'  => $item->extends->hap_url];
                 unset($item->extends);
 
                 if($item['adv_alias'] == AdvAliasEnum::BD ){
-                    $copyUrl = array_merge($copyUrl,$this->getJmyForwardUrl($item));
+                    $popularizeUrl = array_merge($popularizeUrl,$this->getJmyForwardUrl($item));
                 }
 
-                $item->copy_url = $copyUrl;
+                $item->popularize_url = $popularizeUrl;
             }
         });
     }
