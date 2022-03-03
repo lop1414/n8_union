@@ -41,6 +41,7 @@ class N8UnionUserModel extends UserActionBaseModel
         'matcher',
         'last_match_time',
         'user_type',
+        'brand',
         'created_at'
     ];
 

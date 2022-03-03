@@ -201,6 +201,7 @@ class N8UnionUserService extends BaseService
             'adv_alias'     => $channelExtend['adv_alias'],
             'matcher'       => $data['matcher'],
             'user_type'     => $userType,
+            'brand'         => '',
             'created_at'    => date('Y-m-d H:i:s')
         ]);
 
