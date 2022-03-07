@@ -4,11 +4,9 @@ namespace App\Services;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\CpTypeEnums;
-use App\Common\Enums\DeviceBrandEnum;
 use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Enums\ProductTypeEnums;
-use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -395,12 +393,10 @@ class N8UnionUserService extends BaseService
                     continue;
                 }
 
-                $deviceBrandEnum = $deviceService->getDeviceBrandEnum($item->extend->ua);
-
-                $item->brand = $deviceBrandEnum;
+                $item->brand = $deviceService->getDeviceBrandEnum($item->extend->ua);
                 $item->save();
 
-                echo $item->id." : {$deviceBrandEnum} \n";
+                echo $item->id." : { $item->brand} \n";
             }
         }while(!$list->isEmpty());
 
