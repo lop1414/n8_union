@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Console\Commands\AnalyseUserDeviceBrandCommand;
 use App\Console\Commands\SaveUserActionCommand;
 use App\Console\Commands\TestCommand;
 use App\Console\Commands\CreateTableCommand;
@@ -32,6 +33,9 @@ class Kernel extends ConsoleKernel
 
         // 同步渠道
         PullCpChannelCommand::class,
+
+        // 用户设备品牌分析
+        AnalyseUserDeviceBrandCommand::class,
     ];
 
     /**
@@ -42,9 +46,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $time = time();
-        $hourRange24 = date('Y-m-d H:i:s',$time - 60*60*24).','.date('Y-m-d H:i:s',$time);
-
+        $dateTime = date('Y-m-d H:i:s',TIMESTAMP);
+        //24小时区间
+        $hourRange24 = date('Y-m-d H:i:s',TIMESTAMP - 60*60*24).','.$dateTime;
+        //五分钟区间
+        $fiveMinuteRange = "'".date('Y-m-d H:i:s',TIMESTAMP-60*5)."','{$dateTime}'";
 
         //创建分表
         $schedule->command('create_table')->cron('0 0 1,15 * *');
@@ -70,6 +76,8 @@ class Kernel extends ConsoleKernel
                 $schedule->command($matchCommand)->cron('* * * * *');
             }
         }
+        //用户设备品牌分析
+//        $schedule->command("analyse_user_device_brand  --time='{$fiveMinuteRange}'")->cron('*/5 * * * *');
 
     }
 }

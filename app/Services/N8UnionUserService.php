@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\CpTypeEnums;
+use App\Common\Enums\DeviceBrandEnum;
 use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Enums\ProductTypeEnums;
+use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -113,8 +115,6 @@ class N8UnionUserService extends BaseService
         $actionData['product_type'] = $product['type'];
         return $this->create($actionData);
     }
-
-
 
 
 
@@ -351,6 +351,7 @@ class N8UnionUserService extends BaseService
     }
 
 
+
     public function getUserUa($n8Guid){
         $info = (new UserExtendModel())->where('n8_guid',$n8Guid)->first();
         return $info['ua'];
@@ -362,6 +363,48 @@ class N8UnionUserService extends BaseService
         $agent = new Agent();
         $agent->setUserAgent($ua);
         return $agent->isiOS() ? PlatformEnum::IOS : PlatformEnum::ANDROID;
+    }
+
+
+
+
+
+    /**
+     * @param $startTime
+     * @param $endTime
+     * @param string $brand
+     * @param int $productId
+     * @return bool
+     * 分析设备品牌
+     */
+    public function analyseDeviceBrand($startTime,$endTime,$brand = '',$productId = 0){
+        $deviceService = new DeviceService();
+        $unionUserModel = (new N8UnionUserModel())
+            ->whereBetween('created_time',[$startTime,$endTime])
+            ->when($productId,function ($query,$productId){
+                return $query->where('product_id',$productId);
+            })
+            ->where('brand',$brand);
+        $lastId = 0;
+        do{
+            $list = $unionUserModel->where('id','>',$lastId)->limit(100)->get();
+            foreach ($list as $item){
+                $lastId = $item->id;
+
+                if(empty($item->extend) || empty($item->extend->ua)) {
+                    continue;
+                }
+
+                $deviceBrandEnum = $deviceService->getDeviceBrandEnum($item->extend->ua);
+
+                $item->brand = $deviceBrandEnum;
+                $item->save();
+
+                echo $item->id." : {$deviceBrandEnum} \n";
+            }
+        }while(!$list->isEmpty());
+
+        return true;
     }
 
 }
