@@ -13,7 +13,7 @@ class AnalyseUserDeviceBrandCommand extends BaseCommand
      * 命令行执行命令
      * @var string
      */
-    protected $signature = 'analyse_user_device_brand {--product_id=}  {--time=}';
+    protected $signature = 'analyse_user_device_brand {--product_id=} {--brand=}  {--time=}';
 
     /**
      * 命令描述
