@@ -20,6 +20,7 @@ use App\Enums\QueueEnums;
 use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
 use App\Models\UserExtendModel;
+use Illuminate\Support\Facades\DB;
 use Jenssegers\Agent\Agent;
 
 class N8UnionUserService extends BaseService
@@ -378,25 +379,24 @@ class N8UnionUserService extends BaseService
     public function analyseDeviceBrand($startTime,$endTime,$brand = '',$productId = 0){
         $deviceService = new DeviceService();
         $unionUserModel = (new N8UnionUserModel())
-            ->whereBetween('created_time',[$startTime,$endTime])
+            ->select(DB::raw("n8_union_users.*"))
+            ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
+            ->whereBetween('n8_union_users.created_time',[$startTime,$endTime])
             ->when($productId,function ($query,$productId){
-                return $query->where('product_id',$productId);
+                return $query->where('n8_union_users.product_id',$productId);
             })
-            ->where('brand',$brand);
+            ->where('n8_union_users.brand',$brand)
+            ->where('e.ua','!=','');
         $lastId = 0;
         do{
-            $list = $unionUserModel->where('id','>',$lastId)->limit(100)->get();
+            $list = $unionUserModel->where('id','>',$lastId)->limit(1000)->get();
             foreach ($list as $item){
                 $lastId = $item->id;
-
-                if(empty($item->extend) || empty($item->extend->ua)) {
-                    continue;
-                }
 
                 $item->brand = $deviceService->getDeviceBrandEnum($item->extend->ua);
                 $item->save();
 
-                echo $item->id." : { $item->brand} \n";
+                echo $item->id." : {$item->brand} \n";
             }
         }while(!$list->isEmpty());
 
