@@ -400,7 +400,7 @@ class N8UnionUserService extends BaseService
 
                 $deviceInfo = $uaReadSdk->setUa($item->extend->ua)->getInfo();
 
-                if($deviceInfo['brand'] == DeviceBrandEnum::OTHER || $deviceInfo['device_model'] != 'OTHER'){
+                if($deviceInfo['brand'] == DeviceBrandEnum::OTHER && $deviceInfo['device_model'] != 'OTHER'){
                     dd($lastId,$item->extend->ua,$deviceInfo);
                 }
 
