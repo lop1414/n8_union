@@ -7,20 +7,20 @@ use App\Common\Helpers\Functions;
 use App\Common\Services\ConsoleEchoService;
 use App\Services\N8UnionUserService;
 
-class AnalyseUserDeviceBrandCommand extends BaseCommand
+class UaReadAnalyseCommand extends BaseCommand
 {
     /**
      * 命令行执行命令
      * @var string
      */
-    protected $signature = 'analyse_user_device_brand {--product_id=} {--brand=}  {--time=}';
+    protected $signature = 'ua_read_analyse {--product_id=} {--time=}';
 
     /**
      * 命令描述
      *
      * @var string
      */
-    protected $description = '用户设备品牌分析';
+    protected $description = '用户ua读取分析';
 
     protected $consoleEchoService;
 
@@ -39,14 +39,13 @@ class AnalyseUserDeviceBrandCommand extends BaseCommand
     public function handle(){
 
         $productId = $this->option('product_id') ?: 0;
-        $brand = $this->option('brand') ?: '';
         $time = $this->option('time');
         list($startTime,$endTime) = Functions::getTimeRange($time);
 
-        $key = "analyse_user_device_brand|{$brand}|{$productId}";
+        $key = "ua_read_analyse|{$productId}";
 
-        $this->lockRun(function () use ($startTime,$endTime,$brand,$productId){
-            (new N8UnionUserService())->analyseDeviceBrand($startTime,$endTime,$brand,$productId);
+        $this->lockRun(function () use ($startTime,$endTime,$productId){
+            (new N8UnionUserService())->uaReadAnalyse($startTime,$endTime,$productId);
         },$key, 60*60*3,['log' => true]);
     }
 

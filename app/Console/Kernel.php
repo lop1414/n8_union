@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
-use App\Console\Commands\AnalyseUserDeviceBrandCommand;
+use App\Console\Commands\UaReadAnalyseCommand;
 use App\Console\Commands\SaveUserActionCommand;
 use App\Console\Commands\TestCommand;
 use App\Console\Commands\CreateTableCommand;
@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         PullCpChannelCommand::class,
 
         // 用户设备品牌分析
-        AnalyseUserDeviceBrandCommand::class,
+        UaReadAnalyseCommand::class,
     ];
 
     /**
