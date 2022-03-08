@@ -44,9 +44,11 @@ class UaReadAnalyseCommand extends BaseCommand
 
         $key = "ua_read_analyse|{$productId}";
 
-        $this->lockRun(function () use ($startTime,$endTime,$productId){
-            (new N8UnionUserService())->uaReadAnalyse($startTime,$endTime,$productId);
-        },$key, 60*60*3,['log' => true]);
+        (new N8UnionUserService())->uaReadAnalyse($startTime,$endTime,$productId);
+
+//        $this->lockRun(function () use ($startTime,$endTime,$productId){
+//            (new N8UnionUserService())->uaReadAnalyse($startTime,$endTime,$productId);
+//        },$key, 60*60*3,['log' => true]);
     }
 
 
