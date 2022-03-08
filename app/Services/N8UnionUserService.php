@@ -333,7 +333,7 @@ class N8UnionUserService extends BaseService
      * @return array
      * 过滤设备信息
      */
-    public function filterUaRead($data){
+    public function filterDeviceInfo($data){
         return [
             'ip'                    => $data['ip'] ?? '',
             'ua'                    => $data['ua'] ?? '',
