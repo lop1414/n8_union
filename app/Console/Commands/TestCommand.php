@@ -38,35 +38,7 @@ class TestCommand extends BaseCommand
 
 
     public function handle(){
-        $service = new DeviceNetworkLicenseService();
-        $list = (new DeviceModel())->where('brand','')->whereNull('has_network_license')->get();
-        foreach ($list as $item){
-            $item->brand = $service->getBrand($item->model);
-            $hasNetworkLicense =  0;
-            if(empty($item->brand)){
-                echo$item->id.' : '. $item->model."\n";
-                $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
-                $param = array(
-                    'equipmentModel' => $item->model,
-                    'pageNo'         => 1,
-                    'pageSize'       => 100,
-                    'isphoto'        => 2
-                );
 
-                $ret = file_get_contents($url .'?'. http_build_query($param));
-                $result = json_decode($ret, true);
-                if($result['code'] == 200){
-                    foreach ($result['data']['records'] as $v){
-                        if(strtoupper($v['equipmentModel']) == strtoupper($item->model)){
-                            var_dump($result,$item->model);
-                            $hasNetworkLicense = 1;
-                        }
-                    }
-                }
-            }
-            $item->has_network_license = $hasNetworkLicense;
-            $item->save();
-        }
     }
 
 

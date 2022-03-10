@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Console\Commands\CheckHasNetworkLicenseCommand;
 use App\Console\Commands\SyncDeviceNetworkLicenseCommand;
 use App\Console\Commands\UaReadAnalyseCommand;
 use App\Console\Commands\SaveUserActionCommand;
@@ -39,7 +40,9 @@ class Kernel extends ConsoleKernel
         UaReadAnalyseCommand::class,
 
         // 同步设备入网许可信息
-        SyncDeviceNetworkLicenseCommand::class
+        SyncDeviceNetworkLicenseCommand::class,
+        // 检查是否有网络许可证
+        CheckHasNetworkLicenseCommand::class,
     ];
 
     /**
@@ -80,9 +83,6 @@ class Kernel extends ConsoleKernel
                 $schedule->command($matchCommand)->cron('* * * * *');
             }
         }
-        //用户设备品牌分析
-//        $schedule->command("analyse_user_device_brand  --time='{$fiveMinuteRange}'")->cron('*/5 * * * *');
-
 
 
         //同步设备入网许可信息 每月1号执行

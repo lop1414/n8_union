@@ -200,10 +200,10 @@ class DeviceNetworkLicenseService
     }
 
 
-    public function apiGetInfo($company,$startDate,$endDate){
+    public function apiGetInfo($company,$startDate,$endDate,$model = ''){
         $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
         $param = array(
-            'equipmentModel' => '',
+            'equipmentModel' => $model,
             'applyOrg'       => $company,
             'pageNo'         => 1,
             'pageSize'       => 100,
