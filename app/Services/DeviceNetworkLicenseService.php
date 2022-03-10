@@ -107,6 +107,22 @@ class DeviceNetworkLicenseService
             'name'  => '捷开通讯科技（上海）有限公司',
             'brand_enum' => DeviceBrandEnum::LN,
         ],
+        [
+            'name'  => '奇酷互联网络科技（深圳）有限公司',
+            'brand_enum' => DeviceBrandEnum::A_360,
+        ],
+        [
+            'name'  => '厦门美图移动科技有限公司',
+            'brand_enum' => DeviceBrandEnum::MEITU,
+        ],
+        [
+            'name'  => '北京得特创新科技有限公司',
+            'brand_enum' => DeviceBrandEnum::NUT,
+        ],
+        [
+            'name'  => '华硕电脑（上海）有限公司',
+            'brand_enum' => DeviceBrandEnum::ASUS,
+        ],
     );
 
 

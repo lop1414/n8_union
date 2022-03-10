@@ -390,7 +390,7 @@ class N8UnionUserService extends BaseService
         $user->sys_version = $uaReadInfo['sys_version'];
         $user->save();
 
-        echo $user->id." : {$deviceInfo['brand']} : {$uaReadInfo['device_model']} : {$uaReadInfo['sys_version']} \n";
+//        echo $user->id." : {$deviceInfo['brand']} : {$uaReadInfo['device_model']} : {$uaReadInfo['sys_version']} \n";
     }
 
 
