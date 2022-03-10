@@ -29,7 +29,7 @@ class SyncDeviceNetworkLicenseCommand extends BaseCommand
         $key = "sync_device_network_license|{$year}";
 
         $this->lockRun(function () use ($year){
-            (new DeviceNetworkLicenseService())->syncDeviceInfo($year);
+            (new DeviceNetworkLicenseService())->syncDeviceInfo($year,$year);
         },$key, 60*60*3,['log' => true]);
     }
 
