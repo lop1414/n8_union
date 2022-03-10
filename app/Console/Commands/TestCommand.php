@@ -54,8 +54,8 @@ class TestCommand extends BaseCommand
                 $ret = file_get_contents($url .'?'. http_build_query($param));
                 $result = json_decode($ret, true);
                 if($result['code'] == 200){
-                    foreach ($result['data']['records'] as $item){
-                        if(strtoupper($item['equipmentModel']) == strtoupper($item->model)){
+                    foreach ($result['data']['records'] as $v){
+                        if(strtoupper($v['equipmentModel']) == strtoupper($item->model)){
                             dd($result,$item->model);
                         }
                     }
