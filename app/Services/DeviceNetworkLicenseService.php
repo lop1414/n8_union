@@ -103,6 +103,10 @@ class DeviceNetworkLicenseService
             'name'  => '深圳满利宝电子科技有限公司',
             'brand_enum' => DeviceBrandEnum::YLT,
         ],
+        [
+            'name'  => '捷开通讯科技（上海）有限公司',
+            'brand_enum' => DeviceBrandEnum::LN,
+        ],
     );
 
 

@@ -42,6 +42,7 @@ class TestCommand extends BaseCommand
         $list = (new DeviceModel())->where('brand','')->get();
         foreach ($list as $item){
             $item->brand = $service->getBrand($item->model);
+            $hasNetworkLicense =  null;
             if(empty($item->brand)){
                 $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
                 $param = array(
@@ -56,13 +57,14 @@ class TestCommand extends BaseCommand
                 if($result['code'] == 200){
                     foreach ($result['data']['records'] as $v){
                         if(strtoupper($v['equipmentModel']) == strtoupper($item->model)){
-                            dd($result,$item->model);
+                            var_dump($result,$item->model);
+                            $hasNetworkLicense = 1;
                         }
                     }
                 }
             }
+            $item->has_network_license = $hasNetworkLicense;
             $item->save();
-            echo $item->brand."\n";
         }
     }
 

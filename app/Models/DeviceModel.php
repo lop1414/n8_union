@@ -27,5 +27,6 @@ class DeviceModel extends BaseModel
         'name',
         'brand',
         'model',
+        'has_network_license',
     ];
 }

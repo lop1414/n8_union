@@ -381,7 +381,8 @@ class N8UnionUserService extends BaseService
             $deviceInfo = $deviceData->save([
                 'name' => '',
                 'brand' => $brand,
-                'model' => $uaReadInfo['device_model']
+                'model' => $uaReadInfo['device_model'],
+                'has_network_license' => $brand ? 1 : null
             ]);
         }
 
