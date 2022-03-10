@@ -65,14 +65,17 @@ class DeviceNetworkLicenseService
         ]
     );
 
+
     /**
+     * @param int $yearDate 开始年份
+     * @param $endYearDate
      * @return bool
      * @throws \App\Common\Tools\CustomException
      * 同步设备型号
      */
-    public function syncDeviceInfo(){
-        $endYearDate = intval(date('Y'));
-        $yearDate = 2000; //开始年份
+    public function syncDeviceInfo($yearDate = 2000, $endYearDate = ''){
+        $endYearDate = empty($endYearDate) ? intval(date('Y')) : min(intval(date('Y')),$endYearDate);
+
         foreach ($this->companies as $item){
             $company = $item['name'];
             while ($yearDate <= $endYearDate){
@@ -83,12 +86,13 @@ class DeviceNetworkLicenseService
                 $data = $this->apiGetInfo($company,$start,$end);
 
                 var_dump( "{$company} : 年 : {$yearDate} : {$data['total']} ");
-                $yearDate += 1;
                 if($data['total'] >= 30){
                     $this->syncDeviceInfoByMonth($company,$yearDate);
-                    continue;
+                }else{
+                    $this->saveData($data['records']);
                 }
-                $this->saveData($data['records']);
+
+                $yearDate += 1;
             }
         }
 
