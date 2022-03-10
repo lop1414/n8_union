@@ -42,7 +42,7 @@ class TestCommand extends BaseCommand
         $list = (new DeviceModel())->where('brand','')->whereNull('has_network_license')->get();
         foreach ($list as $item){
             $item->brand = $service->getBrand($item->model);
-            $hasNetworkLicense =  null;
+            $hasNetworkLicense =  0;
             if(empty($item->brand)){
                 $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
                 $param = array(
