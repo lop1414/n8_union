@@ -42,6 +42,23 @@ class TestCommand extends BaseCommand
         $list = (new DeviceModel())->where('brand','')->get();
         foreach ($list as $item){
             $item->brand = $service->getBrand($item->model);
+            if(empty($item->brand)){
+                $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
+                $param = array(
+                    'equipmentModel' => $item->model,
+                    'pageNo'         => 1,
+                    'pageSize'       => 100,
+                    'isphoto'        => 2
+                );
+
+                $ret = file_get_contents($url .'?'. http_build_query($param));
+                $result = json_decode($ret, true);
+                if($result['code'] == 200){
+                   dd($result);
+                }
+            }
+
+
             $item->save();
             echo $item->brand."\n";
         }
