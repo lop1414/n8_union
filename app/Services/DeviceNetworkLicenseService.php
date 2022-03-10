@@ -15,58 +15,70 @@ class DeviceNetworkLicenseService
      * 各品牌的设备进网许可以申请单位
      */
     private $companies = array(
+//        [
+//            'name'  => '华为技术有限公司',
+//            'brand_enum' => DeviceBrandEnum::HUAWEI,
+//        ],
+//        [
+//            'name'  => '华为终端有限公司',
+//            'brand_enum' => DeviceBrandEnum::HUAWEI,
+//        ],
+//        [
+//            'name'  => '荣耀终端有限公司',
+//            'brand_enum' => DeviceBrandEnum::HONOR,
+//        ],
+//        [
+//            'name'  => '小米通讯技术有限公司',
+//            'brand_enum' => DeviceBrandEnum::XIAOMI,
+//        ],
+//        [
+//            'name'  => '深圳市万普拉斯科技有限公司',
+//            'brand_enum' => DeviceBrandEnum::ONEPLUS, //一加
+//        ],
+//        [
+//            'name'  => 'OPPO广东移动通信有限公司',
+//            'brand_enum' => DeviceBrandEnum::OPPO,
+//        ],
+//        [
+//            'name'  => '维沃移动通信有限公司',
+//            'brand_enum' => DeviceBrandEnum::VIVO,
+//        ],
+//        [
+//            'name'  => '东软集团（大连）有限公司',
+//            'brand_enum' => DeviceBrandEnum::MEIZU, //魅族
+//        ],
+//        [
+//            'name'  => '惠州三星电子有限公司',
+//            'brand_enum' => DeviceBrandEnum::SAMSUNG,//三星
+//        ],
+//        [
+//            'name'  => 'RealMe重庆移动通信有限公司',
+//            'brand_enum' => DeviceBrandEnum::REALME, //魅族
+//        ],
+//        [
+//            'name'  => '努比亚技术有限公司',
+//            'brand_enum' => DeviceBrandEnum::NUBIA, //努比亚
+//        ],
+//        [
+//            'name'  => '青岛海信通信有限公司',
+//            'brand_enum' => DeviceBrandEnum::HISENSE, //海信
+//        ],
+//        [
+//            'name'  => '南昌黑鲨科技有限公司',
+//            'brand_enum' => DeviceBrandEnum::BLACKSHARK, //黑鲨
+//        ],
         [
-            'name'  => '华为技术有限公司',
-            'brand_enum' => DeviceBrandEnum::HUAWEI,
+            'name'  => '联通华盛通信有限公司',
+            'brand_enum' => DeviceBrandEnum::BLACKSHARK, //优享畅
         ],
         [
-            'name'  => '华为终端有限公司',
-            'brand_enum' => DeviceBrandEnum::HUAWEI,
+            'name'  => '中国移动通信集团终端有限公司',
+            'brand_enum' => DeviceBrandEnum::NZONE, //动感地带
         ],
         [
-            'name'  => '荣耀终端有限公司',
-            'brand_enum' => DeviceBrandEnum::HONOR,
+            'name'  => '北京锤子数码科技有限公司',
+            'brand_enum' => DeviceBrandEnum::SMARTISAN, //锤子
         ],
-        [
-            'name'  => '小米通讯技术有限公司',
-            'brand_enum' => DeviceBrandEnum::XIAOMI,
-        ],
-        [
-            'name'  => '深圳市万普拉斯科技有限公司',
-            'brand_enum' => DeviceBrandEnum::ONEPLUS, //一加
-        ],
-        [
-            'name'  => 'OPPO广东移动通信有限公司',
-            'brand_enum' => DeviceBrandEnum::OPPO,
-        ],
-        [
-            'name'  => '维沃移动通信有限公司',
-            'brand_enum' => DeviceBrandEnum::VIVO,
-        ],
-        [
-            'name'  => '东软集团（大连）有限公司',
-            'brand_enum' => DeviceBrandEnum::MEIZU, //魅族
-        ],
-        [
-            'name'  => '惠州三星电子有限公司',
-            'brand_enum' => DeviceBrandEnum::SAMSUNG,//三星
-        ],
-        [
-            'name'  => 'RealMe重庆移动通信有限公司',
-            'brand_enum' => DeviceBrandEnum::REALME, //魅族
-        ],
-        [
-            'name'  => '努比亚技术有限公司',
-            'brand_enum' => DeviceBrandEnum::NUBIA, //努比亚
-        ],
-        [
-            'name'  => '青岛海信通信有限公司',
-            'brand_enum' => DeviceBrandEnum::HISENSE, //海信
-        ],
-        [
-            'name'  => '南昌黑鲨科技有限公司',
-            'brand_enum' => DeviceBrandEnum::BLACKSHARK, //黑鲨
-        ]
     );
 
 
