@@ -79,25 +79,29 @@ class DeviceNetworkLicenseService
 //            'name'  => '北京锤子数码科技有限公司',
 //            'brand_enum' => DeviceBrandEnum::SMARTISAN, //锤子
 //        ],
+//        [
+//            'name'  => '三星（中国）投资有限公司',
+//            'brand_enum' => DeviceBrandEnum::SAMSUNG,
+//        ],
+//        [
+//            'name'  => '摩托罗拉移动技术（中国）有限公司',
+//            'brand_enum' => DeviceBrandEnum::MOTO,
+//        ],
+//        [
+//            'name'  => '深圳市金立通信设备有限公司',
+//            'brand_enum' => DeviceBrandEnum::GIONEE,
+//        ],
+//        [
+//            'name'  => '深圳市酷派移动科技有限公司',
+//            'brand_enum' => DeviceBrandEnum::COOLPAD,
+//        ],
+//        [
+//            'name'  => '天翼电信终端有限公司',
+//            'brand_enum' => DeviceBrandEnum::TIANYI,
+//        ],
         [
-            'name'  => '三星（中国）投资有限公司',
-            'brand_enum' => DeviceBrandEnum::SAMSUNG,
-        ],
-        [
-            'name'  => '摩托罗拉移动技术（中国）有限公司',
-            'brand_enum' => DeviceBrandEnum::MOTO,
-        ],
-        [
-            'name'  => '深圳市金立通信设备有限公司',
-            'brand_enum' => DeviceBrandEnum::GIONEE,
-        ],
-        [
-            'name'  => '深圳市酷派移动科技有限公司',
-            'brand_enum' => DeviceBrandEnum::COOLPAD,
-        ],
-        [
-            'name'  => '天翼电信终端有限公司',
-            'brand_enum' => DeviceBrandEnum::TIANYI,
+            'name'  => '深圳满利宝电子科技有限公司',
+            'brand_enum' => DeviceBrandEnum::YLT,
         ],
     );
 
