@@ -39,7 +39,7 @@ class TestCommand extends BaseCommand
 
     public function handle(){
         $service = new DeviceNetworkLicenseService();
-        $list = (new DeviceModel())->where('brand','')->list();
+        $list = (new DeviceModel())->where('brand','')->get();
         foreach ($list as $item){
             $item->brand = $service->getBrand($item->model);
             $item->save();
