@@ -73,11 +73,12 @@ class DeviceNetworkLicenseService
      * @throws \App\Common\Tools\CustomException
      * 同步设备型号
      */
-    public function syncDeviceInfo($yearDate = 2000, $endYearDate = ''){
+    public function syncDeviceInfo($startYearDate = 2000, $endYearDate = ''){
         $endYearDate = empty($endYearDate) ? intval(date('Y')) : min(intval(date('Y')),$endYearDate);
 
         foreach ($this->companies as $item){
             $company = $item['name'];
+            $yearDate = $startYearDate;
             while ($yearDate <= $endYearDate){
 
                 $start = $yearDate.'-01-01';
