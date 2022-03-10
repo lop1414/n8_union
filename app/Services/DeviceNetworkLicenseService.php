@@ -24,6 +24,10 @@ class DeviceNetworkLicenseService
             'brand_enum' => DeviceBrandEnum::HUAWEI,
         ],
         [
+            'name'  => '荣耀终端有限公司',
+            'brand_enum' => DeviceBrandEnum::HONOR,
+        ],
+        [
             'name'  => '小米通讯技术有限公司',
             'brand_enum' => DeviceBrandEnum::XIAOMI,
         ],
