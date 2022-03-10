@@ -44,6 +44,7 @@ class TestCommand extends BaseCommand
             $item->brand = $service->getBrand($item->model);
             $hasNetworkLicense =  0;
             if(empty($item->brand)){
+                echo$item->id.' : '. $item->model."\n";
                 $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
                 $param = array(
                     'equipmentModel' => $item->model,
