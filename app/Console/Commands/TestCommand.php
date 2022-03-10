@@ -54,11 +54,9 @@ class TestCommand extends BaseCommand
                 $ret = file_get_contents($url .'?'. http_build_query($param));
                 $result = json_decode($ret, true);
                 if($result['code'] == 200){
-                   dd($result);
+                   dd($result,$item);
                 }
             }
-
-
             $item->save();
             echo $item->brand."\n";
         }
