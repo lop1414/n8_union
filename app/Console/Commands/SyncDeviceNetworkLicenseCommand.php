@@ -3,10 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
-use App\Common\Helpers\Functions;
-use App\Common\Services\ConsoleEchoService;
 use App\Services\DeviceNetworkLicenseService;
-use App\Services\N8UnionUserService;
 
 class SyncDeviceNetworkLicenseCommand extends BaseCommand
 {
