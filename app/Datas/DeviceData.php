@@ -29,7 +29,7 @@ class DeviceData extends BaseData
      * 唯一键数组
      */
     protected $uniqueKeys = [
-        ['brand','model']
+        ['model']
     ];
 
 
@@ -52,7 +52,6 @@ class DeviceData extends BaseData
     public function save($data){
 
         $where = [
-            'brand' => $data['brand'],
             'model' => $data['model']
         ];
         $this->setParams($where)->clear();

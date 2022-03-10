@@ -7,8 +7,6 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\MatcherEnum;
 use App\Common\Enums\PlatformEnum;
 use App\Common\Enums\ProductTypeEnums;
-use App\Common\Sdks\UaRead\Enums\DeviceBrandEnum;
-use App\Common\Sdks\UaRead\UaReadSdk;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
@@ -369,6 +367,30 @@ class N8UnionUserService extends BaseService
     }
 
 
+    /**
+     * @param $user
+     * @throws CustomException
+     * ua 读取分析
+     */
+    public function uaReadAnalyse($user){
+        $deviceData = new DeviceData();
+        $uaReadInfo = (new UaReadService())->setUa($user->extend->ua)->getInfo();
+        $deviceInfo = $deviceData->setParams(['model' => $uaReadInfo['device_model']])->read();
+        if(empty($deviceInfo)){
+            $brand = (new DeviceNetworkLicenseService())->getBrand($uaReadInfo['device_model']);
+            $deviceInfo = $deviceData->save([
+                'name' => '',
+                'brand' => $brand,
+                'model' => $uaReadInfo['device_model']
+            ]);
+        }
+
+        $user->device_id = $deviceInfo->id;
+        $user->sys_version = $uaReadInfo['sys_version'];
+        $user->save();
+
+        echo $user->id." : {$deviceInfo['brand']} : {$uaReadInfo['device_model']} : {$uaReadInfo['sys_version']} \n";
+    }
 
 
 
@@ -377,10 +399,10 @@ class N8UnionUserService extends BaseService
      * @param $endTime
      * @param int $productId
      * @return bool
-     * ua 读取分析
+     * @throws CustomException
+     *  批量 ua 读取分析
      */
-    public function uaReadAnalyse($startTime,$endTime,$productId = 0){
-        $uaReadSdk = new UaReadSdk();
+    public function batchUaReadAnalyse($startTime,$endTime,$productId = 0){
         $unionUserModel = (new N8UnionUserModel())
             ->select(DB::raw("n8_union_users.*"))
             ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
@@ -392,28 +414,11 @@ class N8UnionUserService extends BaseService
             ->where('e.ua','!=','');
         $lastId = 0;
 
-        $deviceData = new DeviceData();
         do{
             $list = $unionUserModel->where('id','>',$lastId)->limit(1000)->get();
             foreach ($list as $item){
                 $lastId = $item->id;
-
-                $deviceInfo = $uaReadSdk->setUa($item->extend->ua)->getInfo();
-
-                if($deviceInfo['brand'] == DeviceBrandEnum::OTHER && $deviceInfo['device_model'] != 'OTHER'){
-                    dd($lastId,$item->extend->ua,$deviceInfo);
-                }
-
-                $info = $deviceData->save([
-                    'name' => '',
-                    'brand' => $deviceInfo['brand'],
-                    'model' => $deviceInfo['device_model']
-                ]);
-                $item->device_id = $info->id;
-                $item->sys_version = $deviceInfo['sys_version'];
-                $item->save();
-
-                echo $item->id." : {$deviceInfo['brand']} : {$deviceInfo['device_model']} : {$deviceInfo['sys_version']} \n";
+                $this->uaReadAnalyse($item);
             }
         }while(!$list->isEmpty());
 

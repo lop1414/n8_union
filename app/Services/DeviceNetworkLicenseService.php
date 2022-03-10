@@ -67,7 +67,7 @@ class DeviceNetworkLicenseService
 
 
     /**
-     * @param int $yearDate 开始年份
+     * @param int $startYearDate 开始年份
      * @param $endYearDate
      * @return bool
      * @throws \App\Common\Tools\CustomException
@@ -101,32 +101,6 @@ class DeviceNetworkLicenseService
         return true;
     }
 
-    public function apiGetInfo($company,$startDate,$endDate){
-        $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
-        $param = array(
-            'equipmentModel' => '',
-            'applyOrg'       => $company,
-            'pageNo'         => 1,
-            'pageSize'       => 100,
-            'isphoto'        => 2
-        );
-        if(empty(!$startDate)){
-            $param['startDate'] = $startDate;
-            $param['endDate'] = $endDate;
-        }
-
-        $ret = file_get_contents($url .'?'. http_build_query($param));
-        $result = json_decode($ret, true);
-        if(!isset($result['code']) || $result['code'] != 200){
-            //无该条纪录
-            if($result['code'] == 500){
-                return ['records' => [],'total' => 0];
-            }
-            throw new \Exception('查询失败-'.$result['message'],$result['code']);
-        }
-
-        return $result['data'];
-    }
 
     /**
      * @param $company
@@ -182,6 +156,32 @@ class DeviceNetworkLicenseService
     }
 
 
+    public function apiGetInfo($company,$startDate,$endDate){
+        $url = 'https://jwxk.miit.gov.cn/dev-api-20/internetService/CertificateQuery';
+        $param = array(
+            'equipmentModel' => '',
+            'applyOrg'       => $company,
+            'pageNo'         => 1,
+            'pageSize'       => 100,
+            'isphoto'        => 2
+        );
+        if(empty(!$startDate)){
+            $param['startDate'] = $startDate;
+            $param['endDate'] = $endDate;
+        }
+
+        $ret = file_get_contents($url .'?'. http_build_query($param));
+        $result = json_decode($ret, true);
+        if(!isset($result['code']) || $result['code'] != 200){
+            //无该条纪录
+            if($result['code'] == 500){
+                return ['records' => [],'total' => 0];
+            }
+            throw new \Exception('查询失败-'.$result['message'],$result['code']);
+        }
+
+        return $result['data'];
+    }
 
 
     public function saveData($data){
@@ -197,7 +197,21 @@ class DeviceNetworkLicenseService
             ];
         }
         (new DeviceNetworkLicenseModel())->chunkInsertOrUpdate($arr);
+    }
 
+
+    /**
+     * @param $model
+     * @return mixed|string
+     * 获取品牌枚举
+     */
+    public function getBrand($model){
+        $info = (new DeviceNetworkLicenseModel())->where('model',$model)->first();
+        $company = empty($info) ? '' : $info->apply_org;
+
+        // 根据公司名称映射匹配枚举
+        $brandEnumMap = array_column($this->companies,'brand_enum','name');
+        return $brandEnumMap[$company] ?? '';
     }
 
 }
