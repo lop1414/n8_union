@@ -385,7 +385,7 @@ class N8UnionUserService extends BaseService
             ]);
         }
 
-        $user->device_id = $deviceInfo->id;
+        $user->device_id = $deviceInfo['id'];
         $user->sys_version = $uaReadInfo['sys_version'];
         $user->save();
 
