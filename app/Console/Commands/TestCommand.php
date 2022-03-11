@@ -53,7 +53,8 @@ class TestCommand extends BaseCommand
         $uaReadService = new UaReadService();
 
         do{
-            $list = $unionUserModel->where('id','>',$lastId)->limit(1000)->get();
+            $list = $unionUserModel->where('id','>',$lastId)->limit(5000)->get();
+            echo $lastId."\n";
             foreach ($list as $item){
                 $lastId = $item->id;
                 $uaReadInfo = $uaReadService->setUa($item->extend->ua)->getInfo();
