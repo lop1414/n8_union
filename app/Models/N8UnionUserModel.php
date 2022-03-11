@@ -42,7 +42,7 @@ class N8UnionUserModel extends UserActionBaseModel
         'last_match_time',
         'user_type',
         'sys_version',
-        'device_id',
+        'device_model',
         'created_at'
     ];
 

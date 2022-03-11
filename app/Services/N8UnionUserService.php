@@ -188,6 +188,12 @@ class N8UnionUserService extends BaseService
 
         $n8UserSum =  (new N8UnionUserModel())->where('n8_guid',$data['n8_guid'])->count();
         $userType = $n8UserSum > 0 ? N8UserTypeEnum::BACKFLOW : N8UserTypeEnum::NEW;
+
+        $uaReadInfo = [];
+        if(!empty($data['ua'])){
+            $uaReadInfo = (new UaReadService())->setUa($data['ua'])->getInfo();
+        }
+
         $unionUser = (new N8UnionUserModel())->create([
             'n8_guid'       => $data['n8_guid'],
             'product_id'    => $data['product_id'],
@@ -201,8 +207,8 @@ class N8UnionUserService extends BaseService
             'adv_alias'     => $channelExtend['adv_alias'],
             'matcher'       => $data['matcher'],
             'user_type'     => $userType,
-            'sys_version'   => '',
-            'device_id'     => 0,
+            'sys_version'   => $uaReadInfo['sys_version'] ?? '',
+            'device_model'  => $uaReadInfo['device_model'] ?? '',
             'created_at'    => date('Y-m-d H:i:s')
         ]);
 
@@ -364,66 +370,6 @@ class N8UnionUserService extends BaseService
         $agent = new Agent();
         $agent->setUserAgent($ua);
         return $agent->isiOS() ? PlatformEnum::IOS : PlatformEnum::ANDROID;
-    }
-
-
-    /**
-     * @param $user
-     * @throws CustomException
-     * ua 读取分析
-     */
-    public function uaReadAnalyse($user){
-        $deviceData = new DeviceData();
-        $uaReadInfo = (new UaReadService())->setUa($user->extend->ua)->getInfo();
-        $deviceInfo = $deviceData->setParams(['model' => $uaReadInfo['device_model']])->read();
-        if(empty($deviceInfo)){
-            $brand = (new DeviceNetworkLicenseService())->getBrand($uaReadInfo['device_model']);
-            $deviceInfo = $deviceData->save([
-                'name' => '',
-                'brand' => $brand,
-                'model' => $uaReadInfo['device_model'],
-                'has_network_license' => $brand ? 1 : null
-            ]);
-        }
-
-        $user->device_id = $deviceInfo['id'];
-        $user->sys_version = $uaReadInfo['sys_version'];
-        $user->save();
-
-//        echo $user->id." : {$deviceInfo['brand']} : {$uaReadInfo['device_model']} : {$uaReadInfo['sys_version']} \n";
-    }
-
-
-
-    /**
-     * @param $startTime
-     * @param $endTime
-     * @param int $productId
-     * @return bool
-     * @throws CustomException
-     *  批量 ua 读取分析
-     */
-    public function batchUaReadAnalyse($startTime,$endTime,$productId = 0){
-        $unionUserModel = (new N8UnionUserModel())
-            ->select(DB::raw("n8_union_users.*"))
-            ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
-            ->whereBetween('n8_union_users.created_time',[$startTime,$endTime])
-            ->when($productId,function ($query,$productId){
-                return $query->where('n8_union_users.product_id',$productId);
-            })
-            ->where('n8_union_users.device_id',0)
-            ->where('e.ua','!=','');
-        $lastId = 0;
-
-        do{
-            $list = $unionUserModel->where('id','>',$lastId)->limit(1000)->get();
-            foreach ($list as $item){
-                $lastId = $item->id;
-                $this->uaReadAnalyse($item);
-            }
-        }while(!$list->isEmpty());
-
-        return true;
     }
 
 }
