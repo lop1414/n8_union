@@ -2,10 +2,6 @@
 
 namespace App\Services;
 
-
-use App\Common\Enums\DeviceBrandEnum;
-use App\Models\DeviceNetworkLicenseModel;
-
 class UaReadService
 {
 
@@ -28,16 +24,6 @@ class UaReadService
      */
     protected $sysVersion;
 
-
-
-    /**
-     * @var
-     * 缓存有效期
-     */
-    protected $ttl = 86400;
-
-
-    protected  $brandEnumMap;
 
     public function getInfo(){
         $this->analyseDeviceInfo();
@@ -82,24 +68,21 @@ class UaReadService
         }
     }
 
+
+
     public function getUa(){
         return $this->ua;
     }
 
+
+
     public function setUa($agent){
         $this->ua = $agent;
 
-        // 清除设备型号
+        // 清除设备型号、系统版本 信息
         $this->deviceModel = '';
+        $this->sysVersion = '';
         return $this;
-    }
-
-    public function getBrand($model){
-        $info = (new DeviceNetworkLicenseModel)->where('model',$model)->first();
-        $company = empty($info) ? '' : $info->apply_org;
-
-        // 根据公司名称映射匹配枚举
-        return $this->brandEnumMap[$company] ?? '';
     }
 
 
