@@ -11,7 +11,6 @@ use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
-use App\Datas\DeviceData;
 use App\Datas\N8UnionUserData;
 use App\Datas\UserLoginActionData;
 use App\Datas\UserReadActionData;
@@ -135,9 +134,6 @@ class N8UnionUserService extends BaseService
             }
         }
 
-        if(!empty($updateData)){
-            $this->unionUserModelData->update(['id' => $uuid],$updateData);
-        }
 
         // 可修改扩展信息字段
         $unionUserExtendAllowChangeField = ['request_id','ip','ua'];
@@ -145,7 +141,18 @@ class N8UnionUserService extends BaseService
         foreach ($unionUserExtendAllowChangeField as $field){
             if(!empty($actionData[$field])){
                 $extendUpdateData[$field] = $actionData[$field];
+                if($field == 'ua'){
+                    $uaReadInfo = (new UaReadService())->setUa($actionData[$field])->getInfo();
+                    $updateData['sys_version'] = $uaReadInfo['sys_version'] ?? '';
+                    $updateData['device_model'] = $uaReadInfo['device_model'] ?? '';
+                }
             }
+        }
+
+
+
+        if(!empty($updateData)){
+            $this->unionUserModelData->update(['id' => $uuid],$updateData);
         }
 
         if(!empty($extendUpdateData)){
