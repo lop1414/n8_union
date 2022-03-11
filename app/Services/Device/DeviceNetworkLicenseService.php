@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Device;
 
 use App\Common\Enums\DeviceBrandEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ErrorLogService;
 use App\Models\DeviceNetworkLicenseModel;
 
-class DeviceNetworkLicenseService
+class DeviceNetworkLicenseService extends DeviceBaseService
 {
+
+    public $source = 'NETWORK_LICENSE';
+
 
     /**
      * @var string[]
@@ -124,6 +127,13 @@ class DeviceNetworkLicenseService
             'brand_enum' => DeviceBrandEnum::ASUS,
         ],
     );
+
+
+
+    public function __construct(){
+        parent::__construct();
+        $this->model = new DeviceNetworkLicenseModel();
+    }
 
 
     /**
@@ -256,7 +266,7 @@ class DeviceNetworkLicenseService
                 'license_no'     => $item['licenseNo']
             ];
         }
-        (new DeviceNetworkLicenseModel())->chunkInsertOrUpdate($arr);
+        $this->model->chunkInsertOrUpdate($arr);
     }
 
 
@@ -266,7 +276,7 @@ class DeviceNetworkLicenseService
      * 获取品牌枚举
      */
     public function getBrand($model){
-        $info = (new DeviceNetworkLicenseModel())->where('model',$model)->first();
+        $info = $this->model->where('model',$model)->first();
         $company = empty($info) ? '' : $info->apply_org;
 
         // 根据公司名称映射匹配枚举

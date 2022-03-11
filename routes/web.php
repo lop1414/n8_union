@@ -178,6 +178,19 @@ $router->group([
     });
 
 
+    // 设备品牌
+    $router->group(['prefix' => 'device_brand'], function () use ($router) {
+        $router->post('select', 'Admin\DeviceBrandController@select');
+        $router->post('update', 'Admin\DeviceBrandController@update');
+    });
+
+    // 设备名称
+    $router->group(['prefix' => 'device_name'], function () use ($router) {
+        $router->post('select', 'Admin\DeviceNameController@select');
+        $router->post('update', 'Admin\DeviceNameController@update');
+    });
+
+
     // 抽奖
     $router->group(['prefix' => 'lottery'], function () use ($router) {
         $router->post('select', 'Admin\LotteryController@select');

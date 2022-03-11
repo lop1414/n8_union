@@ -3,13 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Common\Controllers\Front\FrontController;
-use App\Common\Sdks\UaRead\UaReadSdk;
-use App\Common\Services\SystemApi\UnionApiService;
-use App\Models\ProductModel;
-use App\Sdks\Yw\YwSdk;
-use App\Services\DeviceNetworkLicenseService;
+use App\Services\Device\DeviceBrandService;
+use App\Services\Device\DeviceNameService;
 use Illuminate\Http\Request;
-use Jenssegers\Agent\Agent;
 
 class TestController extends FrontController
 {
@@ -29,6 +25,9 @@ class TestController extends FrontController
             return $this->forbidden();
         }
 
+
+       (new DeviceBrandService())->analyse();
+       (new DeviceNameService())->analyse();
     }
 
 
