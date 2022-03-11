@@ -56,14 +56,6 @@ class N8UnionUserModel extends UserActionBaseModel
 
 
 
-    /**
-     * 关联应用模型   多对一
-     */
-    public function device(){
-        return $this->belongsTo('App\Models\DeviceModel', 'id', 'device_id');
-    }
-
-
 
 
     /**
