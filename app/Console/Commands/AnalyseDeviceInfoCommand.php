@@ -44,7 +44,7 @@ class AnalyseDeviceInfoCommand extends BaseCommand
 
         $this->lockRun(function () use ($type,$startTime,$endTime){
             switch ($type){
-                case 'naem':
+                case 'name':
                     (new DeviceNameService())->analyse($startTime,$endTime);
                     break;
                 case 'brand':
