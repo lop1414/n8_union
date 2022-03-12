@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
-use App\Console\Commands\AnalyseDeviceInfoCommand;
 use App\Console\Commands\SyncDeviceNetworkLicenseCommand;
 use App\Console\Commands\UaReadAnalyseCommand;
 use App\Console\Commands\SaveUserActionCommand;
@@ -41,9 +40,6 @@ class Kernel extends ConsoleKernel
 
         // 同步设备入网许可信息
         SyncDeviceNetworkLicenseCommand::class,
-
-        // 设备分析
-        AnalyseDeviceInfoCommand::class
 
     ];
 
@@ -90,9 +86,6 @@ class Kernel extends ConsoleKernel
         //同步设备入网许可信息 每月1号执行
         $year = date('Y');
         $schedule->command("sync_device_network_license  --year='{$year}'")->cron('* * 1 * *');
-        //设备信息分析
-        $schedule->command("analyse_device_info  --type='name' --time='{$hourRange24}' ")->cron('0 * * * *');
-        $schedule->command("analyse_device_info  --type='brand' --time='{$hourRange24}' ")->cron('0 * * * *');
 
     }
 }
