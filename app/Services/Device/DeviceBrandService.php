@@ -8,13 +8,14 @@ use App\Models\DeviceBrandModel;
 class DeviceBrandService extends DeviceBaseService
 {
 
-    protected $deviceNetworkLicenseService;
-    protected $deviceCustomBrandService;
     /**
      * @var int
      * 版本号
      */
     private $version = 1;
+
+    protected $deviceNetworkLicenseService;
+    protected $deviceCustomBrandService;
 
     public function __construct(){
         parent::__construct();
