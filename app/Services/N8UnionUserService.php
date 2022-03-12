@@ -134,6 +134,10 @@ class N8UnionUserService extends BaseService
             }
         }
 
+        if(!empty($updateData)){
+            $this->unionUserModelData->update(['id' => $uuid],$updateData);
+        }
+
 
         // 可修改扩展信息字段
         $unionUserExtendAllowChangeField = ['request_id','ip','ua'];
@@ -141,19 +145,9 @@ class N8UnionUserService extends BaseService
         foreach ($unionUserExtendAllowChangeField as $field){
             if(!empty($actionData[$field])){
                 $extendUpdateData[$field] = $actionData[$field];
-                if($field == 'ua'){
-                    $uaReadInfo = (new UaReadService())->setUa($actionData[$field])->getInfo();
-                    $updateData['sys_version'] = $uaReadInfo['sys_version'] ?? '';
-                    $updateData['device_model'] = $uaReadInfo['device_model'] ?? '';
-                }
             }
         }
 
-
-
-        if(!empty($updateData)){
-            $this->unionUserModelData->update(['id' => $uuid],$updateData);
-        }
 
         if(!empty($extendUpdateData)){
             (new N8UnionUserExtendModel())->where('uuid',$uuid)->update($extendUpdateData);
@@ -196,11 +190,6 @@ class N8UnionUserService extends BaseService
         $n8UserSum =  (new N8UnionUserModel())->where('n8_guid',$data['n8_guid'])->count();
         $userType = $n8UserSum > 0 ? N8UserTypeEnum::BACKFLOW : N8UserTypeEnum::NEW;
 
-        $uaReadInfo = [];
-        if(!empty($data['ua'])){
-            $uaReadInfo = (new UaReadService())->setUa($data['ua'])->getInfo();
-        }
-
         $unionUser = (new N8UnionUserModel())->create([
             'n8_guid'       => $data['n8_guid'],
             'product_id'    => $data['product_id'],
@@ -214,8 +203,6 @@ class N8UnionUserService extends BaseService
             'adv_alias'     => $channelExtend['adv_alias'],
             'matcher'       => $data['matcher'],
             'user_type'     => $userType,
-            'sys_version'   => $uaReadInfo['sys_version'] ?? '',
-            'device_model'  => $uaReadInfo['device_model'] ?? '',
             'created_at'    => date('Y-m-d H:i:s')
         ]);
 

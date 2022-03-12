@@ -41,8 +41,6 @@ class N8UnionUserModel extends UserActionBaseModel
         'matcher',
         'last_match_time',
         'user_type',
-        'sys_version',
-        'device_model',
         'created_at'
     ];
 
@@ -54,22 +52,6 @@ class N8UnionUserModel extends UserActionBaseModel
         return $this->hasOne('App\Models\N8UnionUserExtendModel', 'uuid', 'id');
     }
 
-
-
-    /**
-     * 关联模型   多对一
-     */
-    public function device_brand(){
-        return $this->belongsTo('App\Models\DeviceBrandModel', 'model', 'device_model');
-    }
-
-
-    /**
-     * 关联模型   多对一
-     */
-    public function device_name(){
-        return $this->belongsTo('App\Models\DeviceNameModel', 'model', 'device_model');
-    }
 
 
 

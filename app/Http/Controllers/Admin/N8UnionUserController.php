@@ -69,8 +69,6 @@ class N8UnionUserController extends UserActionBaseController
         $item->book;
         $item->chapter;
         $item->force_chapter;
-        $item->device_brand;
-        $item->device_name;
         $item->admin_name = $this->adminMap[$item->admin_id]['name'];
 
     }
