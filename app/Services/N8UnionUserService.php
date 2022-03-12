@@ -19,7 +19,10 @@ use App\Enums\N8UserTypeEnum;
 use App\Enums\QueueEnums;
 use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
+use App\Models\N8UnionUserUaInfoModel;
 use App\Models\UserExtendModel;
+use App\Services\Ua\UaReadService;
+use App\Services\Ua\V1UaDeviceService;
 use Illuminate\Support\Facades\DB;
 use Jenssegers\Agent\Agent;
 
@@ -27,10 +30,12 @@ class N8UnionUserService extends BaseService
 {
 
     public $unionUserModelData;
+    public $unionUserUaInfoModel;
 
     public function __construct(){
         parent::__construct();
         $this->unionUserModelData = new N8UnionUserData();
+        $this->unionUserUaInfoModel = new N8UnionUserUaInfoModel();
     }
 
 
@@ -151,6 +156,9 @@ class N8UnionUserService extends BaseService
 
         if(!empty($extendUpdateData)){
             (new N8UnionUserExtendModel())->where('uuid',$uuid)->update($extendUpdateData);
+            if(!empty($extendUpdateData['ua'])){
+                $this->getUaInfo($uuid,$extendUpdateData['ua']);
+            }
         }
     }
 
@@ -234,6 +242,10 @@ class N8UnionUserService extends BaseService
         ]);
 
         $unionUser->extend;
+
+        if(!empty($data['ua'])){
+            $this->getUaInfo($unionUser['id'],$data['ua']);
+        }
 
         return $unionUser;
     }
@@ -364,6 +376,20 @@ class N8UnionUserService extends BaseService
         $agent = new Agent();
         $agent->setUserAgent($ua);
         return $agent->isiOS() ? PlatformEnum::IOS : PlatformEnum::ANDROID;
+    }
+
+
+    public function getUaInfo($uuid,$ua){
+        $uaReadInfo = (new UaReadService())->setUa($ua)->getInfo();
+        $uaDeviceInfo = (new V1UaDeviceService())->read($uaReadInfo['device_model']);
+        $unionUserUaInfo = $this->unionUserUaInfoModel->where('uuid',$uuid)->first();
+        if(empty($unionUserUaInfo)){
+            $unionUserUaInfo->uuid = $uuid;
+            $unionUserUaInfo->ua_device_id = $uaDeviceInfo['id'];
+            $unionUserUaInfo->sys_version = $uaReadInfo['sys_version'];
+            $unionUserUaInfo->save();
+        }
+        return $unionUserUaInfo;
     }
 
 }

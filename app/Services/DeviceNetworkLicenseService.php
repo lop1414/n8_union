@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Services\Device;
+namespace App\Services;
 
 use App\Common\Enums\DeviceBrandEnum;
 use App\Common\Helpers\Functions;
+use App\Common\Services\BaseService;
 use App\Common\Services\ErrorLogService;
 use App\Models\DeviceNetworkLicenseModel;
 
-class DeviceNetworkLicenseService extends DeviceBaseService
+class DeviceNetworkLicenseService extends BaseService
 {
 
-    public $source = 'NETWORK_LICENSE';
 
 
     /**
@@ -276,14 +276,11 @@ class DeviceNetworkLicenseService extends DeviceBaseService
 
 
     /**
-     * @param $model
+     * @param $company
      * @return mixed|string
      * 获取品牌枚举
      */
-    public function getBrand($model){
-        $info = $this->model->where('model',$model)->first();
-        $company = empty($info) ? '' : $info->apply_org;
-
+    public function getBrandByCompany($company){
         // 根据公司名称映射匹配枚举
         $brandEnumMap = array_column($this->companies,'brand_enum','name');
         return $brandEnumMap[$company] ?? '';

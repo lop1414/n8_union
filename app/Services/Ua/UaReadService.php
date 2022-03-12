@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Ua;
 
 class UaReadService
 {
@@ -23,6 +23,24 @@ class UaReadService
      * 系统版本
      */
     protected $sysVersion;
+
+
+
+
+    public function getUa(){
+        return $this->ua;
+    }
+
+
+
+    public function setUa($agent){
+        $this->ua = $agent;
+
+        // 清除设备型号、系统版本 信息
+        $this->deviceModel = '';
+        $this->sysVersion = '';
+        return $this;
+    }
 
 
     public function getInfo(){
@@ -70,20 +88,6 @@ class UaReadService
 
 
 
-    public function getUa(){
-        return $this->ua;
-    }
-
-
-
-    public function setUa($agent){
-        $this->ua = $agent;
-
-        // 清除设备型号、系统版本 信息
-        $this->deviceModel = '';
-        $this->sysVersion = '';
-        return $this;
-    }
 
 
 }
