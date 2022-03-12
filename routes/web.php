@@ -44,6 +44,11 @@ $router->group([
     'prefix' => 'admin',
     'middleware' => ['center_menu_auth', 'admin_request_log', 'access_control_allow_origin']
 ], function () use ($router) {
+    // 枚举
+    $router->group(['prefix' => 'enum'], function () use ($router) {
+        $router->post('get', 'Admin\EnumController@get');
+    });
+
     // 菜单
     $router->group(['prefix' => 'menu'], function () use ($router) {
         $router->post('create', 'Admin\MenuController@create');
