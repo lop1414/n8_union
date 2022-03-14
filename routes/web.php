@@ -183,17 +183,12 @@ $router->group([
     });
 
 
-    // 设备品牌
-    $router->group(['prefix' => 'device_brand'], function () use ($router) {
-        $router->post('select', 'Admin\DeviceBrandController@select');
-        $router->post('update', 'Admin\DeviceBrandController@update');
+    // ua设备信息
+    $router->group(['prefix' => 'ua_device'], function () use ($router) {
+        $router->post('select', 'Admin\UaDeviceController@select');
+        $router->post('update', 'Admin\UaDeviceController@update');
     });
 
-    // 设备名称
-    $router->group(['prefix' => 'device_name'], function () use ($router) {
-        $router->post('select', 'Admin\DeviceNameController@select');
-        $router->post('update', 'Admin\DeviceNameController@update');
-    });
 
 
     // 抽奖

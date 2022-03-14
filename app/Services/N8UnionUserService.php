@@ -21,6 +21,7 @@ use App\Models\N8UnionUserExtendModel;
 use App\Models\N8UnionUserModel;
 use App\Models\N8UnionUserUaInfoModel;
 use App\Models\UserExtendModel;
+use App\Services\Ua\UaDeviceService;
 use App\Services\Ua\UaReadService;
 use App\Services\Ua\V1UaDeviceService;
 use Illuminate\Support\Facades\DB;
@@ -383,8 +384,7 @@ class N8UnionUserService extends BaseService
         $unionUserUaInfo = $this->unionUserUaInfoModel->where('uuid',$uuid)->first();
         if(empty($unionUserUaInfo)){
             $uaReadInfo = (new UaReadService())->getInfo($ua);
-            $uaDeviceInfo = (new V1UaDeviceService())->read($uaReadInfo['device_model']);
-
+            $uaDeviceInfo = (new UaDeviceService())->read($uaReadInfo['device_model']);
             $unionUserUaInfo = (new N8UnionUserUaInfoModel());
             $unionUserUaInfo->uuid = $uuid;
             $unionUserUaInfo->ua_device_id = $uaDeviceInfo['id'];

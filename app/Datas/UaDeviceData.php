@@ -55,6 +55,8 @@ class UaDeviceData extends BaseData
         return $info;
     }
 
+
+
     public function createLog($info = [],$extend = []){
         $log = new UaDeviceLogModel();
         $log->ua_device_id = $info['id'];
@@ -65,6 +67,8 @@ class UaDeviceData extends BaseData
         $log->save();
         return $log;
     }
+
+
 
     public function update($where = [],$update = [],$logExtend = []){
         if(empty($update)){

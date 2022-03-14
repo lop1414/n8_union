@@ -26,17 +26,38 @@ class UaDeviceBaseService extends BaseService
         $info = $modelData->setParams(['model' => $deviceModel])->read();
 
         if(empty($info)){
-            $deviceInfo = $this->getDeviceInfo($deviceModel);
-
-            $data = [
-                'device_model' => $deviceModel,
-                'name'         => $deviceInfo['name'],
-                'brand'        => $deviceInfo['brand'],
-            ];
-            $logExtend = $deviceInfo['extend'];
-            $info = $modelData->create($data,$logExtend);
-
+            $info = $this->create($deviceModel);
         }
+        return $info;
+    }
+
+
+
+    public function create($deviceModel){
+        $deviceInfo = $this->getDeviceInfo($deviceModel);
+
+        $data = [
+            'device_model' => $deviceModel,
+            'name'         => $deviceInfo['name'],
+            'brand'        => $deviceInfo['brand'],
+        ];
+        $logExtend = $deviceInfo['extend'];
+        $info = (new UaDeviceData())->create($data,$logExtend);
+        return $info;
+    }
+
+
+
+    public function update($deviceModel){
+
+        $deviceInfo = $this->getDeviceInfo($deviceModel);
+
+        $data = [
+            'name'         => $deviceInfo['name'],
+            'brand'        => $deviceInfo['brand'],
+        ];
+        $logExtend = $deviceInfo['extend'];
+        $info = (new UaDeviceData())->update(['model' => $deviceModel],$data,$logExtend);
         return $info;
     }
 
@@ -56,6 +77,7 @@ class UaDeviceBaseService extends BaseService
         $info = (new UaDeviceCustomBrandModel())->where('model',$deviceModel)->first();
         return $info ? $info->toArray() : [];
     }
+
 
 
     public function getUaDeviceCustomName($deviceModel){
