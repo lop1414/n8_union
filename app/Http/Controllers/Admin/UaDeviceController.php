@@ -61,7 +61,7 @@ class UaDeviceController extends BaseController
         if($requestData['brand'] != $info->brand ){
             $customBrandInfo = (new UaDeviceCustomBrandModel())->where('model',$info->model)->first();
             if(empty($customBrandInfo)){
-                $customBrandInfo = new UaDeviceCustomNameModel();
+                $customBrandInfo = new UaDeviceCustomBrandModel();
                 $customBrandInfo->model = $info->model;
             }
             $customBrandInfo->brand = $requestData['brand'];
