@@ -12,19 +12,29 @@ class V1UaDeviceService extends UaDeviceBaseService
 
 
     public function getDeviceInfo($deviceModel){
-        $name  = $brand  = '';
-        $extend = [];
-        $customInfo = $this->getUaDeviceCustomInfo($deviceModel);
-        if(!empty($customInfo)){
-            $extend['ua_device_custom'] = $customInfo;
-            $name  = $customInfo['name'];
-            $brand = $customInfo['brand'];
+        $extend = ['version' => $this->version];
+
+        // 品牌
+        $brand  = '';
+        $customBrand = $this->getUaDeviceCustomBrand($deviceModel);
+        if(!empty($customBrand)){
+            $extend['ua_device_custom_brand'] = $customBrand;
+            $brand = $customBrand['brand'];
         }
 
         if(empty($brand)){
+            // 通过进网许可获取
             $deviceNetworkLicenseInfo = $this->getDeviceNetworkLicenseInfo($deviceModel);
             $extend['device_network_license'] = $deviceNetworkLicenseInfo;
-            $brand = $deviceNetworkLicenseInfo['brand'];
+            $brand = $deviceNetworkLicenseInfo['brand'] ?? '';
+        }
+
+        // 名称
+        $name  = '';
+        $customName = $this->getUaDeviceCustomName($deviceModel);
+        if(!empty($customName)){
+            $extend['ua_device_custom_name'] = $customName;
+            $name = $customName['name'];
         }
 
         return [

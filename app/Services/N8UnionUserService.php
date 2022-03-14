@@ -157,7 +157,7 @@ class N8UnionUserService extends BaseService
         if(!empty($extendUpdateData)){
             (new N8UnionUserExtendModel())->where('uuid',$uuid)->update($extendUpdateData);
             if(!empty($extendUpdateData['ua'])){
-                $this->getUaInfo($uuid,$extendUpdateData['ua']);
+                $this->readUaInfo($uuid,$extendUpdateData['ua']);
             }
         }
     }
@@ -244,7 +244,7 @@ class N8UnionUserService extends BaseService
         $unionUser->extend;
 
         if(!empty($data['ua'])){
-            $this->getUaInfo($unionUser['id'],$data['ua']);
+            $this->readUaInfo($unionUser['id'],$data['ua']);
         }
 
         return $unionUser;
@@ -379,16 +379,19 @@ class N8UnionUserService extends BaseService
     }
 
 
-    public function getUaInfo($uuid,$ua){
-        $uaReadInfo = (new UaReadService())->setUa($ua)->getInfo();
-        $uaDeviceInfo = (new V1UaDeviceService())->read($uaReadInfo['device_model']);
+    public function readUaInfo($uuid,$ua){
         $unionUserUaInfo = $this->unionUserUaInfoModel->where('uuid',$uuid)->first();
         if(empty($unionUserUaInfo)){
+            $uaReadInfo = (new UaReadService())->getInfo($ua);
+            $uaDeviceInfo = (new V1UaDeviceService())->read($uaReadInfo['device_model']);
+
+            $unionUserUaInfo = (new N8UnionUserUaInfoModel());
             $unionUserUaInfo->uuid = $uuid;
             $unionUserUaInfo->ua_device_id = $uaDeviceInfo['id'];
             $unionUserUaInfo->sys_version = $uaReadInfo['sys_version'];
             $unionUserUaInfo->save();
         }
+
         return $unionUserUaInfo;
     }
 

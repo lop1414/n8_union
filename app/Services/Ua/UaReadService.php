@@ -33,8 +33,8 @@ class UaReadService
 
 
 
-    public function setUa($agent){
-        $this->ua = $agent;
+    public function setUa($ua){
+        $this->ua = $ua;
 
         // 清除设备型号、系统版本 信息
         $this->deviceModel = '';
@@ -43,7 +43,10 @@ class UaReadService
     }
 
 
-    public function getInfo(){
+    public function getInfo($ua = ''){
+        if(!empty($ua)){
+            $this->setUa($ua);
+        }
         $this->analyseDeviceInfo();
         return [
             'device_model'  => $this->deviceModel,

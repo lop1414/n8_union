@@ -3,12 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
-use App\Common\Models\BaseModel;
 use App\Common\Services\ConsoleEchoService;
-use App\Models\DeviceModel;
 use App\Models\N8UnionUserModel;
-use App\Services\DeviceNetworkLicenseService;
-use App\Services\UaReadService;
+use App\Services\N8UnionUserService;
 use Illuminate\Support\Facades\DB;
 
 
@@ -43,25 +40,23 @@ class TestCommand extends BaseCommand
 
     public function handle(){
         $unionUserModel = (new N8UnionUserModel())
-            ->select(DB::raw("n8_union_users.*"))
+            ->select(DB::raw("n8_union_users.id,e.ua"))
             ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
-            ->where('n8_union_users.device_model','')
+            ->leftJoin('n8_union_user_ua_info AS a','n8_union_users.id','=','a.uuid')
+            ->whereNull('a.ua_device_id')
             ->where('e.ua','!=','');
 
         $lastId = 0;
 
-        $uaReadService = new UaReadService();
+        $service = new N8UnionUserService();
 
         do{
-            $list = $unionUserModel->where('id','>',$lastId)->limit(5000)->get();
-            echo $lastId."\n";
+            $list = $unionUserModel->where('id','>',$lastId)->limit(10000)->get();
             foreach ($list as $item){
                 $lastId = $item->id;
-                $uaReadInfo = $uaReadService->setUa($item->extend->ua)->getInfo();
-                $item->sys_version = $uaReadInfo['sys_version'] ?? '';
-                $item->device_model = $uaReadInfo['device_model'] ?? '';
-                $item->save();
+                $service->readUaInfo($item->id,$item->ua);
             }
+            echo $lastId."\n";
         }while(!$list->isEmpty());
 
     }
