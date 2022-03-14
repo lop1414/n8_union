@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\DeviceBrandEnum;
-use App\Datas\UaDeviceData;
 use App\Models\UaDeviceCustomBrandModel;
 use App\Models\UaDeviceCustomNameModel;
 use App\Models\UaDeviceModel;
