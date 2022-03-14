@@ -51,12 +51,12 @@ class TestCommand extends BaseCommand
         $service = new N8UnionUserService();
 
         do{
+            echo $lastId."\n";
             $list = $unionUserModel->where('id','>',$lastId)->limit(10000)->get();
             foreach ($list as $item){
                 $lastId = $item->id;
                 $service->readUaInfo($item->id,$item->ua);
             }
-            echo $lastId."\n";
         }while(!$list->isEmpty());
 
     }
