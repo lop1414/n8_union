@@ -4,9 +4,8 @@ namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
 use App\Common\Services\ConsoleEchoService;
-use App\Models\N8UnionUserModel;
-use App\Services\N8UnionUserService;
-use Illuminate\Support\Facades\DB;
+use App\Models\UaDeviceModel;
+use App\Services\Ua\UaDeviceService;
 
 
 class TestCommand extends BaseCommand
@@ -39,23 +38,18 @@ class TestCommand extends BaseCommand
 
 
     public function handle(){
-        $unionUserModel = (new N8UnionUserModel())
-            ->select(DB::raw("n8_union_users.id,e.ua"))
-            ->leftJoin('n8_union_user_extends AS e','n8_union_users.id','=','e.uuid')
-            ->leftJoin('n8_union_user_ua_info AS a','n8_union_users.id','=','a.uuid')
-            ->whereNull('a.ua_device_id')
-            ->where('e.ua','!=','');
+        $unionUserModel = (new UaDeviceModel());
 
         $lastId = 0;
 
-        $service = new N8UnionUserService();
+        $service = new UaDeviceService();
 
         do{
             echo $lastId."\n";
             $list = $unionUserModel->where('id','>',$lastId)->limit(10000)->get();
             foreach ($list as $item){
                 $lastId = $item->id;
-                $service->readUaInfo($item->id,$item->ua);
+                $service->update($item->model);
             }
         }while(!$list->isEmpty());
 
