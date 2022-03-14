@@ -22,6 +22,8 @@ class UaDeviceService extends BaseService
         $this->service = new V1UaDeviceService();
     }
 
+
+
     public function read($deviceModel = ''){
         if(!empty($deviceModel)){
             $this->setDeviceModel($deviceModel);
@@ -31,10 +33,14 @@ class UaDeviceService extends BaseService
         return $info;
     }
 
+
+
     public function setDeviceModel($deviceModel){
         $this->deviceModel = $deviceModel;
         return $this;
     }
+
+
 
     public function update($deviceModel = ''){
         if(!empty($deviceModel)){
