@@ -35,10 +35,8 @@ class UaDeviceController extends BaseController
 
         unset($requestData['model']);
         $this->curdService->setRequestData($requestData);
-        $this->curdService->addField('name')->addValidRule('required');
-        $this->curdService->addField('brand')
-            ->addValidEnum(DeviceBrandEnum::class)
-            ->addValidRule('required');
+        $this->curdService->addField('name');
+        $this->curdService->addField('brand')->addValidEnum(DeviceBrandEnum::class);
 
 
         $info = $this->curdService->read();
@@ -46,7 +44,7 @@ class UaDeviceController extends BaseController
         $hasChange = false;
 
         //名称
-        if($requestData['name'] != $info->name ){
+        if(!empty($requestData['name']) && $requestData['name'] != $info->name ){
             $customNameInfo = (new UaDeviceCustomNameModel())->where('model',$info->model)->first();
             if(empty($customNameInfo)){
                 $customNameInfo = new UaDeviceCustomNameModel();
@@ -58,7 +56,7 @@ class UaDeviceController extends BaseController
         }
 
         // 品牌
-        if($requestData['brand'] != $info->brand ){
+        if(!empty($requestData['brand']) && $requestData['brand'] != $info->brand ){
             $customBrandInfo = (new UaDeviceCustomBrandModel())->where('model',$info->model)->first();
             if(empty($customBrandInfo)){
                 $customBrandInfo = new UaDeviceCustomBrandModel();
