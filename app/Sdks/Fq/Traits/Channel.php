@@ -9,7 +9,7 @@ trait Channel
 
 
 
-    public function getChannelList($startTime,$endTime,$offset = 0, $limit = 1000){
+    public function getChannelList($startTime,$endTime,$offset = 0, $cpId = null,$limit = 1000){
         $uri = 'novelsale/openapi/promotion/list/v1';
         $param = [
             'begin' => strtotime($startTime),

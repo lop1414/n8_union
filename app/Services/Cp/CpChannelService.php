@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Services\Cp;
+
+
+use App\Datas\ChannelData;
+use App\Services\Cp\Channel\BmKyyChannelService;
+use App\Services\Cp\Channel\FqKyyChannelService;
+use App\Services\Cp\Channel\QyH5ChannelService;
+use App\Services\Cp\Channel\TwKyyChannelService;
+use App\Services\Cp\Channel\YwH5ChannelService;
+use App\Services\Cp\Channel\YwKyyChannelService;
+use App\Services\ProductService;
+use App\Services\Cp\Channel\CpChannelInterface;
+
+class CpChannelService
+{
+
+    private $param;
+
+    private $service;
+
+    private $modelData;
+
+
+    public function __construct(CpChannelInterface $service)
+    {
+        $this->service = $service;
+        $this->modelData = new ChannelData();
+    }
+
+
+    /**
+     * @return string[]
+     * 获取书城渠道服务列表
+     */
+    static public function getServices(): array
+    {
+        return [
+            YwKyyChannelService::class,
+            YwH5ChannelService::class,
+            BmKyyChannelService::class,
+            FqKyyChannelService::class,
+            QyH5ChannelService::class,
+            TwKyyChannelService::class,
+        ];
+    }
+
+    public function __call($name, $arguments)
+    {
+        return $this->service->$name(...$arguments);
+    }
+
+    public function sync()
+    {
+        $where = [
+            'product_ids' => $this->getParam('product_ids'),
+            'cp_type'   => $this->service->getCpType(),
+            'type'      => $this->service->getType(),
+        ];
+
+        $productList = ProductService::get($where);
+
+        $startDate = $this->getParam('start_date');
+        $endDate = $this->getParam('end_date');
+        $cpId = $this->getParam('cp_id');
+
+        foreach ($productList as $product){
+            $date = $startDate;
+            do{
+                $data = $this->service->get($product,$date,$cpId);
+
+                if(!empty($data)){
+                    foreach ($data as $item){
+                        $this->modelData->save($item);
+                    }
+                }
+                $date = date('Y-m-d', strtotime('+1 day',strtotime($date)));
+            }while($date <= $endDate);
+        }
+    }
+
+    public function getParam($key)
+    {
+        if(empty($this->param[$key])){
+            return null;
+        }
+        return $this->param[$key];
+    }
+
+    public function setParam($key,$data)
+    {
+        $this->param[$key] = $data;
+    }
+
+}

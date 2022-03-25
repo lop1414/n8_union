@@ -8,7 +8,7 @@ trait Channel
 
 
 
-    public function getChannelList($startTime,$endTime,$page = 1, $recycle = 1,$type = 2){
+    public function getChannelList($startTime,$endTime,$page = 1,$id = null,$recycle = 1,$type = 2){
         $uri = 'cpapi/wxNovel/GetQuickSpreadList';
         $param = [
             'start_time' => strtotime($startTime),
@@ -18,26 +18,19 @@ trait Channel
             'page'  => $page
         ];
 
-        return $this->apiRequest($uri,$param);
-    }
-
-
-    public function getChannelById($startTime,$endTime,$id = 1, $recycle = 1,$type = 2){
-        $uri = 'cpapi/wxNovel/GetQuickSpreadList';
-        $param = [
-            'channel_id'  => $id,
-            'start_time' => strtotime($startTime),
-            'end_time' => strtotime($endTime),
-            'recycle'     => $recycle,
-            'type'        => $type,
-        ];
+        if($id){
+            $param['channel_id'] = $id;
+            $param['page'] = 1;
+        }
 
         return $this->apiRequest($uri,$param);
     }
 
 
 
-    public function getH5ChannelList($startTime,$endTime,$page = 1, $recycle = 1,$type = 2){
+
+
+    public function getH5ChannelList($startTime,$endTime,$page = 1, $id = null,$recycle = 1,$type = 2){
         $uri = 'cpapi/wxNovel/GetwxSpreadList';
         $param = [
             'start_time' => strtotime($startTime),
@@ -47,20 +40,12 @@ trait Channel
             'page'  => $page
         ];
 
-        return $this->apiRequest($uri,$param);
-    }
-
-
-    public function getH5ChannelById($startTime,$endTime,$id = 1, $recycle = 1,$type = 2){
-        $uri = 'cpapi/wxNovel/GetwxSpreadList';
-        $param = [
-            'channel_id'  => $id,
-            'start_time' => strtotime($startTime),
-            'end_time' => strtotime($endTime),
-            'recycle'     => $recycle,
-            'type'        => $type,
-        ];
+        if($id){
+            $param['channel_id'] = $id;
+            $param['page'] = 1;
+        }
 
         return $this->apiRequest($uri,$param);
     }
+
 }

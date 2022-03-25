@@ -8,7 +8,7 @@ use App\Common\Enums\StatusEnum;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
 use App\Models\CpAccountModel;
-use App\Services\Cp\CpProviderService;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 class CpAccountController extends BaseController
@@ -91,11 +91,10 @@ class CpAccountController extends BaseController
         // 查找
         $item = $this->curdService->read();
 
-        $service = CpProviderService::readCpProductService($item->cp_type);
-        if(!is_null($service)){
-            $service->setParam('cp_account',$item);
-            $service->syncWithHook();
-        }
+        (new ProductService())->sync([
+            'cp_type'    => $item->cp_type,
+        ]);
+
 
         return $this->success();
 

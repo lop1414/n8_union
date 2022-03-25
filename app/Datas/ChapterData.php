@@ -29,7 +29,8 @@ class ChapterData extends BaseData
      * 唯一键数组
      */
     protected $uniqueKeys = [
-        ['book_id','cp_chapter_id']
+        ['book_id','cp_chapter_id'],
+        ['book_id','seq']
     ];
 
 

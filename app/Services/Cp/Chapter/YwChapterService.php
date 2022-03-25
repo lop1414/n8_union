@@ -2,42 +2,50 @@
 
 namespace App\Services\Cp\Chapter;
 
-
 use App\Common\Enums\CpTypeEnums;
-use App\Common\Tools\CustomException;
+use App\Models\ProductModel;
 use App\Sdks\Yw\YwSdk;
+use App\Services\BookService;
+use App\Services\ChapterService;
 
-class YwChapterService extends AbstractCpChapterService
+class YwChapterService
 {
-    protected $cpType = CpTypeEnums::YW;
+    protected $bookService;
 
-    /**
-     * @return array
-     * @throws CustomException
-     */
-    public function sync(){
-        $cpBookId = $this->getParam('cp_book_id');
-        $cpChapterId = $this->getParam('cp_chapter_id');
-        $this->checkProduct();
-        $sdk = new YwSdk($this->product['cp_product_alias'],$this->product['cp_account']['account'],$this->product['cp_account']['cp_secret']);
+    protected $chapterService;
 
-        $list = $sdk->getChapterList($cpBookId);
-        $list = $list['chapter_list'] ?? [];
-        $info = [];
+
+    public function __construct()
+    {
+        $this->bookService = new BookService();
+        $this->chapterService = new ChapterService();
+    }
+
+
+
+    public function getCpType(): string
+    {
+        return CpTypeEnums::YW;
+    }
+
+
+
+    public function sync(ProductModel $product,int $bookId)
+    {
+        $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
+
+        $bookInfo = $this->bookService->read($bookId);
+
+        $res = $sdk->getChapterList($bookInfo['cp_book_id']);
+        $list = $res['chapter_list'] ?? [];
 
         foreach ($list as $chapter){
-            $item = $this->chapterModelData->save([
-                'book_id'       => $this->book['id'],
+            $this->chapterService->save([
+                'book_id'       => $bookId,
                 'cp_chapter_id' => $chapter['ccid'],
                 'name'          => $chapter['chapter_title'],
                 'seq'           => $chapter['chapter_seq']
             ]);
-            if($cpChapterId && $cpChapterId == $chapter['ccid']){
-                $info = $item;
-            }
         }
-        return $info;
     }
-
-
 }

@@ -7,10 +7,10 @@ trait Chapter
 {
 
 
-    public function getChapterList($cp_book_id){
+    public function getChapterList($cpBookId){
         $uri = 'cpapi/wxNovel/getFreeChapterListByCbid';
         $param = [
-            'cbid'  => $cp_book_id
+            'cbid'  => $cpBookId
         ];
         return $this->apiRequest($uri,$param);
     }

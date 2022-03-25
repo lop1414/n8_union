@@ -3,36 +3,29 @@
 namespace App\Services\Cp\Book;
 
 
-use App\Common\Enums\CpTypeEnums;
-use App\Common\Tools\CustomException;
+use App\Models\ProductModel;
 use App\Sdks\Yw\YwSdk;
 
 
-class YwBookService extends AbstractCpBookService
+class YwBookService
 {
-    protected $cpType = CpTypeEnums::YW;
 
 
-    /**
-     * @return array
-     * @throws CustomException
-     */
-    public function sync(){
 
-        $cpBookId = $this->getParam('cp_book_id');
-        $this->checkProduct();
-        $ywSdk = new YwSdk($this->product['cp_product_alias'],$this->product['cp_account']['account'],$this->product['cp_account']['cp_secret']);
-        $info = $ywSdk->getBookInfo($cpBookId);
+    public function read(ProductModel $product,string $cpId): array
+    {
+        $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
 
-        return $this->bookModelData->save([
-            'cp_type'       => $this->product['cp_type'],
-            'cp_book_id'    => $info['cbid'],
-            'name'          => $info['title'],
-            'author_name'   => $info['author_name'],
-            'all_words'     => $info['all_words'],
-            'update_time'   => $info['update_time']
-        ]);
+        $data = $sdk->getBookInfo($cpId);
+        $info = [
+            'cp_type'       => $product['cp_type'],
+            'cp_book_id'    => $data['cbid'],
+            'name'          => $data['title'],
+            'author_name'   => $data['author_name'],
+            'all_words'     => $data['all_words'],
+            'update_time'   => $data['update_time']
+        ];
+
+        return $info;
     }
-
-
 }

@@ -2,10 +2,15 @@
 
 namespace App\Services;
 
+use App\Common\Enums\CpTypeEnums;
+use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
+use App\Services\Cp\Channel\CpChannelInterface;
+use App\Services\Cp\CpChannelService;
+use Illuminate\Container\Container;
 
 class ChannelService extends BaseService
 {
@@ -62,5 +67,39 @@ class ChannelService extends BaseService
             ]);
         }
         return $channel;
+    }
+
+
+    public function sync($param = []){
+        $cpTypeParam = $param['cp_type'] ?? '';
+        if(!empty($cpTypeParam)){
+            Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
+        }
+
+        $container = Container::getInstance();
+
+        $services = CpChannelService::getServices();
+        foreach ($services as $service){
+
+            $container->bind(CpChannelInterface::class,$service);
+            $cpChannelService = $container->make(CpChannelService::class);
+
+            $cpType = $cpChannelService->getCpType();
+
+            if(empty($cpTypeParam) || $cpTypeParam == $cpType){
+                $cpChannelService->setParam('start_date',$param['start_date']);
+                $cpChannelService->setParam('end_date',$param['end_date']);
+
+                if(!empty($param['product_ids'])){
+                    $cpChannelService->setParam('product_ids',$param['product_ids']);
+                }
+
+                if(!empty($param['cp_channel_id'])){
+                    $cpChannelService->setParam('cp_id',$param['cp_channel_id']);
+                }
+
+                $cpChannelService->sync();
+            }
+        }
     }
 }

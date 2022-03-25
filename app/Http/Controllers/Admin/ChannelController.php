@@ -13,7 +13,7 @@ use App\Common\Helpers\Platform;
 use App\Datas\ChannelData;
 use App\Models\ChannelModel;
 use App\Models\ProductModel;
-use App\Services\Cp\CpProviderService;
+use App\Services\ChannelService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,6 +66,8 @@ class ChannelController extends BaseController
             if(!empty($req['admin_id'])){
                 $builder->where('e.admin_id',$req['admin_id']);
             }
+
+
 
             if(!empty($req['status'])){
                 $builder->where('e.status',$req['status']);
@@ -248,24 +250,20 @@ class ChannelController extends BaseController
 
 
 
-
     public function sync(Request $request){
         $req = $request->all();
         $this->validRule($req,[
             'product_id'    =>  'required',
         ]);
 
-        $productInfo = ProductService::read($req['product_id']);
-        $service = CpProviderService::readCpChannelService($productInfo['cp_type']);
+        $product = ProductService::read($req['product_id']);
 
-        if(is_null($service)){
-            return $this->fail('FAIL','该产品暂无此功能');
-        }
-        $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
-        $service->setParam('end_date',date('Y-m-d'));
-        $service->setParam('product_id',$req['product_id']);
-        $service->setParam('channel_ids',$req['channel_ids'] ?? []);
-        $service->syncWithHook();
+        (new ChannelService())->sync([
+            'start_date' => date('Y-m-d',strtotime('-5 day')),
+            'end_date'   => date('Y-m-d'),
+            'product_id' => $req['product_id'],
+            'cp_type'    => $product['cp_type']
+        ]);
 
         return $this->success();
     }
@@ -277,15 +275,15 @@ class ChannelController extends BaseController
             'id'    =>  'required',
         ]);
         $channelInfo = $this->model->where('id',$req['id'])->first();
-        $service = CpProviderService::readCpChannelService($channelInfo->product->cp_type);
-        if(is_null($service)){
-            return $this->fail('FAIL','该产品暂无此功能');
-        }
-        $service->setParam('start_date',date('Y-m-d',strtotime('-5 day')));
-        $service->setParam('end_date',date('Y-m-d'));
-        $service->setParam('product_id',$channelInfo->product->id);
-        $service->setParam('channel_ids',[$req['id']]);
-        $service->syncWithHook();
+
+        (new ChannelService())->sync([
+            'start_date' => date('Y-m-d',strtotime('-5 day')),
+            'end_date'   => date('Y-m-d'),
+            'product_id' => $channelInfo->product->id,
+            'cp_type'    => $channelInfo->product->cp_type,
+            'cp_channel_id' => $channelInfo->cp_channel_id
+        ]);
+
         return $this->success();
     }
 

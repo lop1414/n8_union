@@ -3,10 +3,10 @@
 namespace App\Services\SaveUserAction;
 
 
-use App\Common\Tools\CustomException;
 use App\Enums\QueueEnums;
 use App\Models\UserReadActionModel;
-use App\Services\Cp\CpProviderService;
+use App\Services\BookService;
+use App\Services\ChapterService;
 use App\Services\N8UnionUserService;
 use App\Services\UserBookReadService;
 
@@ -21,6 +21,10 @@ class SaveReadActionService extends SaveUserActionService
 
     protected $userBookReadService;
 
+    protected $bookService;
+
+    protected $charterService;
+
 
 
     public function __construct(){
@@ -29,6 +33,9 @@ class SaveReadActionService extends SaveUserActionService
         $this->setModel($model);
         $this->unionUserService = new N8UnionUserService();
         $this->userBookReadService = new UserBookReadService();
+
+        $this->bookService = new BookService();
+        $this->charterService = new ChapterService();
     }
 
 
@@ -37,20 +44,12 @@ class SaveReadActionService extends SaveUserActionService
 
         $unionUser = $this->unionUserService->read($user['n8_guid'],$user['channel_id']);
 
-        $cpBookService = CpProviderService::readCpBookService($data['cp_type']);
-        $cpChapterService = CpProviderService::readCpChapterService($data['cp_type']);
-        if(is_null($cpBookService) || is_null($cpChapterService)){
-            throw new CustomException([
-                'code'    => 'NOT_SERVICE',
-                'message' => '该书城没有实现BookService 或 ChapterServices',
-                'log'     => true,
-                'data'    => $data
-            ]);
-        }
-
-        $book = $cpBookService->readSave($data['cp_book_id'],$data['cp_book_name']);
-        $chapter = $cpChapterService->setBook($book)->readSave($data['cp_chapter_id'],$data['cp_chapter_name'],$data['cp_chapter_index']);
-
+        $book = $this->bookService->readSave([
+            'cp_book_id' => $data['cp_book_id'],
+            'name'       => $data['cp_book_name'],
+            'cp_type'    => $data['cp_type']
+        ]);
+        $chapter = $this->charterService->readSave($book['id'],$data['cp_chapter_id'],$data['cp_chapter_name'],$data['cp_chapter_index']);
 
         $createData = [
             'uuid' => $unionUser['id'],

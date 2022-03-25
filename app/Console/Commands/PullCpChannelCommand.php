@@ -4,9 +4,8 @@ namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
 use App\Common\Enums\CpTypeEnums;
-use App\Common\Enums\ProductTypeEnums;
 use App\Common\Helpers\Functions;
-use App\Services\Cp\CpProviderService;
+use App\Services\ChannelService;
 
 class PullCpChannelCommand extends BaseCommand
 {
@@ -36,31 +35,22 @@ class PullCpChannelCommand extends BaseCommand
 
     public function handle(){
 
-        $cpTypeParam = $this->option('cp_type');
-        if(!empty($cpTypeParam)){
-            Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
-        }
-
-        list($startDate,$endDate) = Functions::getDateRange($this->option('date'));
-
-
         $expire = env('APP_DEBUG') ? 1 : 60 * 60;
 
-        $this->lockRun(function () use ($cpTypeParam,$startDate,$endDate){
-            $services = CpProviderService::getCpChannelServices();
-            foreach ($services as $service){
-                $cpType = $service->getCpType();
-                if(empty($cpTypeParam) || $cpTypeParam == $cpType){
-                    echo "{$cpType}\n";
-                    $service->setParam('start_date',$startDate);
-                    $service->setParam('end_date',$endDate);
-                    // 阅文只同步快应用
-                    if($cpType == CpTypeEnums::YW){
-                        $service->setParam('product_type',ProductTypeEnums::KYY);
-                    }
-                    $service->syncWithHook();
-                }
+        $this->lockRun(function (){
+
+            $param = [];
+
+            $cpTypeParam = $this->option('cp_type');
+            if(!empty($cpTypeParam)){
+                Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
+                $param['cp_type'] = $cpTypeParam;
             }
+
+            list($param['start_date'],$param['end_date']) = Functions::getDateRange($this->option('date'));
+
+            (new ChannelService())->sync($param);
+
         },'pull_channel',$expire,['log' => true]);
 
     }
