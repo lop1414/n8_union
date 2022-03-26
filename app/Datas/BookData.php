@@ -59,9 +59,9 @@ class BookData extends BaseData
 
         return $this->model->updateOrCreate($where, [
                 'name'          => $data['name'],
-                'author_name'   => $data['author_name'],
-                'all_words'     => $data['all_words'],
-                'update_time'   => $data['update_time']
+                'author_name'   => $data['author_name'] ?? '',
+                'all_words'     => $data['all_words'] ?? 0,
+                'update_time'   => $data['update_time'] ?? null
             ]
         );
     }
