@@ -116,8 +116,13 @@ class ChannelController extends BaseController
 
             $map = $this->getAdminUserMap();
 
-            $advFeedBack = Advs::getFeedbackUrlMap();
-            $advPageFeedBack = Advs::getPageFeedbackUrlMap();
+            $feedbackUrlParam = [];
+            if($this->isSupport()){
+                $feedbackUrlParam['support_admin_id'] = $this->adminUser['admin_user']['id'];
+            }
+
+            $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
+            $advPageFeedBack = Advs::getPageFeedbackUrlMap($feedbackUrlParam);
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->product;
