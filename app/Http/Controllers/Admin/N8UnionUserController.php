@@ -48,12 +48,15 @@ class N8UnionUserController extends UserActionBaseController
 
                 if($isSelf){
                     $adminId = $this->adminUser['admin_user']['id'];
-                }elseif(!$this->isDataAuth()) {
-                    $builder->where('admin_id', $this->getPermissionAdminIds());
                 }
 
                 if(!empty($adminId)){
                     $builder->where('admin_id',$adminId);
+                }
+
+                if(!$this->isAdmin()){
+                    $adminIds = $this->isSupport() ? $this->getGroupAdminIds() : $this->getPermissionAdminIds();
+                    $builder->whereIn('e.admin_id',$adminIds);
                 }
             });
         });

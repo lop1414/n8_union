@@ -36,6 +36,16 @@ class BaseController extends AdminController
 
 
     /**
+     * @return mixed
+     * 获取组内管理员id
+     */
+    public function getGroupAdminIds(){
+        return $this->adminUser['group_admin_ids'];
+    }
+
+
+
+    /**
      * 有数据权限
      * @return bool
      */
@@ -45,12 +55,37 @@ class BaseController extends AdminController
         return false;
     }
 
+
+
+    /**
+     * 是否为管理员
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        if($this->adminUser['is_admin']) return true;
+        return false;
+    }
+
+
+
+
     /**
      * @return bool
      * 是否为书城人员
      */
     public function isCp(){
         if($this->adminUser['is_cp']) return true;
+        return false;
+    }
+
+    /**
+     * @return bool
+     * 是否为助理
+     */
+    public function isSupport(): bool
+    {
+        if($this->adminUser['admin_user']['is_support']) return true;
         return false;
     }
 
