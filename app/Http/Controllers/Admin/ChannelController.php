@@ -287,8 +287,8 @@ class ChannelController extends BaseController
         (new ChannelService())->sync([
             'start_date' => $date,
             'end_date'   => $date,
-            'product_id' => $channelInfo->product->id,
-            'cp_type'    => $channelInfo->product->cp_type,
+            'product_ids'   => array($channelInfo->product->id),
+            'cp_type'       => $channelInfo->product->cp_type,
             'cp_channel_id' => $channelInfo->cp_channel_id
         ]);
 
