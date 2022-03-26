@@ -69,7 +69,7 @@ class UserActionBaseController extends BaseController
                 }
 
                 if(!$this->isAdmin()){
-                    $adminIds = $this->isSupport() ? $this->getGroupAdminIds() : $this->getPermissionAdminIds();
+                    $adminIds = $this->isSupport() ? $this->getGroupAdminIds() : [$this->adminUser['admin_user']['id']];
                     $unionWhere .= ' AND admin_id IN (' . implode(',',$adminIds) .')';
                 }
 

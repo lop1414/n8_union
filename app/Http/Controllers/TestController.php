@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Common\Controllers\Front\FrontController;
-use App\Services\Device\DeviceBrandService;
-use App\Services\Device\DeviceNameService;
+use App\Models\ProductModel;
+use App\Sdks\Yw\YwSdk;
 use Illuminate\Http\Request;
 
 class TestController extends FrontController
@@ -26,8 +26,10 @@ class TestController extends FrontController
         }
 
 
-       (new DeviceBrandService())->analyse();
-       (new DeviceNameService())->analyse();
+        $product = (new ProductModel())->find(79);
+        $ywSdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
+        $info = $ywSdk->getBookInfo(20294462201079606);
+        dd($info);
     }
 
 
