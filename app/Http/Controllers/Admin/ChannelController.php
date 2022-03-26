@@ -272,7 +272,7 @@ class ChannelController extends BaseController
         (new ChannelService())->sync([
             'start_date' => date('Y-m-d',strtotime('-1 day')),
             'end_date'   => date('Y-m-d'),
-            'product_id' => $req['product_id'],
+            'product_ids'=> array($req['product_id']),
             'cp_type'    => $product['cp_type']
         ]);
 
