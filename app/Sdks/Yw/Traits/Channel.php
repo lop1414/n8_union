@@ -20,7 +20,7 @@ trait Channel
 
         if($id){
             $param['channel_id'] = $id;
-            $param['page'] = 1;
+            unset($param['page'],$param['start_time'],$param['end_time']);
         }
 
         return $this->apiRequest($uri,$param);

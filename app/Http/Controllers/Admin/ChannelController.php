@@ -252,6 +252,17 @@ class ChannelController extends BaseController
 
     public function sync(Request $request){
         $req = $request->all();
+
+        //根据id更新
+        $channelIds = $req['channel_ids'];
+        if(!empty($channelIds)){
+            foreach ($channelIds as $channelId){
+                $this->renew($channelId);
+            }
+            return $this->success();
+        }
+
+
         $this->validRule($req,[
             'product_id'    =>  'required',
         ]);
@@ -259,7 +270,7 @@ class ChannelController extends BaseController
         $product = ProductService::read($req['product_id']);
 
         (new ChannelService())->sync([
-            'start_date' => date('Y-m-d',strtotime('-5 day')),
+            'start_date' => date('Y-m-d',strtotime('-1 day')),
             'end_date'   => date('Y-m-d'),
             'product_id' => $req['product_id'],
             'cp_type'    => $product['cp_type']
@@ -269,16 +280,13 @@ class ChannelController extends BaseController
     }
 
 
-    public function renew(Request $request){
-        $req = $request->all();
-        $this->validRule($req,[
-            'id'    =>  'required',
-        ]);
-        $channelInfo = $this->model->where('id',$req['id'])->first();
+    protected function renew($channelId){
+        $channelInfo = $this->model->where('id',$channelId)->first();
+        $date = date('Y-m-d',strtotime($channelInfo->create_time));
 
         (new ChannelService())->sync([
-            'start_date' => date('Y-m-d',strtotime('-5 day')),
-            'end_date'   => date('Y-m-d'),
+            'start_date' => $date,
+            'end_date'   => $date,
             'product_id' => $channelInfo->product->id,
             'cp_type'    => $channelInfo->product->cp_type,
             'cp_channel_id' => $channelInfo->cp_channel_id
