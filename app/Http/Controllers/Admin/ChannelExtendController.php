@@ -181,16 +181,4 @@ class ChannelExtendController extends BaseController
         return $this->success($ret);
     }
 
-
-
-    /**
-     * 有数据权限
-     * @return bool
-     */
-    public function isAdmin(){
-        if($this->adminUser['is_admin']) return true;
-
-        return false;
-    }
-
 }
