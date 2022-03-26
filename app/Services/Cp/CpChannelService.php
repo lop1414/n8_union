@@ -46,10 +46,27 @@ class CpChannelService
         ];
     }
 
+
+    public function getParam($key)
+    {
+        if(empty($this->param[$key])){
+            return null;
+        }
+        return $this->param[$key];
+    }
+
+
+    public function setParam($key,$data)
+    {
+        $this->param[$key] = $data;
+    }
+
+
     public function __call($name, $arguments)
     {
         return $this->service->$name(...$arguments);
     }
+
 
     public function sync()
     {
@@ -78,19 +95,6 @@ class CpChannelService
                 $date = date('Y-m-d', strtotime('+1 day',strtotime($date)));
             }while($date <= $endDate);
         }
-    }
-
-    public function getParam($key)
-    {
-        if(empty($this->param[$key])){
-            return null;
-        }
-        return $this->param[$key];
-    }
-
-    public function setParam($key,$data)
-    {
-        $this->param[$key] = $data;
     }
 
 }
