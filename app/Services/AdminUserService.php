@@ -52,7 +52,7 @@ class AdminUserService extends BaseService
      * @return array
      * 获取有权限的管理员ID
      */
-    public function getHasAuthAdminIds(): array
+    public function getHasPermissionAdminIds(): array
     {
         $adminIds = array(
             $this->adminUser['admin_user']['id']
@@ -61,10 +61,10 @@ class AdminUserService extends BaseService
         //市场助手
         if($this->isSupport()){
             $adminIds = array_merge($adminIds,$this->getGroupAdminIds());
+        }else{
+            //下属
+            $adminIds = array_merge($adminIds,$this->getChildrenAdminIds());
         }
-
-        //已授权
-//        $adminIds = array_merge($adminIds,$this->getPermissionAdminIds());
 
         return $adminIds;
     }

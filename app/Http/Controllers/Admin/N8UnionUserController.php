@@ -55,7 +55,7 @@ class N8UnionUserController extends UserActionBaseController
                 }
 
                 if(!$this->adminUserService->isAdmin()){
-                    $adminIds = $this->adminUserService->getHasAuthAdminIds();
+                    $adminIds = $this->adminUserService->getHasPermissionAdminIds();
                     $builder->whereIn('admin_id',$adminIds);
                 }
             });

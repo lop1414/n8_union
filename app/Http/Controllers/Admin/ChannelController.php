@@ -58,7 +58,7 @@ class ChannelController extends BaseController
                 $builder->where('e.admin_id','>',0);
 
                 if(!$this->adminUserService->isAdmin()){
-                    $adminIds = $this->adminUserService->getHasAuthAdminIds();
+                    $adminIds = $this->adminUserService->getHasPermissionAdminIds();
                     $builder->whereIn('e.admin_id',$adminIds);
                 }
             }
