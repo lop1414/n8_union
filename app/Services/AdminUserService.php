@@ -64,7 +64,7 @@ class AdminUserService extends BaseService
         }
 
         //已授权
-        $adminIds = array_merge($adminIds,$this->getPermissionAdminIds());
+//        $adminIds = array_merge($adminIds,$this->getPermissionAdminIds());
 
         return $adminIds;
     }
