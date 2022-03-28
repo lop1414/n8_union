@@ -9,7 +9,6 @@ use App\Common\Enums\OperatorEnum;
 use App\Common\Enums\StatusEnum;
 use App\Common\Enums\SystemAliasEnum;
 use App\Common\Helpers\Functions;
-use App\Common\Services\SystemApi\CenterApiService;
 use App\Common\Tools\CustomException;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
@@ -52,10 +51,9 @@ class ProductController extends BaseController
         $this->curdService->customBuilder(function ($builder){
             $req = $this->curdService->requestData;
             if(!empty($req['is_self'])){
-                $adminUser = Functions::getGlobalData('admin_user_info');
                 // 非管理员
-                if(!$adminUser['is_admin']) {
-                    $adminIds = implode(',',$adminUser['children_admin_ids']);
+                if(!$this->adminUserService->isAdmin()) {
+                    $adminIds = implode(',',$this->adminUserService->getChildrenAdminIds());
                     $status = StatusEnum::ENABLE;
                     $builder->whereRaw("id IN (SELECT product_id FROM product_admins WHERE status = '{$status}' AND (admin_id = 0 OR admin_id IN ({$adminIds})))");
                 }
@@ -75,8 +73,6 @@ class ProductController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
 
-            $centerApiService = new CenterApiService();
-
             $n8UnionUrl = config('common.system_api.'.SystemAliasEnum::UNION.'.url');
             $n8TransferDataUrl = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.data_url');
             foreach ($this->curdService->responseData['list'] as $item){
@@ -89,7 +85,7 @@ class ProductController extends BaseController
                         $item->is_public = 1;
                         continue;
                     }
-                    array_push($admins,$centerApiService->apiReadAdminUser($productAdmin['admin_id']));
+                    array_push($admins,$this->adminUserService->read($productAdmin['admin_id']));
                 }
                 $item->admins = $admins;
 
@@ -106,7 +102,9 @@ class ProductController extends BaseController
                             'name' => '用户数据接收地址',
                             'url'  => $n8TransferDataUrl.'/open/yw_kyy/user'
                         ];
-                    }elseif ($item->type == ProductTypeEnums::H5){
+                    }
+
+                    if ($item->type == ProductTypeEnums::H5){
                         $copyUrl[] = [
                             'name' => '用户数据接收地址',
                             'url'  => $n8TransferDataUrl.'/open/yw_h5/user'
@@ -146,7 +144,6 @@ class ProductController extends BaseController
             $this->curdService->responseData;
 
             $this->curdService->responseData->cp_account;
-            $centerApiService = new CenterApiService();
 
             $admins = [];
             $this->curdService->responseData->is_public = 0;
@@ -155,7 +152,7 @@ class ProductController extends BaseController
                     $this->curdService->responseData->is_public = 1;
                     continue;
                 }
-                array_push($admins,$centerApiService->apiReadAdminUser($item['admin_id']));
+                array_push($admins,$this->adminUserService->read($item['admin_id']));
             }
             $this->curdService->responseData->admins = $admins;
         });

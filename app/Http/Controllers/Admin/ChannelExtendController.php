@@ -46,7 +46,7 @@ class ChannelExtendController extends BaseController
 
         $this->curdService->saveBefore(function(){
             // 赋值 admin_id
-            $this->curdService->handleData['admin_id'] = $this->adminUser['admin_user']['id'];
+            $this->curdService->handleData['admin_id'] = $this->adminUserService->readId();
         });
     }
 
@@ -67,7 +67,7 @@ class ChannelExtendController extends BaseController
                 unset($this->curdService->handleData['adv_alias']);
             }
 
-            if(!$this->isAdmin()){
+            if(!$this->adminUserService->isAdmin()){
                 unset($this->curdService->handleData['admin_id']);
             }
 
@@ -126,10 +126,10 @@ class ChannelExtendController extends BaseController
 
 
         // 赋值 admin_id
-        if($this->isAdmin() && isset($requestData['admin_id']) && !empty($requestData['admin_id'])){
+        if($this->adminUserService->isAdmin() && !empty($requestData['admin_id'])){
             $adminId = $requestData['admin_id'];
         }else{
-            $adminId = $this->adminUser['admin_user']['id'];
+            $adminId = $this->adminUserService->readId();
         }
 
 

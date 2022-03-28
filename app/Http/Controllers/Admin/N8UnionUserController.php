@@ -47,15 +47,15 @@ class N8UnionUserController extends UserActionBaseController
                 $isSelf = $this->curdService->requestData['is_self'] ?? 1;
 
                 if($isSelf){
-                    $adminId = $this->adminUser['admin_user']['id'];
+                    $adminId = $this->adminUserService->readId();
                 }
 
                 if(!empty($adminId)){
                     $builder->where('admin_id',$adminId);
                 }
 
-                if(!$this->isAdmin()){
-                    $adminIds = $this->isSupport() ? $this->getGroupAdminIds() : [$this->adminUser['admin_user']['id']];
+                if(!$this->adminUserService->isAdmin()){
+                    $adminIds = $this->adminUserService->getHasAuthAdminIds();
                     $builder->whereIn('admin_id',$adminIds);
                 }
             });
@@ -72,7 +72,7 @@ class N8UnionUserController extends UserActionBaseController
         $item->book;
         $item->chapter;
         $item->force_chapter;
-        $item->admin_name = $this->adminMap[$item->admin_id]['name'];
+        $item->admin_name = $this->adminUserService->readName($item->admin_id);
 
     }
 
@@ -87,7 +87,7 @@ class N8UnionUserController extends UserActionBaseController
             $this->curdService->responseData->book;
             $this->curdService->responseData->chapter;
             $this->curdService->responseData->force_chapter;
-            $this->curdService->responseData->admin_name = $this->adminMap[$this->curdService->responseData->admin_id]['name'];
+            $this->curdService->responseData->admin_name = $this->adminUserService->readName($this->curdService->responseData->admin_id);
         });
     }
 

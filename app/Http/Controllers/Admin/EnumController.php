@@ -21,10 +21,6 @@ class EnumController extends BaseController
         $type = $requestData['type'] ?? '';
         $arr = [];
         switch ($type){
-            case 'device_info_source':
-                // 设备信息来源
-                $arr = DeviceInfoSourceEnum::$list;
-                break;
             case 'device_brand':
                 // 设备品牌
                 $arr = DeviceBrandEnum::$list;

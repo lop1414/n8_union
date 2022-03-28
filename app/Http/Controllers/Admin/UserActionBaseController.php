@@ -27,8 +27,6 @@ class UserActionBaseController extends BaseController
 
     public $convertType ;
 
-    protected $adminMap;
-
     /**
      * @var string
      * 点击id字段
@@ -43,11 +41,6 @@ class UserActionBaseController extends BaseController
      */
     public $isConvertCallbackKey = false;
 
-    public function __construct(){
-        parent::__construct();
-        $this->adminMap = $this->getAdminUserMap();
-
-    }
 
 
     public function selectCommonFilter(){
@@ -61,15 +54,15 @@ class UserActionBaseController extends BaseController
 
                 $isSelf = $requestData['is_self'] ?? 1;
                 if($isSelf){
-                    $adminId = $this->adminUser['admin_user']['id'];
+                    $adminId = $this->adminUserService->readId();
                 }
 
                 if(!empty($adminId)){
                     $unionWhere .= ' AND admin_id = ' . $adminId;
                 }
 
-                if(!$this->isAdmin()){
-                    $adminIds = $this->isSupport() ? $this->getGroupAdminIds() : [$this->adminUser['admin_user']['id']];
+                if(!$this->adminUserService->isAdmin()){
+                    $adminIds = $this->adminUserService->getHasAuthAdminIds();
                     $unionWhere .= ' AND admin_id IN (' . implode(',',$adminIds) .')';
                 }
 
@@ -201,7 +194,7 @@ class UserActionBaseController extends BaseController
                     if($this->mapUnionUser){
                         $item->union_user;
                         $item->union_user->channel;
-                        $item->admin_name = $this->adminMap[$item->union_user->admin_id]['name'];
+                        $item->admin_name = $this->adminUserService->readName($item->union_user->admin_id);
                     }
                     $this->itemPrepare($item);
                 }
@@ -247,7 +240,7 @@ class UserActionBaseController extends BaseController
 
             if($this->mapUnionUser) {
                 $this->curdService->responseData->union_user;
-                $this->curdService->responseData->admin_name = $this->adminMap[$this->curdService->responseData->admin_id]['name'];
+                $this->curdService->responseData->admin_name = $this->adminUserService->readName($this->curdService->responseData->admin_id);
                 $this->curdService->responseData->union_user->channel;
             }
         });

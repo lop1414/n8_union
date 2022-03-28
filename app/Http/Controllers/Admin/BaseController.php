@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Controllers\Admin\AdminController;
-use App\Common\Helpers\Functions;
-use App\Common\Services\SystemApi\CenterApiService;
 use App\Datas\N8GlobalUserData;
+use App\Services\AdminUserService;
 
 
 class BaseController extends AdminController
@@ -20,7 +19,7 @@ class BaseController extends AdminController
     protected $defaultOrderBy = 'created_at';
 
 
-    public $adminUser;
+    protected $adminUserService;
 
 
     /**
@@ -30,92 +29,9 @@ class BaseController extends AdminController
     {
         parent::__construct();
 
-        $this->adminUser = Functions::getGlobalData('admin_user_info');
-
+        $this->adminUserService = new AdminUserService();
     }
 
-
-    /**
-     * @return mixed
-     * 获取组内管理员id
-     */
-    public function getGroupAdminIds(){
-        return $this->adminUser['group_admin_ids'];
-    }
-
-
-
-    /**
-     * 有数据权限
-     * @return bool
-     */
-    public function isDataAuth(){
-        if($this->adminUser['is_admin']) return true;
-
-        return false;
-    }
-
-
-
-    /**
-     * 是否为管理员
-     * @return bool
-     */
-    public function isAdmin(): bool
-    {
-        if($this->adminUser['is_admin']) return true;
-        return false;
-    }
-
-
-
-
-    /**
-     * @return bool
-     * 是否为书城人员
-     */
-    public function isCp(){
-        if($this->adminUser['is_cp']) return true;
-        return false;
-    }
-
-    /**
-     * @return bool
-     * 是否为助理
-     */
-    public function isSupport(): bool
-    {
-        if($this->adminUser['admin_user']['is_support']) return true;
-        return false;
-    }
-
-
-    /**
-     * @return array|mixed
-     * 获取授权管理员ID
-     */
-    public function getPermissionAdminIds(){
-
-        return $this->adminUser['permission_admin_ids'];
-    }
-
-    /**
-     * @return string
-     * 获取授权管理员ID
-     */
-    public function getPermissionAdminIdsStr(){
-        return implode(',',$this->getPermissionAdminIds());
-    }
-
-
-
-    public function getAdminUserMap($filter = []){
-        $adminUsers = (new CenterApiService())->apiGetAdminUsers($filter);
-        $tmp = array_column($adminUsers,null,'id');
-        // 兼容没有admin_id
-        $tmp[0] = ['name' => ''];
-        return $tmp;
-    }
 
 
 

@@ -36,7 +36,6 @@ class ChannelController extends BaseController
         $this->modelData = new ChannelData();
 
         parent::__construct();
-        $this->adminUser = Functions::getGlobalData('admin_user_info');
     }
 
 
@@ -58,8 +57,8 @@ class ChannelController extends BaseController
             }else{
                 $builder->where('e.admin_id','>',0);
 
-                if(!$this->isAdmin()){
-                    $adminIds = $this->isSupport() ? $this->getGroupAdminIds() : [$this->adminUser['admin_user']['id']];
+                if(!$this->adminUserService->isAdmin()){
+                    $adminIds = $this->adminUserService->getHasAuthAdminIds();
                     $builder->whereIn('e.admin_id',$adminIds);
                 }
             }
@@ -67,7 +66,6 @@ class ChannelController extends BaseController
             if(!empty($req['admin_id'])){
                 $builder->where('e.admin_id',$req['admin_id']);
             }
-
 
 
             if(!empty($req['status'])){
@@ -114,23 +112,22 @@ class ChannelController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
 
-            $map = $this->getAdminUserMap();
-
             $feedbackUrlParam = [];
-            if($this->isSupport()){
-                $feedbackUrlParam['support_admin_id'] = $this->adminUser['admin_user']['id'];
+            if($this->adminUserService->isSupport()){
+                $feedbackUrlParam['support_admin_id'] = $this->adminUserService->readId();
             }
 
             $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
             $advPageFeedBack = Advs::getPageFeedbackUrlMap($feedbackUrlParam);
 
             foreach ($this->curdService->responseData['list'] as $item){
+                $adminId = $item->admin_id ?? 0;
                 $item->product;
                 $item->book;
                 $item->chapter;
                 $item->force_chapter;
-                $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
-                $item->has_extend = $item->admin_id ? true : false;
+                $item->admin_name = $this->adminUserService->readName($adminId) ;
+                $item->has_extend = !!$adminId;
 
                 //监测链接
                 $url = $advFeedBack[$item['adv_alias']] ?? '';
@@ -162,7 +159,11 @@ class ChannelController extends BaseController
     }
 
 
-
+    /**
+     * @param $data
+     * @return array
+     * 获取积木鱼转发url
+     */
     public function getJmyForwardUrl($data){
         $productExtends = $data->product->extends;
         $extends = $data->extends;
@@ -209,15 +210,15 @@ class ChannelController extends BaseController
         });
 
         $this->curdService->getQueryAfter(function(){
-            $map = $this->getAdminUserMap();
-
             foreach ($this->curdService->responseData as $item){
                 $item->product;
                 $item->book;
                 $item->chapter;
                 $item->force_chapter;
-                $item->admin_name = $item->admin_id ? $map[$item->admin_id]['name'] : '';
-                $item->has_extend = $item->admin_id ? true : false;
+
+                $adminId = $item->admin_id ?? 0;
+                $item->admin_name = $this->adminUserService->readName($adminId) ;
+                $item->has_extend = !!$adminId;
             }
         });
     }
@@ -240,11 +241,7 @@ class ChannelController extends BaseController
             if(isset($this->curdService->responseData->channel_extend['admin_id'])){
                 $adminId = $this->curdService->responseData->channel_extend['admin_id'];
 
-                $map = $this->getAdminUserMap([
-                    'id'  => $adminId
-                ]);
-
-                $this->curdService->responseData->channel_extend['admin_name'] = $map[$adminId]['name'];
+                $this->curdService->responseData->channel_extend['admin_name'] = $this->adminUserService->readName($adminId);
             }else{
                 $this->curdService->responseData->channel_extend['admin_name'] = '';
             }

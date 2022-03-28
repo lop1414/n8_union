@@ -49,8 +49,8 @@ class MultiPlatFormChannelController extends BaseController
         $this->curdService->customBuilder(function ($builder){
 
 
-            if(!$this->isDataAuth()){
-                $builder->where('admin_id',$this->adminUser['admin_user']['id']);
+            if(!$this->adminUserService->isAdmin()){
+                $builder->where('admin_id',$this->adminUserService->readId());
             }
 
             $req = $this->curdService->requestData;
@@ -83,7 +83,6 @@ class MultiPlatFormChannelController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
 
-            $map = $this->getAdminUserName();
             $advFeedBack = Advs::getFeedbackUrlMap();
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
@@ -116,7 +115,8 @@ class MultiPlatFormChannelController extends BaseController
                 $item->ios_channel->book;
                 $item->ios_channel->chapter;
                 $item->ios_channel->force_chapter;
-                $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
+                $adminId = $item->admin_id ?? 0;
+                $item->admin_name = $this->adminUserService->readName($adminId);
                 //iOS下载链接
                 if($item->ios_channel->product->type == ProductTypeEnums::KYY){
                     $item->ios_channel->href_url = $item->ios_channel->extends->hap_url ?? '';
@@ -141,10 +141,9 @@ class MultiPlatFormChannelController extends BaseController
 
 
         $this->curdService->getQueryAfter(function(){
-            $map = $this->getAdminUserName();
-
             foreach ($this->curdService->responseData as $item){
-                $item->admin_name = $item->admin_id ? $map[$item->admin_id] : '';
+                $adminId = $item->admin_id ?? 0;
+                $item->admin_name = $this->adminUserService->readName($adminId);
             }
         });
     }
@@ -168,15 +167,7 @@ class MultiPlatFormChannelController extends BaseController
             $this->curdService->responseData->ios_channel->chapter;
             $this->curdService->responseData->ios_channel->force_chapter;
             $adminId = $this->curdService->responseData->admin_id;
-            if(!empty($adminId)){
-                $map = $this->getAdminUserName([
-                    'id'  => $adminId
-                ]);
-
-                $this->curdService->responseData->admin_name = $map[$adminId];
-            }else{
-                $this->curdService->responseData->admin_name = '';
-            }
+            $this->curdService->responseData->admin_name = empty($adminId) ? '' : $this->adminUserService->readName($adminId);
         });
     }
 
@@ -235,7 +226,7 @@ class MultiPlatFormChannelController extends BaseController
 
 
             // 赋值 admin_id
-            $this->curdService->handleData['admin_id'] = $this->adminUser['admin_user']['id'];
+            $this->curdService->handleData['admin_id'] = $this->adminUserService->readId();
         });
     }
 

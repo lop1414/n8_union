@@ -25,12 +25,11 @@ class TestBookGroupController extends BaseController
      */
     public function selectPrepare(){
         $this->curdService->selectQueryAfter(function(){
-            $map = $this->getAdminUserMap();
-
             foreach ($this->curdService->responseData['list'] as $item){
                 $adminUsers = [];
                 foreach ($item->admin_user_ids as $adminItem){
-                    $adminUsers[] =  $adminItem->admin_id ? $map[$adminItem->admin_id]['name'] : '';
+                    $adminId = $adminItem->admin_id ?? 0;
+                    $adminUsers[] = $this->adminUserService->readName($adminId);
                 }
                 $item->admin_users = $adminUsers;
             }
