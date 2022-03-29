@@ -166,7 +166,7 @@ class UserActionBaseController extends BaseController
                 //自定义转化回传
                 $customConvertList = (new CustomConvertCallbackMapService())
                     ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
-                $convertList = $customConvertList = [];
+
                 foreach ($this->curdService->responseData['list'] as $item){
 
                     $convertCallback = [];
