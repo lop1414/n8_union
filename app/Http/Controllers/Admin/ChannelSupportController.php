@@ -37,7 +37,8 @@ class ChannelSupportController extends ChannelController
             if(empty($req['is_bind'])){
                 $builder->whereNull('s.admin_id');
             }else{
-                $adminIds = $this->adminUserService->getHasPermissionAdminIds();
+                // 组管理员
+                $adminIds = $this->adminUserService->getGroupAdminIds();
                 $builder->whereIn('s.admin_id',$adminIds);
             }
 
