@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\ConvertTypeEnum;
 use App\Models\N8UnionUserModel;
+use Illuminate\Support\Facades\DB;
 
 class N8UnionUserController extends UserActionBaseController
 {
@@ -55,8 +56,19 @@ class N8UnionUserController extends UserActionBaseController
                 }
 
                 if(!$this->adminUserService->isAdmin()){
-                    $adminIds = $this->adminUserService->getHasPermissionAdminIds();
+                    $adminIds = $this->adminUserService->getChildrenAdminIds();
                     $builder->whereIn('admin_id',$adminIds);
+                }
+
+                if($this->adminUserService->isSupport()){
+                    $channel = DB::table('channel_supports')
+                        ->where('admin_id', $this->adminUserService->readId())
+                        ->select('channel_id');
+
+                    $builder->LeftjoinSub($channel, 'channel', function($join){
+                        $tableName = $this->model->getTable();
+                        $join->on($tableName.'.channel_id', '=', 'channel.channel_id');
+                    });
                 }
             });
         });
@@ -90,8 +102,4 @@ class N8UnionUserController extends UserActionBaseController
             $this->curdService->responseData->admin_name = $this->adminUserService->readName($this->curdService->responseData->admin_id);
         });
     }
-
-
-
-
 }

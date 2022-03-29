@@ -11,6 +11,7 @@ use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Services\ConvertCallbackMapService;
 use App\Services\CustomConvertCallbackMapService;
+use Illuminate\Support\Facades\DB;
 
 class UserActionBaseController extends BaseController
 {
@@ -62,8 +63,19 @@ class UserActionBaseController extends BaseController
                 }
 
                 if(!$this->adminUserService->isAdmin()){
-                    $adminIds = $this->adminUserService->getHasPermissionAdminIds();
+                    $adminIds = $this->adminUserService->getChildrenAdminIds();
                     $unionWhere .= ' AND admin_id IN (' . implode(',',$adminIds) .')';
+                }
+
+                if(!$this->adminUserService->isSupport()){
+                    $channel = DB::table('channel_supports')
+                        ->where('admin_id', $this->adminUserService->readId())
+                        ->select('channel_id');
+
+                    $builder->LeftjoinSub($channel, 'channel', function($join){
+                        $tableName = $this->model->getTable();
+                        $join->on($tableName.'.channel_id', '=', 'channel.channel_id');
+                    });
                 }
 
                 $platform = $requestData['platform'] ?? '';
@@ -148,13 +160,13 @@ class UserActionBaseController extends BaseController
 
             if(!empty($this->curdService->responseData['list'])){
                 //转化回传
-                $convertList = (new ConvertCallbackMapService())
-                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
-
-                //自定义转化回传
-                $customConvertList = (new CustomConvertCallbackMapService())
-                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
-
+//                $convertList = (new ConvertCallbackMapService())
+//                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
+//
+//                //自定义转化回传
+//                $customConvertList = (new CustomConvertCallbackMapService())
+//                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
+                $convertList = $customConvertList = [];
                 foreach ($this->curdService->responseData['list'] as $item){
 
                     $convertCallback = [];
