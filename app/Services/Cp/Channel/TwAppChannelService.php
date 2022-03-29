@@ -5,9 +5,8 @@ namespace App\Services\Cp\Channel;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
-use App\Datas\BookData;
-use App\Datas\ChapterData;
 use App\Sdks\TwApp\TwAppSdk;
+use App\Services\BookService;
 
 
 class TwAppChannelService implements CpChannelInterface
@@ -34,20 +33,17 @@ class TwAppChannelService implements CpChannelInterface
 
         $data = array();
         $sdk = new TwAppSdk($product['cp_product_alias'],$product['cp_secret']);
-        $bookData = new BookData();
-        $chapterData = new ChapterData();
+        $bookService = new BookService();
+
 
         $channels = $sdk->getCpChannel();
-
+;
         foreach ($channels as $channel){
             // 书籍
-            $book = $bookData->save([
-                'cp_type'       => $product['cp_type'],
-                'cp_book_id'    => $channel['book_id'] ?? 0,
-                'name'          => $channel['name'],
-                'author_name'   => '',
-                'all_words'     => 0,
-                'update_time'   => null
+            $book = $bookService->readSave([
+                'cp_book_id' => $channel['bid'],
+                'name'       => $channel['book_name'],
+                'cp_type'    => $product['cp_type']
             ]);
 
             $data[] = [

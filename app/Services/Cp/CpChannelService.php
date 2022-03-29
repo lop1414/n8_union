@@ -40,7 +40,7 @@ class CpChannelService
         return [
             YwKyyChannelService::class,
             YwH5ChannelService::class,
-          //  TwAppChannelService::class,
+            TwAppChannelService::class,
             BmKyyChannelService::class,
             FqKyyChannelService::class,
             QyH5ChannelService::class,

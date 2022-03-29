@@ -5,9 +5,9 @@ namespace App\Services\Cp\Channel;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
-use App\Datas\BookData;
-use App\Datas\ChapterData;
 use App\Sdks\Tw\TwSdk;
+use App\Services\BookService;
+use App\Services\ChapterService;
 
 
 class TwKyyChannelService implements CpChannelInterface
@@ -34,8 +34,8 @@ class TwKyyChannelService implements CpChannelInterface
 
         $data = array();
         $sdk = new TwSdk($product['cp_product_alias'],$product['cp_secret']);
-        $bookData = new BookData();
-        $chapterData = new ChapterData();
+        $bookService = new BookService();
+        $chapterService = new ChapterService();
 
         $para = [
             'time'  => TIMESTAMP,
@@ -45,28 +45,16 @@ class TwKyyChannelService implements CpChannelInterface
 
         foreach ($channels as $channel){
             // 书籍
-            $book = $bookData->save([
-                'cp_type'       => $product['cp_type'],
-                'cp_book_id'    => $channel['bid'],
-                'name'          => $channel['book_name'],
-                'author_name'   => '',
-                'all_words'     => 0,
-                'update_time'   => null
+            $book = $bookService->readSave([
+                'cp_book_id' => $channel['bid'],
+                'name'       => $channel['book_name'],
+                'cp_type'    => $product['cp_type']
             ]);
             // 打开章节
-            $openChapter = $chapterData->save([
-                'book_id'       => $book['id'],
-                'cp_chapter_id' => 0,
-                'name'          => $channel['num_name'] ?? '',
-                'seq'           => $channel['num']
-            ]);
+            $openChapter = $chapterService->readSave($book['id'],0,$data['num_name'],$data['num']);
+
             //强制章节
-            $installChapter = $chapterData->save([
-                'book_id'       => $book['id'],
-                'cp_chapter_id' => 0,
-                'name'          => $channel['follow_num_name'] ?? '',
-                'seq'           => $channel['follow_num']
-            ]);
+            $installChapter = $chapterService->readSave($book['id'],0,$data['follow_num_name'],$data['follow_num']);
 
 
             $data[] = [
