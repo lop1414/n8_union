@@ -160,12 +160,12 @@ class UserActionBaseController extends BaseController
 
             if(!empty($this->curdService->responseData['list'])){
                 //转化回传
-//                $convertList = (new ConvertCallbackMapService())
-//                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
-//
-//                //自定义转化回传
-//                $customConvertList = (new CustomConvertCallbackMapService())
-//                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
+                $convertList = (new ConvertCallbackMapService())
+                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
+
+                //自定义转化回传
+                $customConvertList = (new CustomConvertCallbackMapService())
+                    ->listMap($this->curdService->responseData['list'],$convertType,$this->convertId);
                 $convertList = $customConvertList = [];
                 foreach ($this->curdService->responseData['list'] as $item){
 
