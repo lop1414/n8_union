@@ -141,6 +141,11 @@ $router->group([
         $router->post('enable', 'Admin\ChannelExtendController@enable');
         $router->post('disable', 'Admin\ChannelExtendController@disable');
     });
+    // 助手渠道
+    $router->group(['prefix' => 'channel_support'], function () use ($router) {
+        $router->post('select', 'Admin\ChannelSupportController@select');
+        $router->post('bind', 'Admin\ChannelSupportController@bind');
+    });
 
     // 多平台渠道
     $router->group(['prefix' => 'multi_plat_form_channel'], function () use ($router) {

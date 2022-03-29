@@ -5,14 +5,10 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\AdvAliasEnum;
-use App\Common\Enums\PlatformEnum;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Helpers\Advs;
-use App\Common\Helpers\Functions;
-use App\Common\Helpers\Platform;
 use App\Datas\ChannelData;
 use App\Models\ChannelModel;
-use App\Models\ProductModel;
 use App\Services\ChannelService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -26,7 +22,6 @@ class ChannelController extends BaseController
     protected $cpChannelServices;
 
 
-
     /**
      * constructor.
      */
@@ -34,11 +29,8 @@ class ChannelController extends BaseController
     {
         $this->model = new ChannelModel();
         $this->modelData = new ChannelData();
-
         parent::__construct();
     }
-
-
 
 
     /**
@@ -49,7 +41,8 @@ class ChannelController extends BaseController
         $this->curdService->customBuilder(function ($builder){
 
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
-                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
+                ->leftJoin('channel_supports AS s','channels.id','=','s.channel_id')
+                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id,s.admin_id AS support_id'));
 
             $req = $this->curdService->requestData;
             if(isset($req['is_bind']) && $req['is_bind'] == 0){
@@ -76,21 +69,6 @@ class ChannelController extends BaseController
                 $builder->where('e.adv_alias',$req['adv_alias']);
             }
 
-            if(!empty($req['status'])){
-                $builder->where('e.status',$req['status']);
-            }
-
-            if(!empty($req['os'])){
-                Functions::hasEnum(PlatformEnum::class,$req['os']);
-
-                $productIds = (new ProductModel())
-                    ->whereIn('type',Platform::getOSProductType($req['os']))
-                    ->get('id')
-                    ->toArray();
-
-                return $builder->whereIn('product_id',array_column($productIds,'id'));
-            }
-
             $keyword = $this->curdService->requestData['keyword'] ?? '';
             if(!empty($keyword)){
                 $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `channel_id` LIKE '%{$keyword}%')");
@@ -98,7 +76,15 @@ class ChannelController extends BaseController
         });
     }
 
-
+    /**
+     * @param $item
+     * @return bool
+     * 是否可复制监测链接
+     */
+    public function canCopyFeedBack($item): bool
+    {
+        return empty($item->support_id);
+    }
 
 
     /**
@@ -112,29 +98,35 @@ class ChannelController extends BaseController
 
         $this->curdService->selectQueryAfter(function(){
 
-            $feedbackUrlParam = [];
-            if($this->adminUserService->isSupport()){
-                $feedbackUrlParam['support_admin_id'] = $this->adminUserService->readId();
-            }
-
-            $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
-            $advPageFeedBack = Advs::getPageFeedbackUrlMap($feedbackUrlParam);
-
             foreach ($this->curdService->responseData['list'] as $item){
                 $adminId = $item->admin_id ?? 0;
                 $item->product;
                 $item->book;
                 $item->chapter;
                 $item->force_chapter;
-                $item->admin_name = $this->adminUserService->readName($adminId) ;
+                $item->admin_name = $this->adminUserService->readName($adminId);
+                $item->support_name = '';
                 $item->has_extend = !!$adminId;
 
+                $feedbackUrlParam = [];
+                if(!empty($item->support_id)){
+                    $feedbackUrlParam['support_admin_id'] = $item->support_id;
+                    $item->support_name = $this->adminUserService->readName( $item->support_id);
+                }
+
+
                 //监测链接
-                $url = $advFeedBack[$item['adv_alias']] ?? '';
-                $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
-                $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
+                $item->feedback_url = '';
+                if($this->canCopyFeedBack($item)){
+                    $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
+                    $url = $advFeedBack[$item['adv_alias']] ?? '';
+                    $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
+                    $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
+                }
+
 
                 // n8页面监测链接
+                $advPageFeedBack = Advs::getPageFeedbackUrlMap($feedbackUrlParam);
                 $pageUrl = $advPageFeedBack[$item['adv_alias']] ?? '';
                 $pageUrl = str_replace('__N8_MULTI_CHANNEL_ID__',0,$pageUrl);
                 $pageUrl = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$pageUrl);
