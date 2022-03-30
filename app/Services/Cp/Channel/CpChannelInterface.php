@@ -2,6 +2,8 @@
 
 namespace App\Services\Cp\Channel;
 
+use App\Models\BookModel;
+use App\Models\ChapterModel;
 use App\Models\ProductModel;
 
 interface CpChannelInterface
@@ -27,5 +29,16 @@ interface CpChannelInterface
      */
     public function get(ProductModel $product,string $date,string $cpId): array;
 
+
+    /**
+     * @param ProductModel $product
+     * @param string $name
+     * @param BookModel $book
+     * @param ChapterModel $chapter
+     * @param ChapterModel $forceChapter
+     * @return string
+     * 创建
+     */
+    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,ChapterModel $forceChapter): string;
 
 }

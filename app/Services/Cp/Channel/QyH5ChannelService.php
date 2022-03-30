@@ -5,6 +5,7 @@ namespace App\Services\Cp\Channel;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
+use App\Common\Tools\CustomException;
 use App\Models\ProductModel;
 use App\Sdks\Qy\QySdk;
 use App\Services\BookService;
@@ -22,6 +23,11 @@ class QyH5ChannelService implements CpChannelInterface
     {
         $this->bookService = new BookService();
         $this->chapterService = new ChapterService();
+    }
+
+    public function getCpType(): string
+    {
+        return CpTypeEnums::QY;
     }
 
     public function getType(): string
@@ -73,8 +79,12 @@ class QyH5ChannelService implements CpChannelInterface
         return $info;
     }
 
-    public function getCpType(): string
+
+    public function create($product, $name, $book, $chapter,$forceChapter): string
     {
-        return CpTypeEnums::QY;
+        throw new CustomException([
+            'code'       => 'NOT_CAN_CREATE_CHANNEL',
+            'message'    => "该小说平台暂不支持"
+        ]);
     }
 }

@@ -109,18 +109,16 @@ class ChannelExtendController extends BaseController
 
         $this->validRule($requestData,[
             'channel_ids' => 'required|array',
-            'adv_alias' => 'required'
+            'adv_alias' => 'required',
+            'status' => 'required',
         ],[
             'channel_ids.required' => 'channel_ids 不能为空',
             'channel_ids.array' => 'channel_ids 不是数组',
-            'adv_alias.required' => 'adv_alias 不能为空'
+            'adv_alias.required' => 'adv_alias 不能为空',
+            'status.required' => 'status 不能为空',
         ]);
 
         Functions::hasEnum(AdvAliasEnum::class,$requestData['adv_alias']);
-
-        if(!isset($requestData['status'])){
-            $requestData['status'] = StatusEnum::ENABLE;
-        }
         Functions::hasEnum(StatusEnum::class,$requestData['status']);
 
 
@@ -147,6 +145,7 @@ class ChannelExtendController extends BaseController
                 $channelExtendModel->adv_alias = $requestData['adv_alias'];
                 $channelExtendModel->status = $requestData['status'];
                 $channelExtendModel->admin_id = $adminId;
+                $channelExtendModel->parent_id = 0;
                 $tmp = $channelExtendModel->save();
 
                 if($tmp){

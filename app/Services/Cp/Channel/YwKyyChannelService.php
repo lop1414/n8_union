@@ -31,9 +31,19 @@ class YwKyyChannelService implements CpChannelInterface
         return ProductTypeEnums::KYY;
     }
 
+    public function getCpType(): string
+    {
+        return CpTypeEnums::YW;
+    }
+
+    public function getSdk(ProductModel $product){
+        $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
+        return $sdk;
+    }
+
     public function get($product,$date,$cpId): array
     {
-        $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
+        $sdk = $this->getSdk($product);
         $startTime = $date.' 00:00:00';
         $endTime = $date.' 23:59:59';
         $data = array();
@@ -88,11 +98,6 @@ class YwKyyChannelService implements CpChannelInterface
         return $info;
     }
 
-    public function getCpType(): string
-    {
-        return CpTypeEnums::YW;
-    }
-
     protected function readChapter(ProductModel $product,int $bookId,string $cpChapterId): ?array
     {
         $info = $this->chapterService->readByUniqueKey($bookId,$cpChapterId);
@@ -102,5 +107,13 @@ class YwKyyChannelService implements CpChannelInterface
             $info = $this->chapterService->readByUniqueKey($bookId,$cpChapterId);
         }
         return $info;
+    }
+
+
+    public function create($product, $name, $book, $chapter,$forceChapter): string
+    {
+        $sdk = $this->getSdk($product);
+        $res = $sdk->createChannel($book['cp_book_id'],$chapter['cp_chapter_id'],$name,$forceChapter['seq']);
+        return $res['channel_id'];
     }
 }

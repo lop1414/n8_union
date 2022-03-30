@@ -4,6 +4,8 @@ namespace App\Services\Cp;
 
 
 use App\Datas\ChannelData;
+use App\Models\BookModel;
+use App\Models\ChapterModel;
 use App\Services\Cp\Channel\BmKyyChannelService;
 use App\Services\Cp\Channel\FqKyyChannelService;
 use App\Services\Cp\Channel\QyH5ChannelService;
@@ -99,4 +101,22 @@ class CpChannelService
         }
     }
 
+
+    /**
+     * @param string $name
+     * @param BookModel $book
+     * @param ChapterModel $chapter
+     * @param ChapterModel $forceChapter
+     * @return string
+     * 创建渠道
+     */
+    public function create(string $name,BookModel $book,ChapterModel $chapter,ChapterModel $forceChapter): string
+    {
+
+        $products = ProductService::get(['product_id' =>$this->getParam('product_id')]);
+        $product = $products[0];
+
+        $cpChannelId = $this->service->create($product,$name,$book,$chapter,$forceChapter);
+        return $cpChannelId;
+    }
 }

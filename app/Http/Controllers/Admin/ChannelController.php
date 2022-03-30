@@ -6,8 +6,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Enums\ProductTypeEnums;
+use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Advs;
+use App\Common\Helpers\Functions;
 use App\Datas\ChannelData;
+use App\Models\ChannelExtendModel;
 use App\Models\ChannelModel;
 use App\Services\ChannelService;
 use App\Services\ProductService;
@@ -237,7 +240,12 @@ class ChannelController extends BaseController
     }
 
 
-
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws \App\Common\Tools\CustomException
+     * 同步渠道
+     */
     public function sync(Request $request){
         $req = $request->all();
 
@@ -284,4 +292,55 @@ class ChannelController extends BaseController
     }
 
 
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws \App\Common\Tools\CustomException
+     * 复制渠道
+     */
+    public function copy(Request $request){
+        $req = $request->all();
+        $this->validRule($req,[
+            'channel_id' => 'required',
+            'name' => 'required',
+            'adv_alias' => 'required',
+            'status' => 'required',
+        ],[
+            'channel_id.required' => 'channel_id 不能为空',
+            'name.required' => '名称不能为空',
+            'adv_alias.required' => 'adv_alias 不能为空',
+            'status.required' => 'adv_alias 不能为空',
+        ]);
+        Functions::hasEnum(AdvAliasEnum::class,$req['adv_alias']);
+        Functions::hasEnum(StatusEnum::class,$req['status']);
+
+        $copyChannel = $this->model->where('id',$req['channel_id'])->first();
+
+        $channelService = new ChannelService();
+        $cpChannelId = $channelService->create($copyChannel->product,$req['name'],$copyChannel->book,$copyChannel->chapter,$copyChannel->force_chapter);
+
+        // 同步
+        $date = date('Y-m-d');
+        (new ChannelService())->sync([
+            'start_date' => $date,
+            'end_date'   => $date,
+            'product_ids'   => array($copyChannel->product->id),
+            'cp_type'       => $copyChannel->product->cp_type,
+            'cp_channel_id' => $cpChannelId
+        ]);
+
+        // 认领
+        $channel  = $this->model
+            ->where('product_id',$copyChannel->product->id)
+            ->where('cp_channel_id',$cpChannelId)
+            ->first();
+        $channelExtendModel = new ChannelExtendModel();
+        $channelExtendModel->channel_id = $channel->id;
+        $channelExtendModel->adv_alias = $req['adv_alias'];
+        $channelExtendModel->status = $req['status'];
+        $channelExtendModel->admin_id = $this->adminUserService->readId();
+        $channelExtendModel->parent_id = $copyChannel->id;
+        $channelExtendModel->save();
+        return $this->success();
+    }
 }

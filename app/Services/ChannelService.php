@@ -8,6 +8,9 @@ use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
+use App\Models\BookModel;
+use App\Models\ChapterModel;
+use App\Models\ProductModel;
 use App\Services\Cp\Channel\CpChannelInterface;
 use App\Services\Cp\CpChannelService;
 use Illuminate\Container\Container;
@@ -70,7 +73,8 @@ class ChannelService extends BaseService
     }
 
 
-    public function sync($param = []){
+    public function sync($param = [])
+    {
         $cpTypeParam = $param['cp_type'] ?? '';
         if(!empty($cpTypeParam)){
             Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
@@ -99,6 +103,29 @@ class ChannelService extends BaseService
                 }
 
                 $cpChannelService->sync();
+            }
+        }
+    }
+
+    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,ChapterModel $cpForceChapter): string
+    {
+
+        $container = Container::getInstance();
+        $services = CpChannelService::getServices();
+        foreach ($services as $service){
+
+            $container->bind(CpChannelInterface::class,$service);
+            $cpChannelService = $container->make(CpChannelService::class);
+
+            $cpType = $cpChannelService->getCpType();
+            $productType = $cpChannelService->getType();
+
+            if($product['cp_type'] == $cpType && $product['type'] == $productType){
+
+                $cpChannelService->setParam('product_id',$product['id']);
+
+                $cpChannelId = $cpChannelService->create($name,$book,$chapter,$cpForceChapter);
+                return $cpChannelId;
             }
         }
     }

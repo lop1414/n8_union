@@ -28,7 +28,8 @@ class ChannelExtendModel extends BaseModel
         'channel_id',
         'adv_alias',
         'status',
-        'admin_id'
+        'admin_id',
+        'parent_id'
     ];
 
 

@@ -27,6 +27,18 @@ trait Channel
     }
 
 
+    public function createChannel($cbid,$ccid,$name,$forceChapter,$forceDesktop = 2){
+        $uri = 'cpapi/WxNovel/AddQuickSpread';
+        $param = [
+            'cbid' => $cbid,
+            'ccid' => $ccid,
+            'name' => $name,
+            'force_chapter'  => $forceChapter,
+            'force_desktop'  => $forceDesktop
+        ];
+
+        return $this->apiRequest($uri,$param);
+    }
 
 
 

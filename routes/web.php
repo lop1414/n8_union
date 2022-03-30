@@ -133,6 +133,7 @@ $router->group([
         $router->post('get', 'Admin\ChannelController@get');
         $router->post('read', 'Admin\ChannelController@read');
         $router->post('sync', 'Admin\ChannelController@sync');
+        $router->post('copy', 'Admin\ChannelController@copy');
     });
     $router->group(['prefix' => 'channel_extend'], function () use ($router) {
         $router->post('batch_save', 'Admin\ChannelExtendController@batchSave');
@@ -140,11 +141,6 @@ $router->group([
         $router->post('update', 'Admin\ChannelExtendController@update');
         $router->post('enable', 'Admin\ChannelExtendController@enable');
         $router->post('disable', 'Admin\ChannelExtendController@disable');
-    });
-    // 助手渠道
-    $router->group(['prefix' => 'channel_support'], function () use ($router) {
-        $router->post('select', 'Admin\ChannelSupportController@select');
-        $router->post('bind', 'Admin\ChannelSupportController@bind');
     });
 
     // 多平台渠道
