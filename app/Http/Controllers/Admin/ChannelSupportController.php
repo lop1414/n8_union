@@ -33,13 +33,14 @@ class ChannelSupportController extends ChannelController
                 ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id,s.admin_id AS support_id'))
                 ->where('e.admin_id','>',0);
 
-            // 组管理员
-            $adminIds = $this->adminUserService->getGroupAdminIds();
-            $builder->whereIn('e.admin_id',$adminIds);
-
             $req = $this->curdService->requestData;
             if(empty($req['is_bind'])){
                 $builder->whereNull('s.admin_id');
+                // 组管理员
+                $adminIds = $this->adminUserService->getGroupAdminIds();
+                $builder->whereIn('e.admin_id',$adminIds);
+            }else{
+                $builder->where('s.admin_id',$this->adminUserService->readId());
             }
 
             if(!empty($req['admin_id'])){
