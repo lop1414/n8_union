@@ -103,13 +103,16 @@ class ChannelController extends BaseController
                 $item->has_extend = !!$adminId;
 
                 //可复制
-                $item->isCanCopy = !$item->parent_id;
+                $item->is_can_copy = !$item->parent_id;
 
 
                 //监测链接
-                $url = $advFeedBack[$item['adv_alias']] ?? '';
-                $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
-                $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
+                $item->feedback_url = '';
+                if($item->admin_id == $this->adminUserService->readId()){
+                    $url = $advFeedBack[$item['adv_alias']] ?? '';
+                    $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
+                    $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
+                }
 
 
                 // n8页面监测链接
