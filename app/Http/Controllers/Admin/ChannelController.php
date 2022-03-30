@@ -41,8 +41,7 @@ class ChannelController extends BaseController
         $this->curdService->customBuilder(function ($builder){
 
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
-                ->leftJoin('channel_supports AS s','channels.id','=','s.channel_id')
-                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id,s.admin_id AS support_id'));
+                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
 
             $req = $this->curdService->requestData;
             if(isset($req['is_bind']) && $req['is_bind'] == 0){
@@ -98,6 +97,8 @@ class ChannelController extends BaseController
         });
 
         $this->curdService->selectQueryAfter(function(){
+            $advFeedBack = Advs::getFeedbackUrlMap();
+            $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
             foreach ($this->curdService->responseData['list'] as $item){
                 $adminId = $item->admin_id ?? 0;
@@ -109,25 +110,16 @@ class ChannelController extends BaseController
                 $item->support_name = '';
                 $item->has_extend = !!$adminId;
 
-                $feedbackUrlParam = [];
-                if(!empty($item->support_id)){
-                    $feedbackUrlParam['support_admin_id'] = $item->support_id;
-                    $item->support_name = $this->adminUserService->readName( $item->support_id);
-                }
 
 
                 //监测链接
-                $item->feedback_url = '';
-                if($this->canCopyFeedBack($item)){
-                    $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
-                    $url = $advFeedBack[$item['adv_alias']] ?? '';
-                    $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
-                    $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
-                }
+
+                $url = $advFeedBack[$item['adv_alias']] ?? '';
+                $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
+                $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
 
 
                 // n8页面监测链接
-                $advPageFeedBack = Advs::getPageFeedbackUrlMap($feedbackUrlParam);
                 $pageUrl = $advPageFeedBack[$item['adv_alias']] ?? '';
                 $pageUrl = str_replace('__N8_MULTI_CHANNEL_ID__',0,$pageUrl);
                 $pageUrl = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$pageUrl);
