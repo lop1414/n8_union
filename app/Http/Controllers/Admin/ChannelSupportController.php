@@ -39,7 +39,7 @@ class ChannelSupportController extends ChannelController
             }else{
                 // 组管理员
                 $adminIds = $this->adminUserService->getGroupAdminIds();
-                $builder->whereIn('s.admin_id',$adminIds);
+                $builder->whereIn('e.admin_id',$adminIds);
             }
 
             if(!empty($req['admin_id'])){
