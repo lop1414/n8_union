@@ -56,9 +56,7 @@ class ChannelController extends BaseController
                     //下属管理员
                     $adminIds = $this->adminUserService->getChildrenAdminIds();
                     $builder->whereIn('e.admin_id',$adminIds);
-                }
-
-                if($this->adminUserService->isSupport()){
+                }elseif ($this->adminUserService->isSupport()){
                     //组管理员
                     $adminIds = $this->adminUserService->getGroupAdminIds();
                     $builder->whereIn('e.admin_id',$adminIds);
