@@ -44,7 +44,7 @@ class ChannelController extends BaseController
         $this->curdService->customBuilder(function ($builder){
 
             $builder->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
-                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id'));
+                ->select(DB::raw('channels.*,e.adv_alias,e.status,e.admin_id,e.parent_id'));
 
             $req = $this->curdService->requestData;
             if(isset($req['is_bind']) && $req['is_bind'] == 0){
@@ -79,16 +79,6 @@ class ChannelController extends BaseController
         });
     }
 
-    /**
-     * @param $item
-     * @return bool
-     * 是否可复制监测链接
-     */
-    public function canCopyFeedBack($item): bool
-    {
-        return empty($item->support_id);
-    }
-
 
     /**
      * 分页列表预处理
@@ -110,13 +100,13 @@ class ChannelController extends BaseController
                 $item->chapter;
                 $item->force_chapter;
                 $item->admin_name = $this->adminUserService->readName($adminId);
-                $item->support_name = '';
                 $item->has_extend = !!$adminId;
 
+                //可复制
+                $item->isCanCopy = !$item->parent_id;
 
 
                 //监测链接
-
                 $url = $advFeedBack[$item['adv_alias']] ?? '';
                 $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
                 $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
