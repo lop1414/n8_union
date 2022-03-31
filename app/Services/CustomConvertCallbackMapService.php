@@ -14,22 +14,16 @@ class CustomConvertCallbackMapService extends BaseService
 
     /**
      * @param $list
-     * @param string $realConvertType 实际转化类型
      * @param string $convertType     回传转化类型
      * @param string $convertId
      * @return array
      */
-    public function listMap($list, string $realConvertType, string $convertType, string $convertId = 'id'){
+    public function listMap($list, string $convertType, string $convertId = 'id'){
         $convertList = [];
         foreach ($list as $item){
             if(empty($item['click_id'])) continue;
 
-            $advAlias = $realConvertType == ConvertTypeEnum::REGISTER ? $item['adv_alias'] : $item->union_user['adv_alias'];
-
-            // 未完成订单无需映射
-            if($realConvertType == ConvertTypeEnum::PAY && $item->status != OrderStatusEnums::COMPLETE){
-                continue;
-            }
+            $advAlias = $convertType == ConvertTypeEnum::REGISTER ? $item['adv_alias'] : $item->union_user['adv_alias'];
 
             $convertList[$advAlias][] = array(
                 'convert_type' => $convertType,

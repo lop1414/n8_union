@@ -22,6 +22,7 @@ class N8UnionUserController extends UserActionBaseController
     public function __construct()
     {
         $this->model = new N8UnionUserModel();
+
         // 默认排序字段
         $tableName = $this->model->getTable();
         $this->defaultOrderBy =  $tableName.'.created_time';
@@ -39,7 +40,7 @@ class N8UnionUserController extends UserActionBaseController
         $this->selectFilterAdv($this->convertType);
 
         $this->selectConvertMap($this->convertType);
-        $this->selectCustomConvertMap($this->convertType,ConvertTypeEnum::PAY);
+        $this->selectCustomConvertMap($this->convertType);
 
         $this->curdService->selectQueryAfter(function() {
             foreach ($this->curdService->responseData['list'] as $item){
