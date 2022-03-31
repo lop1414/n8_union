@@ -59,8 +59,8 @@ class OrderController extends UserActionBaseController
         });
 
 
-        $this->selectConvertMap(ConvertTypeEnum::ORDER,'n8_goid');
         $this->selectConvertMap(ConvertTypeEnum::PAY,'n8_goid');
+        $this->selectConvertMap(ConvertTypeEnum::ORDER,'n8_goid');
 
         $this->curdService->selectQueryAfter(function() {
             foreach ($this->curdService->responseData['list'] as $item){
