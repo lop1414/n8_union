@@ -24,7 +24,7 @@ class N8UnionUserController extends UserActionBaseController
         $this->model = new N8UnionUserModel();
         // 默认排序字段
         $tableName = $this->model->getTable();
-        $this->defaultOrderBy =  $tableName.'created_time';
+        $this->defaultOrderBy =  $tableName.'.created_time';
         parent::__construct();
     }
 
