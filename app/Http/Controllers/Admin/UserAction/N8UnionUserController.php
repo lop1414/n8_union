@@ -41,9 +41,9 @@ class N8UnionUserController extends UserActionBaseController
     public function selectPrepare(){
         $this->selectFilterOpenId();
         $this->selectFilter('id');
-        $this->selectFilterAdv(ConvertTypeEnum::REGISTER);
+        $this->selectFilterAdv($this->convertType);
 
-        $this->selectConvertMap(ConvertTypeEnum::REGISTER);
+        $this->selectConvertMap($this->convertType);
         $this->selectCustomConvertMap(ConvertTypeEnum::PAY);
 
         $this->curdService->selectQueryAfter(function() {
