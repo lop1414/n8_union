@@ -28,13 +28,13 @@ class UserActionBaseController extends BaseController
         $this->curdService->selectQueryBefore(function() use ($unionUserId){
             $this->curdService->customBuilder(function ($builder) use ($unionUserId) {
                 $requestData = $this->curdService->requestData;
-                $builder->where('product_id',$requestData['product_id']);
+                $tableName = $this->model->getTable();
+
+                $builder->where($tableName.'.product_id',$requestData['product_id']);
 
                 $unionUserQuery = DB::table('n8_union_users');
-
                 $unionUser = $unionUserQuery->select();
-                $builder->LeftjoinSub($unionUser, 'union_user', function ($join) use ($unionUserId) {
-                    $tableName = $this->model->getTable();
+                $builder->LeftjoinSub($unionUser, 'union_user', function ($join) use ($unionUserId,$tableName) {
                     $join->on($tableName . '.' . $unionUserId, '=', 'union_user.id');
                 });
 
