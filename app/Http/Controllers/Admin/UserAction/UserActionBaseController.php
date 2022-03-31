@@ -23,10 +23,13 @@ class UserActionBaseController extends BaseController
 
 
     public function selectFilter($unionUserId = 'uuid'){
+        $this->curdService->addField('product_id')->addValidRule('required');
 
         $this->curdService->selectQueryBefore(function() use ($unionUserId){
             $this->curdService->customBuilder(function ($builder) use ($unionUserId) {
                 $requestData = $this->curdService->requestData;
+                $builder->where('product_id',$requestData['product_id']);
+
                 $unionUserQuery = DB::table('n8_union_users');
 
                 $unionUser = $unionUserQuery->select();
