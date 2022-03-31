@@ -21,7 +21,7 @@ class CustomConvertCallbackMapService extends BaseService
             if(empty($item['click_id'])) continue;
 
             $advAlias = $item['adv_alias'];
-            if(!empty($item->union_user)){
+            if( $convertType != ConvertTypeEnum::REGISTER && !empty($item->union_user)){
                 $advAlias = $item->union_user['adv_alias'];
             }
 
