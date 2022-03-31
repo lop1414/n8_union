@@ -21,10 +21,7 @@ class ConvertCallbackMapService extends BaseService
         foreach ($list as $item){
             if(empty($item['click_id'])) continue;
 
-            $advAlias = $item['adv_alias'];
-            if( $convertType != ConvertTypeEnum::REGISTER){
-                $advAlias = $item->union_user['adv_alias'];
-            }
+            $advAlias = $convertType == ConvertTypeEnum::REGISTER ? $item['adv_alias'] : $item->union_user['adv_alias'];
 
             // 未完成订单无需映射
             if($convertType == ConvertTypeEnum::PAY && $item->status != OrderStatusEnums::COMPLETE){
