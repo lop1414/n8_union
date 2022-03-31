@@ -31,10 +31,12 @@ class ConvertCallbackMapService extends BaseService
                 continue;
             }
 
-            $convertList[$advAlias][] = array(
-                'convert_type' => $convertType,
-                'convert_id'   => $item[$convertId]
-            );
+            if(!empty($item[$convertId])){
+                $convertList[$advAlias][] = array(
+                    'convert_type' => $convertType,
+                    'convert_id'   => $item[$convertId]
+                );
+            }
         }
         $result = [];
         foreach ($convertList as $adv => $convert){
