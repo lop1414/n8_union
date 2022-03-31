@@ -44,7 +44,7 @@ class N8UnionUserController extends UserActionBaseController
         $this->selectFilterAdv($this->convertType);
 
         $this->selectConvertMap($this->convertType);
-        $this->selectCustomConvertMap(ConvertTypeEnum::PAY);
+        $this->selectCustomConvertMap($this->convertType,ConvertTypeEnum::PAY);
 
         $this->curdService->selectQueryAfter(function() {
             foreach ($this->curdService->responseData['list'] as $item){

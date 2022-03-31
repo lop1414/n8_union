@@ -143,15 +143,15 @@ class UserActionBaseController extends BaseController
     }
 
     // 查询后映射自定义转化信息
-    public function selectCustomConvertMap($convertType,$convertId = 'id'){
-        $this->curdService->selectQueryAfter(function() use ($convertType,$convertId){
+    public function selectCustomConvertMap($realConvertType,$convertType,$convertId = 'id'){
+        $this->curdService->selectQueryAfter(function() use ($realConvertType,$convertType,$convertId){
             $responseData = $this->curdService->responseData;
 
             if(!empty($responseData['list'])){
 
                 //自定义转化回传
                 $customConvertList = (new CustomConvertCallbackMapService())
-                    ->listMap($responseData['list'],$convertType,$convertId);
+                    ->listMap($responseData['list'],$realConvertType,$convertType,$convertId);
 
                 foreach ($this->curdService->responseData['list'] as $item){
 

@@ -12,15 +12,22 @@ use App\Common\Services\SystemApi\AdvOceanApiService;
 class CustomConvertCallbackMapService extends BaseService
 {
 
-    public function listMap($list,$convertType,$convertId = 'id'){
+    /**
+     * @param $list
+     * @param string $realConvertType 实际转化类型
+     * @param string $convertType     回传转化类型
+     * @param string $convertId
+     * @return array
+     */
+    public function listMap($list, string $realConvertType, string $convertType, string $convertId = 'id'){
         $convertList = [];
         foreach ($list as $item){
             if(empty($item['click_id'])) continue;
 
-            $advAlias = $convertType == ConvertTypeEnum::REGISTER ? $item['adv_alias'] : $item->union_user['adv_alias'];
+            $advAlias = $realConvertType == ConvertTypeEnum::REGISTER ? $item['adv_alias'] : $item->union_user['adv_alias'];
 
             // 未完成订单无需映射
-            if($convertType == ConvertTypeEnum::PAY && $item->status != OrderStatusEnums::COMPLETE){
+            if($realConvertType == ConvertTypeEnum::PAY && $item->status != OrderStatusEnums::COMPLETE){
                 continue;
             }
 
