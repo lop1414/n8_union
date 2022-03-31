@@ -54,15 +54,17 @@ class UserActionBaseController extends BaseController
                 !empty($requestData['created_time']) && $builder->whereBetween('union_user.created_time', $requestData['created_time']);
 
                 //open id 筛选
-                $openId = $requestData['open_id'] ?? '';
-                if(!empty($openId)){
+                if(!empty($requestData['open_id'])){
                     $globalUser = (new N8GlobalUserData())
                         ->setParams([
-                            'product_id' => $this->curdService->requestData['product_id'],
-                            'open_id'  => $openId
+                            'product_id' => $requestData['product_id'],
+                            'open_id'  => $requestData['open_id']
                         ])
                         ->read();
-                    if(!empty($globalUser)) $globalUser['n8_guid'] = 0;
+
+                    if(empty($globalUser)){
+                        $globalUser['n8_guid'] = 0;
+                    }
 
                     $builder->where($tableName.'.n8_guid',$globalUser['n8_guid']);
                 }
