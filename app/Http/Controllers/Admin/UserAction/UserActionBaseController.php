@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\UserAction;
 
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Tools\CustomException;
 use App\Datas\N8GlobalUserData;
 use App\Http\Controllers\Admin\BaseController;
@@ -167,11 +168,12 @@ class UserActionBaseController extends BaseController
                         $customConvertCallbackMap = array_column($tmp,null,'custom_convert_type');
                     }
 
-
                     //是否可自定义回传 （已自定义回传过）
+                    $payConvertType = strtolower(ConvertTypeEnum::PAY);
                     $item->has_custom_convert_callback = [
-                        $convertType => !isset($customConvertCallbackMap[$convertType])
+                        $payConvertType => !isset($customConvertCallbackMap[$payConvertType])
                     ];
+
                 }
             }
 
