@@ -49,7 +49,7 @@ class ChannelController extends BaseController
             $req = $this->curdService->requestData;
 
 
-            $isSelf = $requestData['is_self'] ?? 1;
+            $isSelf = isset($requestData['is_self']) ?? 1;
             $isSelf && $builder->where('e.admin_id', $this->adminUserService->readId());
 
             if(isset($req['is_bind']) && $req['is_bind'] == 0){
