@@ -22,7 +22,7 @@ class ConvertCallbackMapService extends BaseService
             if(empty($item['click_id'])) continue;
 
             $advAlias = $item['adv_alias'];
-            if( $convertType != ConvertTypeEnum::REGISTER && !empty($item->union_user)){
+            if( $convertType != ConvertTypeEnum::REGISTER){
                 $advAlias = $item->union_user['adv_alias'];
             }
 
