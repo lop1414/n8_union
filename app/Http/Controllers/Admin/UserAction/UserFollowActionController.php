@@ -38,8 +38,6 @@ class UserFollowActionController extends UserActionBaseController
      */
     public function selectPrepare(){
 
-
-        $this->selectFilterOpenId();
         $this->selectFilter('id');
         $this->selectFilterAdv($this->convertType);
 

@@ -37,7 +37,6 @@ class OrderController extends UserActionBaseController
      */
     public function selectPrepare(){
 
-        $this->selectFilterOpenId();
         $this->selectFilter();
         $this->selectFilterAdv(ConvertTypeEnum::PAY,'n8_goid','complete_click_id');
         //书城 order_id 过滤

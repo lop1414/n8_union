@@ -53,7 +53,19 @@ class UserActionBaseController extends BaseController
                 !empty($requestData['user_type']) && $builder->where('union_user.user_type', $requestData['user_type']);
                 !empty($requestData['created_time']) && $builder->whereBetween('union_user.created_time', $requestData['created_time']);
 
+                //open id 筛选
+                $openId = $requestData['open_id'] ?? '';
+                if(!empty($openId)){
+                    $globalUser = (new N8GlobalUserData())
+                        ->setParams([
+                            'product_id' => $this->curdService->requestData['product_id'],
+                            'open_id'  => $openId
+                        ])
+                        ->read();
+                    if(!empty($globalUser)) $globalUser['n8_guid'] = 0;
 
+                    $builder->where('union_user.n8_guid',$globalUser['n8_guid']);
+                }
             });
         });
     }
@@ -89,26 +101,6 @@ class UserActionBaseController extends BaseController
                         !empty($requestData['unit_id']) && $builder->whereRaw("{$clickField} IN (SELECT id FROM n8_adv_uc.clicks WHERE campaign_id = {$requestData['unit_id']})");
                         !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$convertId} IN (SELECT convert_id FROM n8_adv_uc.convert_callbacks WHERE convert_type = '{$convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
                     }
-                }
-            });
-        });
-    }
-
-    // open id 筛选
-    public function selectFilterOpenId(){
-        $this->curdService->selectQueryBefore(function(){
-            $this->curdService->customBuilder(function ($builder){
-                $openId = $this->curdService->requestData['open_id'] ?? '';
-                if(!empty($openId)){
-                    $globalUser = (new N8GlobalUserData())
-                        ->setParams([
-                            'product_id' => $this->curdService->requestData['product_id'],
-                            'open_id'  => $openId
-                        ])
-                        ->read();
-                    if(!empty($globalUser)) $globalUser['n8_guid'] = 0;
-
-                    $builder->where('n8_guid',$globalUser['n8_guid']);
                 }
             });
         });

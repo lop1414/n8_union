@@ -35,7 +35,6 @@ class N8UnionUserController extends UserActionBaseController
      * 分页列表预处理
      */
     public function selectPrepare(){
-        $this->selectFilterOpenId();
         $this->selectFilter('id');
         $this->selectFilterAdv($this->convertType);
 
