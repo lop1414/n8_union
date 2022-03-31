@@ -45,10 +45,11 @@ class UserActionBaseController extends BaseController
 
                 if ($unionUserQuery !== DB::table('n8_union_users')) {
                     $unionUser = $unionUserQuery->select('id');
-                    $builder->LeftjoinSub($unionUser, 'union_user', function ($join) use ($unionUserId) {
-                        $tableName = $this->model->getTable();
+                    $tableName = $this->model->getTable();
+                    $builder->LeftjoinSub($unionUser, 'union_user', function ($join) use ($tableName,$unionUserId) {
                         $join->on($tableName . '.' . $unionUserId, '=', 'union_user.id');
                     });
+                    $builder->selete(DB::raw($tableName.'.*'));
                 }
             });
         });
