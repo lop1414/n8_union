@@ -73,7 +73,7 @@ class UserActionBaseController extends BaseController
     }
 
     // 广告维度筛选
-    public function selectFilterAdv($convertType,$convertId = 'id',$clickField = 'click_id'){
+    public function selectFilterAdv($convertType,$convertId = 'id',$clickField = 'union_user.click_id'){
         $this->curdService->selectQueryBefore(function () use ($convertId,$convertType,$clickField){
             $this->curdService->customBuilder(function ($builder) use ($convertId,$convertType,$clickField) {
 
