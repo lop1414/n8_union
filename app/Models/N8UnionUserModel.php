@@ -80,6 +80,8 @@ class N8UnionUserModel extends UserActionBaseModel
     }
 
 
-
+    public function union_user(){
+      return [];
+    }
 
 }
