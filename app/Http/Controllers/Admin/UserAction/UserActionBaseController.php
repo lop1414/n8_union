@@ -29,7 +29,7 @@ class UserActionBaseController extends BaseController
                 $requestData = $this->curdService->requestData;
                 $unionUserQuery = DB::table('n8_union_users');
 
-                $unionUser = $unionUserQuery->select('id');
+                $unionUser = $unionUserQuery->select();
                 $builder->LeftjoinSub($unionUser, 'union_user', function ($join) use ($unionUserId) {
                     $tableName = $this->model->getTable();
                     $join->on($tableName . '.' . $unionUserId, '=', 'union_user.id');
