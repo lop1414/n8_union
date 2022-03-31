@@ -140,12 +140,11 @@ class UserActionBaseController extends BaseController
     }
 
 
-    // 查询后映射自定义转化信息
-
     public function itemConvertCallBack($convertType,$convertCallback){
         return $convertCallback;
     }
 
+    // 查询后映射自定义转化信息
     public function selectCustomConvertMap($convertType,$convertId = 'id'){
         $this->curdService->selectQueryAfter(function() use ($convertType,$convertId){
             $responseData = $this->curdService->responseData;
