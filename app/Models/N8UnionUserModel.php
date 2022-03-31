@@ -79,9 +79,4 @@ class N8UnionUserModel extends UserActionBaseModel
         return $this->hasOne('App\Models\ChapterModel', 'id', 'force_chapter_id');
     }
 
-
-    public function union_user(){
-        return $this->hasOne('App\Models\N8UnionUserModel', 'id', 'id');
-    }
-
 }
