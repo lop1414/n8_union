@@ -64,7 +64,7 @@ class UserActionBaseController extends BaseController
                         ->read();
                     if(!empty($globalUser)) $globalUser['n8_guid'] = 0;
 
-                    $builder->where('union_user.n8_guid',$globalUser['n8_guid']);
+                    $builder->where($tableName.'.n8_guid',$globalUser['n8_guid']);
                 }
             });
         });
