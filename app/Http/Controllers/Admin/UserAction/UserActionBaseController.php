@@ -131,7 +131,7 @@ class UserActionBaseController extends BaseController
                         $convertCallback = $convertList[$convertKey]['convert_callback'] ?? [];
                     }
 
-                    $item->convert_callback = [];
+                    $item->convert_callback = $item->convert_callback ?? [];
                     $item->convert_callback += $this->itemConvertCallBack($convertType,$convertCallback);
                 }
             }
