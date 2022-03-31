@@ -103,7 +103,7 @@ class ChannelController extends BaseController
         $this->curdService->selectQueryAfter(function(){
             $feedbackUrlParam = [];
             if($this->adminUserService->isSupport()){
-                $feedbackUrlParam['support_admin_id'] = $this->adminUserService->isSupport();
+                $feedbackUrlParam['support_admin_id'] = $this->adminUserService->readId();
             }
             $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
