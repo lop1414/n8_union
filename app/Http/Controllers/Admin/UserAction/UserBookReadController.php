@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\UserAction;
 
 
+use App\Http\Controllers\Admin\BaseController;
 use App\Models\UserBookReadModel;
 
 class UserBookReadController extends BaseController

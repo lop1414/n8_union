@@ -95,35 +95,35 @@ $router->group([
         $router->post('read', 'Admin\UserController@read');
     });
 
-    // 用户书籍阅读
-    $router->group(['prefix' => 'user_book_read'], function () use ($router) {
-        $router->post('select', 'Admin\UserBookReadController@select');
-    });
-
-    // 订单
-    $router->group(['prefix' => 'order'], function () use ($router) {
-        $router->post('select', 'Admin\OrderController@select');
-        $router->post('read', 'Admin\OrderController@read');
-    });
-
 
     // 用户行为
     $router->group(['prefix' => 'user_action'], function () use ($router) {
         // union 用户
         $router->group(['prefix' => 'union_user'], function () use ($router) {
-            $router->post('select', 'Admin\N8UnionUserController@select');
-            $router->post('read', 'Admin\N8UnionUserController@read');
+            $router->post('select', 'Admin\UserAction\N8UnionUserController@select');
+            $router->post('read', 'Admin\UserAction\N8UnionUserController@read');
         });
         // 加桌
         $router->group(['prefix' => 'add_shortcut'], function () use ($router) {
-            $router->post('select', 'Admin\UserShortcutActionController@select');
-            $router->post('read', 'Admin\UserShortcutActionController@read');
+            $router->post('select', 'Admin\UserAction\UserShortcutActionController@select');
+            $router->post('read', 'Admin\UserAction\UserShortcutActionController@read');
         });
         // 关注
         $router->group(['prefix' => 'follow'], function () use ($router) {
-            $router->post('select', 'Admin\UserFollowActionController@select');
-            $router->post('read', 'Admin\UserFollowActionController@read');
+            $router->post('select', 'Admin\UserAction\UserFollowActionController@select');
+            $router->post('read', 'Admin\UserAction\UserFollowActionController@read');
         });
+    });
+
+    // 用户书籍阅读
+    $router->group(['prefix' => 'user_book_read'], function () use ($router) {
+        $router->post('select', 'Admin\UserAction\UserBookReadController@select');
+    });
+
+    // 订单
+    $router->group(['prefix' => 'order'], function () use ($router) {
+        $router->post('select', 'Admin\UserAction\OrderController@select');
+        $router->post('read', 'Admin\UserAction\OrderController@read');
     });
 
 
