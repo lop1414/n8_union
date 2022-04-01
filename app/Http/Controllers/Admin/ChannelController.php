@@ -86,7 +86,7 @@ class ChannelController extends BaseController
 
             $keyword = $req['keyword'] ?? '';
             if(!empty($keyword)){
-                $builder->whereRaw(" ( trim(replace(`name`,' ','')) LIKE trim(replace('%{$keyword}%',' ','')) OR `id` LIKE '%{$keyword}%')");
+                $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `id` LIKE '%{$keyword}%')");
             }
         });
     }
