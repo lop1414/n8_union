@@ -31,32 +31,35 @@ class UserActionBaseController extends BaseController
                 $requestData = $this->curdService->requestData;
                 $tableName = $this->model->getTable();
 
-                $builder->where($tableName.'.product_id',$requestData['product_id']);
+                $builder->where($tableName . '.product_id', $requestData['product_id']);
 
                 $unionUserQuery = DB::table('n8_union_users');
                 $unionUser = $unionUserQuery->select();
-                $builder->LeftjoinSub($unionUser, 'union_user', function ($join) use ($unionUserId,$tableName) {
+                $builder->LeftjoinSub($unionUser, 'union_user', function ($join) use ($unionUserId, $tableName) {
                     $join->on($tableName . '.' . $unionUserId, '=', 'union_user.id');
                 });
 
                 $isSelf = $requestData['is_self'] ?? 1;
-                $isSelf && $builder->where('union_user.admin_id', $this->adminUserService->readId());
+                if ($isSelf) {
+                    $builder->where('union_user.admin_id', $this->adminUserService->readId());
+                } else {
 
-                !empty($requestData['admin_id']) && $builder->where('union_user.admin_id', $requestData['admin_id']);
+                    !empty($requestData['admin_id']) && $builder->where('union_user.admin_id', $requestData['admin_id']);
 
-                if (!$this->adminUserService->isAdmin()) {
-                    $adminIds = implode(',',$this->adminUserService->getChildrenAdminIds());
-                    $whereRaw = "union_user.admin_id IN ({$adminIds})";
+                    if (!$this->adminUserService->isAdmin()) {
+                        $adminIds = implode(',', $this->adminUserService->getChildrenAdminIds());
+                        $whereRaw = "union_user.admin_id IN ({$adminIds})";
 
-                    if(!$this->adminUserService->isSupport()){
-                        // 助手数据
-                       $sql = "SELECT c.channel_id FROM channel_extends AS c
-                                    LEFT JOIN channel_extends AS ch  ON c.parent_id = ch.channel_id
-                                    WHERE c.parent_id > 0 AND ch.admin_id = ".$this->adminUserService->readId();
-                       $whereRaw = "({$whereRaw} OR union_user.channel_id IN ({$sql}))";
+                        if (!$this->adminUserService->isSupport()) {
+                            // 助手数据
+                            $sql = "SELECT c.channel_id FROM channel_extends AS c
+                                        LEFT JOIN channel_extends AS ch  ON c.parent_id = ch.channel_id
+                                        WHERE c.parent_id > 0 AND ch.admin_id = " . $this->adminUserService->readId();
+                            $whereRaw = "({$whereRaw} OR union_user.channel_id IN ({$sql}))";
+                        }
+
+                        $builder->whereRaw($whereRaw);
                     }
-
-                    $builder->whereRaw($whereRaw);
                 }
 
                 !empty($requestData['channel_id']) && $builder->where('union_user.channel_id', $requestData['channel_id']);
