@@ -50,28 +50,29 @@ class ChannelController extends BaseController
 
 
             $isSelf = $req['is_self'] ?? 1;
-            $isSelf && $builder->where('e.admin_id', $this->adminUserService->readId());
-
-            if(isset($req['is_bind']) && $req['is_bind'] == 0){
-                $builder->whereNull('e.admin_id');
+            if($isSelf){
+                $builder->where('e.admin_id', $this->adminUserService->readId());
             }else{
-                $builder->where('e.admin_id','>',0);
+                if(isset($req['is_bind']) && $req['is_bind'] == 0){
+                    $builder->whereNull('e.admin_id');
+                }else{
+                    $builder->where('e.admin_id','>',0);
 
-                if(!$this->adminUserService->isAdmin()){
-                    if ($this->adminUserService->isSupport()){
-                        //组管理员
-                        $adminIds = $this->adminUserService->getGroupAdminIds();
-                    }else{
-                        //下属管理员
-                        $adminIds = $this->adminUserService->getChildrenAdminIds();
+                    if(!$this->adminUserService->isAdmin()){
+                        if ($this->adminUserService->isSupport()){
+                            //组管理员
+                            $adminIds = $this->adminUserService->getGroupAdminIds();
+                        }else{
+                            //下属管理员
+                            $adminIds = $this->adminUserService->getChildrenAdminIds();
+                        }
+                        $builder->whereIn('e.admin_id',$adminIds);
                     }
-                    $builder->whereIn('e.admin_id',$adminIds);
                 }
 
-            }
-
-            if(!empty($req['admin_id'])){
-                $builder->where('e.admin_id',$req['admin_id']);
+                if(!empty($req['admin_id'])){
+                    $builder->where('e.admin_id',$req['admin_id']);
+                }
             }
 
 
