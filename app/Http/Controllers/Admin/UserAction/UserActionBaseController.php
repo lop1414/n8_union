@@ -45,8 +45,18 @@ class UserActionBaseController extends BaseController
                 !empty($requestData['admin_id']) && $builder->where('union_user.admin_id', $requestData['admin_id']);
 
                 if (!$this->adminUserService->isAdmin()) {
-                    $adminIds = $this->adminUserService->getChildrenAdminIds();
-                    $builder->whereIn('union_user.admin_id', $adminIds);
+                    $adminIds = implode(',',$this->adminUserService->getChildrenAdminIds());
+                    $whereRaw = "union_user.admin_id IN ({$adminIds})";
+
+                    if(!$this->adminUserService->isSupport()){
+                        // 助手数据
+                       $sql = "SELECT c.channel_id FROM channel_extends AS c
+                                    LEFT JOIN channel_extends AS ch  ON c.parent_id = ch.channel_id
+                                    WHERE c.parent_id > 0 AND ch.admin_id = ".$this->adminUserService->readId();
+                       $whereRaw = "({$whereRaw} OR union_user.channel_id IN ({$sql}))";
+                    }
+
+                    $builder->whereRaw($whereRaw);
                 }
 
                 !empty($requestData['channel_id']) && $builder->where('union_user.channel_id', $requestData['channel_id']);
