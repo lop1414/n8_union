@@ -83,7 +83,7 @@ class ChannelController extends BaseController
                 $builder->where('e.adv_alias',$req['adv_alias']);
             }
 
-            $keyword = $this->curdService->requestData['keyword'] ?? '';
+            $keyword = $req['keyword'] ?? '';
             if(!empty($keyword)){
                 $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `channel_id` LIKE '%{$keyword}%')");
             }
