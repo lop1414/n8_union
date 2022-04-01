@@ -52,7 +52,7 @@ class UserActionBaseController extends BaseController
                         // 助手数据
                        $sql = "SELECT c.channel_id FROM channel_extends AS c
                                     LEFT JOIN channel_extends AS ch  ON c.parent_id = ch.channel_id
-                                    WHERE c.parent_id > 0 AND ch.admin_id = ".$this->adminUserService->readId();
+                                    WHERE c.parent_id > 0 AND c.admin_id = ".$this->adminUserService->readId();
                        $whereRaw = "({$whereRaw} OR union_user.channel_id IN ({$sql}))";
                     }
 
