@@ -52,10 +52,10 @@ class TwKyyChannelService implements CpChannelInterface
                 'cp_type'    => $product['cp_type']
             ]);
             // 打开章节
-            $openChapter = $chapterService->readSave($book['id'],0,$data['num_name'],$data['num']);
+            $openChapter = $chapterService->readSave($book['id'],0,$channel['num_name'],$channel['num']);
 
             //强制章节
-            $installChapter = $chapterService->readSave($book['id'],0,$data['follow_num_name'],$data['follow_num']);
+            $installChapter = $chapterService->readSave($book['id'],0,$channel['follow_num_name'],$channel['follow_num']);
 
 
             $data[] = [
