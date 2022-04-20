@@ -53,7 +53,7 @@ class SaveOrderActionService extends SaveUserActionService
             ->whereRaw("
                 n8_guid = {$data['n8_guid']}
                 AND (
-                    ( channel_id = {$unionUser['channel_id']} AND order_time < '{$data['action_time']}')
+                    channel_id = {$unionUser['channel_id']}
                     OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
                 )
             ")
@@ -64,7 +64,7 @@ class SaveOrderActionService extends SaveUserActionService
                 n8_guid = {$data['n8_guid']}
                 AND status = '{$status}'
                 AND (
-                    ( channel_id = {$unionUser['channel_id']} AND order_time < '{$data['action_time']}')
+                    channel_id = {$unionUser['channel_id']}
                     OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
                 )
             ")

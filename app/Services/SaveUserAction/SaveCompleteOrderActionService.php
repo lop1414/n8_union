@@ -44,7 +44,7 @@ class SaveCompleteOrderActionService extends SaveUserActionService
             ->where('n8_guid',$order['n8_guid'])
             ->where('channel_id',$order['channel_id'])
             ->where('status',OrderStatusEnums::COMPLETE)
-            ->where('order_time','<',$order['order_time'])
+//            ->where('order_time','<',$order['order_time'])
             ->count();
 
         $order->complete_time = $data['action_time'];
