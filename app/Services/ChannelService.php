@@ -107,7 +107,7 @@ class ChannelService extends BaseService
         }
     }
 
-    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,ChapterModel $cpForceChapter): string
+    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,?ChapterModel $cpForceChapter): string
     {
 
         $container = Container::getInstance();

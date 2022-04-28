@@ -106,11 +106,11 @@ class CpChannelService
      * @param string $name
      * @param BookModel $book
      * @param ChapterModel $chapter
-     * @param ChapterModel $forceChapter
+     * @param ChapterModel|null $forceChapter
      * @return string
      * 创建渠道
      */
-    public function create(string $name,BookModel $book,ChapterModel $chapter,ChapterModel $forceChapter): string
+    public function create(string $name, BookModel $book, ChapterModel $chapter, ?ChapterModel $forceChapter): string
     {
 
         $products = ProductService::get(['product_id' =>$this->getParam('product_id')]);
