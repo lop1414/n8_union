@@ -335,11 +335,10 @@ class ProductController extends BaseController
         $requestData = $request->all();
         $this->validRule($requestData,[
             'id' => 'required',
-            'divide' => 'required|int'
+            'divide' => 'required'
         ],[
             'id.required' => 'id 不能为空',
-            'divide.required' => 'divide 不能为空',
-            'divide.int' => 'divide 不是int类型',
+            'divide.required' => 'divide 不能为空'
         ]);
 
 
@@ -349,6 +348,11 @@ class ProductController extends BaseController
 
         if(empty($productMoneyDivide)){
             $productMoneyDivide = new ProductMoneyDivideModel();
+        }else{
+            if( $requestData['divide'] == $productMoneyDivide->divide){
+                return $this->success();
+            }
+
         }
 
         $productMoneyDivide->product_id = $requestData['id'];
@@ -363,6 +367,6 @@ class ProductController extends BaseController
             $productMoneyDivideLog->save();
         }
 
-        return $this->success();
+        return $this->success($ret);
     }
 }
