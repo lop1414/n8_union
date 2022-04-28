@@ -15,6 +15,8 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Datas\ProductData;
 use App\Models\ProductAdminModel;
 use App\Models\ProductModel;
+use App\Models\ProductMoneyDivideLogModel;
+use App\Models\ProductMoneyDivideModel;
 use App\Services\ProductAdminService;
 use Illuminate\Http\Request;
 
@@ -317,6 +319,50 @@ class ProductController extends BaseController
                 'status' => StatusEnum::ENABLE,
             ]);
         }
+        return $this->success();
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @return bool
+     * @throws CustomException
+     * 充值分成
+     */
+    public function moneyDivide(Request $request)
+    {
+        $requestData = $request->all();
+        $this->validRule($requestData,[
+            'id' => 'required',
+            'divide' => 'required|int'
+        ],[
+            'id.required' => 'id 不能为空',
+            'divide.required' => 'divide 不能为空',
+            'divide.int' => 'divide 不是int类型',
+        ]);
+
+
+        $productMoneyDivideModel = new ProductMoneyDivideModel();
+        $productMoneyDivide = $productMoneyDivideModel->where('product_id', $requestData['id'])->first();
+
+
+        if(empty($productMoneyDivide)){
+            $productMoneyDivide = new ProductMoneyDivideModel();
+        }
+
+        $productMoneyDivide->product_id = $requestData['id'];
+        $productMoneyDivide->divide = $requestData['divide'];
+        $ret = $productMoneyDivide->save();
+
+        // 日志表
+        if($ret && !empty($productMoneyDivide->product_id)){
+            $productMoneyDivideLog = new ProductMoneyDivideLogModel();
+            $productMoneyDivideLog->product_id = $requestData['id'];
+            $productMoneyDivideLog->divide = $requestData['divide'];
+            $productMoneyDivideLog->save();
+        }
+
         return $this->success();
     }
 }
