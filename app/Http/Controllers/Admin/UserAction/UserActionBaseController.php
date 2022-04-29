@@ -30,7 +30,7 @@ class UserActionBaseController extends BaseController
             $this->curdService->customBuilder(function ($builder) use ($unionUserId) {
                 $requestData = $this->curdService->requestData;
                 $tableName = $this->model->getTable();
-
+                $builder->select(DB::raw($tableName.".*"));
                 $builder->where($tableName . '.product_id', $requestData['product_id']);
 
                 $unionUserQuery = DB::table('n8_union_users');
