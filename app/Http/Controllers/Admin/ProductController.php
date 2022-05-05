@@ -336,10 +336,10 @@ class ProductController extends BaseController
         $requestData = $request->all();
         $this->validRule($requestData,[
             'id' => 'required',
-            'commissions' => 'required'
+            'commission' => 'required'
         ],[
             'id.required' => 'id 不能为空',
-            'commissions.required' => 'commission 不能为空'
+            'commission.required' => 'commission 不能为空'
         ]);
 
 
@@ -350,21 +350,21 @@ class ProductController extends BaseController
         if(empty($productMoneyDivide)){
             $productMoneyDivide = new ProductCommissionModel();
         }else{
-            if( $requestData['commissions'] == $productMoneyDivide->commission){
+            if( $requestData['commission'] == $productMoneyDivide->commission){
                 return $this->success();
             }
 
         }
 
         $productMoneyDivide->product_id = $requestData['id'];
-        $productMoneyDivide->commission = $requestData['commissions'];
+        $productMoneyDivide->commission = $requestData['commission'];
         $ret = $productMoneyDivide->save();
 
         // 日志表
         if($ret && !empty($productMoneyDivide->product_id)){
             $productMoneyDivideLog = new ProductCommissionLogModel();
             $productMoneyDivideLog->product_id = $requestData['id'];
-            $productMoneyDivideLog->commission = $requestData['commissions'];
+            $productMoneyDivideLog->commission = $requestData['commission'];
             $productMoneyDivideLog->save();
         }
 
