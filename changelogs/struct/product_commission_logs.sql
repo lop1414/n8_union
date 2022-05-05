@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `product_commission_logs`;
 CREATE TABLE `product_commission_logs` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `product_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '产品id',
-  `divide` int(11) NOT NULL DEFAULT '0' COMMENT '分成',
+  `commission` int(11) NOT NULL DEFAULT '0' COMMENT '分成',
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),

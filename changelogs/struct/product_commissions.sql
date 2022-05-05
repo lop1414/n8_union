@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `product_commissions`;
 CREATE TABLE `product_commissions` (
   `product_id` bigint(20) NOT NULL,
-  `divide` int(11) NOT NULL DEFAULT '0' COMMENT '分成',
+  `commission` int(11) NOT NULL DEFAULT '0' COMMENT '分成',
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`product_id`)
