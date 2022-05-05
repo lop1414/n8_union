@@ -73,8 +73,9 @@ class ProductModel extends BaseModel
         return $this->hasOne('App\Models\CpAccountModel', 'id', 'cp_account_id');
     }
 
-    public function money_divide(){
-        return $this->hasOne('App\Models\ProductMoneyDivideModel', 'product_id', 'id');
+
+    public function commissions(){
+        return $this->hasOne('App\Models\ProductCommissionModel', 'product_id', 'id');
     }
 
     public function product_admin(){

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Common\Models\BaseModel;
 
-class ProductMoneyDivideModel extends BaseModel
+class ProductCommissionModel extends BaseModel
 {
     /**
      * @var bool
@@ -16,7 +16,7 @@ class ProductMoneyDivideModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'product_money_divide';
+    protected $table = 'product_commissions';
 
     protected $primaryKey = 'product_id';
 

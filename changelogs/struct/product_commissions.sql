@@ -11,17 +11,17 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 28/04/2022 16:51:40
+ Date: 05/05/2022 10:47:38
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for product_money_divide
+-- Table structure for product_commissions
 -- ----------------------------
-DROP TABLE IF EXISTS `product_money_divide`;
-CREATE TABLE `product_money_divide` (
+DROP TABLE IF EXISTS `product_commissions`;
+CREATE TABLE `product_commissions` (
   `product_id` bigint(20) NOT NULL,
   `divide` int(11) NOT NULL DEFAULT '0' COMMENT '分成',
   `created_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',

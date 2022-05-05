@@ -4,14 +4,14 @@ namespace App\Models;
 
 use App\Common\Models\BaseModel;
 
-class ProductMoneyDivideLogModel extends BaseModel
+class ProductCommissionLogModel extends BaseModel
 {
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
-    protected $table = 'product_money_divide_logs';
+    protected $table = 'product_commissions_logs';
 
 
 

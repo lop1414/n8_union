@@ -15,8 +15,8 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Datas\ProductData;
 use App\Models\ProductAdminModel;
 use App\Models\ProductModel;
-use App\Models\ProductMoneyDivideLogModel;
-use App\Models\ProductMoneyDivideModel;
+use App\Models\ProductCommissionLogModel;
+use App\Models\ProductCommissionModel;
 use App\Services\ProductAdminService;
 use Illuminate\Http\Request;
 
@@ -79,7 +79,7 @@ class ProductController extends BaseController
             $n8TransferDataUrl = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.data_url');
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->cp_account;
-                $item->money_divide;
+                $item->commissions;
 
                 $admins = [];
                 $item->is_public = 0;
@@ -343,12 +343,12 @@ class ProductController extends BaseController
         ]);
 
 
-        $productMoneyDivideModel = new ProductMoneyDivideModel();
+        $productMoneyDivideModel = new ProductCommissionModel();
         $productMoneyDivide = $productMoneyDivideModel->where('product_id', $requestData['id'])->first();
 
 
         if(empty($productMoneyDivide)){
-            $productMoneyDivide = new ProductMoneyDivideModel();
+            $productMoneyDivide = new ProductCommissionModel();
         }else{
             if( $requestData['divide'] == $productMoneyDivide->divide){
                 return $this->success();
@@ -362,7 +362,7 @@ class ProductController extends BaseController
 
         // 日志表
         if($ret && !empty($productMoneyDivide->product_id)){
-            $productMoneyDivideLog = new ProductMoneyDivideLogModel();
+            $productMoneyDivideLog = new ProductCommissionLogModel();
             $productMoneyDivideLog->product_id = $requestData['id'];
             $productMoneyDivideLog->divide = $requestData['divide'];
             $productMoneyDivideLog->save();
