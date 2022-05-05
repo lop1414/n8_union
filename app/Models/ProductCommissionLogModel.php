@@ -11,7 +11,7 @@ class ProductCommissionLogModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'product_commissions_logs';
+    protected $table = 'product_commission_logs';
 
 
 
