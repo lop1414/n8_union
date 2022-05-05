@@ -74,7 +74,7 @@ class ProductModel extends BaseModel
     }
 
 
-    public function commissions(){
+    public function commission_info(){
         return $this->hasOne('App\Models\ProductCommissionModel', 'product_id', 'id');
     }
 
