@@ -26,7 +26,7 @@ class ProductCommissionModel extends BaseModel
      * @return float|int
      * 属性访问器
      */
-    public function getDivideAttribute($value)
+    public function getCommissionAttribute($value)
     {
         return $value / 100;
     }
@@ -35,8 +35,8 @@ class ProductCommissionModel extends BaseModel
      * @param $value
      * 属性修饰器
      */
-    public function setDivideAttribute($value)
+    public function setCommissionAttribute($value)
     {
-        $this->attributes['divide'] = intval($value * 100);
+        $this->attributes['commission'] = intval($value * 100);
     }
 }
