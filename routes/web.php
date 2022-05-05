@@ -87,7 +87,7 @@ $router->group([
         $router->post('enable', 'Admin\ProductController@enable');
         $router->post('disable', 'Admin\ProductController@disable');
         $router->post('distribution', 'Admin\ProductController@distribution');
-        $router->post('money_divide', 'Admin\ProductController@moneyDivide');
+        $router->post('commission', 'Admin\ProductController@commission');
     });
 
     // 用户

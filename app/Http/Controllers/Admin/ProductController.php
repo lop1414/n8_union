@@ -331,7 +331,7 @@ class ProductController extends BaseController
      * @throws CustomException
      * 充值分成
      */
-    public function moneyDivide(Request $request)
+    public function commission(Request $request)
     {
         $requestData = $request->all();
         $this->validRule($requestData,[
