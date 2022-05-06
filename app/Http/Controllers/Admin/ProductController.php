@@ -342,30 +342,44 @@ class ProductController extends BaseController
             'commission.required' => 'commission 不能为空'
         ]);
 
+        $defaultTime = '2000-01-01 00:00:00';
+        // 历史记录
+        $productCommissionLogModel = new ProductCommissionLogModel();
+        $last = $productCommissionLogModel->where('product_id', $requestData['id'])
+            ->orderBy('created_at', 'desc')
+            ->first();
 
-        $productMoneyDivideModel = new ProductCommissionModel();
-        $productMoneyDivide = $productMoneyDivideModel->where('product_id', $requestData['id'])->first();
+
+        $productCommissionModel = new ProductCommissionModel();
+        $productCommission = $productCommissionModel->where('product_id', $requestData['id'])->first();
 
 
-        if(empty($productMoneyDivide)){
-            $productMoneyDivide = new ProductCommissionModel();
+        if(empty($productCommission)){
+            $productCommission = new ProductCommissionModel();
         }else{
-            if( $requestData['commission'] == $productMoneyDivide->commission){
+            if( $requestData['commission'] == $productCommission->commission){
                 return $this->success();
             }
-
         }
 
-        $productMoneyDivide->product_id = $requestData['id'];
-        $productMoneyDivide->commission = $requestData['commission'];
-        $ret = $productMoneyDivide->save();
+        $productCommission->product_id = $requestData['id'];
+        $productCommission->commission = $requestData['commission'];
+        if(empty($last)){
+            $productCommission->created_at = $defaultTime;
+            $productCommission->updated_at = $defaultTime;
+        }
+        $ret = $productCommission->save();
 
         // 日志表
-        if($ret && !empty($productMoneyDivide->product_id)){
-            $productMoneyDivideLog = new ProductCommissionLogModel();
-            $productMoneyDivideLog->product_id = $requestData['id'];
-            $productMoneyDivideLog->commission = $requestData['commission'];
-            $productMoneyDivideLog->save();
+        if($ret && !empty($productCommission->product_id)){
+            $productCommissionLog = $productCommissionLogModel;
+            $productCommissionLog->product_id = $requestData['id'];
+            $productCommissionLog->commission = $requestData['commission'];
+            if(empty($last)){
+                $productCommissionLog->created_at = $defaultTime;
+                $productCommissionLog->updated_at = $defaultTime;
+            }
+            $productCommissionLog->save();
         }
 
         return $this->success($ret);
