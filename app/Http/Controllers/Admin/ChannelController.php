@@ -119,7 +119,8 @@ class ChannelController extends BaseController
                 $item->has_extend = !!$adminId;
 
                 //可复制
-                $item->is_can_copy = !$item->parent_id;
+//                $item->is_can_copy = !$item->parent_id;
+                $item->is_can_copy = false;
 
 
                 //监测链接
