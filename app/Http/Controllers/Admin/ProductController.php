@@ -15,8 +15,8 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Datas\ProductData;
 use App\Models\ProductAdminModel;
 use App\Models\ProductModel;
-use App\Models\ProductCommissionLogModel;
-use App\Models\ProductCommissionModel;
+use App\Models\CpCommissionLogModel;
+use App\Models\CpCommissionModel;
 use App\Services\ProductAdminService;
 use Illuminate\Http\Request;
 
@@ -321,67 +321,5 @@ class ProductController extends BaseController
             ]);
         }
         return $this->success();
-    }
-
-
-
-    /**
-     * @param Request $request
-     * @return bool
-     * @throws CustomException
-     * 充值分成
-     */
-    public function commission(Request $request)
-    {
-        $requestData = $request->all();
-        $this->validRule($requestData,[
-            'id' => 'required',
-            'commission' => 'required'
-        ],[
-            'id.required' => 'id 不能为空',
-            'commission.required' => 'commission 不能为空'
-        ]);
-
-        $defaultTime = '2000-01-01 00:00:00';
-        // 历史记录
-        $productCommissionLogModel = new ProductCommissionLogModel();
-        $last = $productCommissionLogModel->where('product_id', $requestData['id'])
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-
-        $productCommissionModel = new ProductCommissionModel();
-        $productCommission = $productCommissionModel->where('product_id', $requestData['id'])->first();
-
-
-        if(empty($productCommission)){
-            $productCommission = new ProductCommissionModel();
-        }else{
-            if( $requestData['commission'] == $productCommission->commission){
-                return $this->success();
-            }
-        }
-
-        $productCommission->product_id = $requestData['id'];
-        $productCommission->commission = $requestData['commission'];
-        if(empty($last)){
-            $productCommission->created_at = $defaultTime;
-            $productCommission->updated_at = $defaultTime;
-        }
-        $ret = $productCommission->save();
-
-        // 日志表
-        if($ret && !empty($productCommission->product_id)){
-            $productCommissionLog = $productCommissionLogModel;
-            $productCommissionLog->product_id = $requestData['id'];
-            $productCommissionLog->commission = $requestData['commission'];
-            if(empty($last)){
-                $productCommissionLog->created_at = $defaultTime;
-                $productCommissionLog->updated_at = $defaultTime;
-            }
-            $productCommissionLog->save();
-        }
-
-        return $this->success($ret);
     }
 }

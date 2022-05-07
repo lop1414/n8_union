@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Common\Models\BaseModel;
 
-class ProductCommissionModel extends BaseModel
+class CpCommissionModel extends BaseModel
 {
     /**
      * @var bool
@@ -16,9 +16,9 @@ class ProductCommissionModel extends BaseModel
      *
      * @var string
      */
-    protected $table = 'product_commissions';
+    protected $table = 'cp_commissions';
 
-    protected $primaryKey = 'product_id';
+    protected $primaryKey = 'cp_type';
 
 
     /**

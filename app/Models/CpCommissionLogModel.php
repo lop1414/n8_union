@@ -4,14 +4,14 @@ namespace App\Models;
 
 use App\Common\Models\BaseModel;
 
-class ProductCommissionLogModel extends BaseModel
+class CpCommissionLogModel extends BaseModel
 {
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
-    protected $table = 'product_commission_logs';
+    protected $table = 'cp_commission_logs';
 
 
 

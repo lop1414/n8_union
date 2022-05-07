@@ -77,6 +77,13 @@ $router->group([
         $router->post('sync_product', 'Admin\CpAccountController@syncProduct');
     });
 
+    // 平台分成
+    $router->group(['prefix' => 'cp_commission'], function () use ($router) {
+        $router->post('update', 'Admin\CpCommissionController@update');
+        $router->post('select', 'Admin\CpCommissionController@select');
+    });
+
+
     // 产品
     $router->group(['prefix' => 'product'], function () use ($router) {
         $router->post('create', 'Admin\ProductController@create');
@@ -87,7 +94,6 @@ $router->group([
         $router->post('enable', 'Admin\ProductController@enable');
         $router->post('disable', 'Admin\ProductController@disable');
         $router->post('distribution', 'Admin\ProductController@distribution');
-        $router->post('commission', 'Admin\ProductController@commission');
     });
 
     // 用户
