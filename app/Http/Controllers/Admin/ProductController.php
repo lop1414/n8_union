@@ -74,7 +74,8 @@ class ProductController extends BaseController
         $this->curdService->selectQueryAfter(function(){
 
             $n8UnionUrl = config('common.system_api.'.SystemAliasEnum::UNION.'.url');
-            $n8TransferDataUrl = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.data_url');
+            $ywTransferDataUrl = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.data_url');
+            $n8TransferDataUrl = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.url');
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->cp_account;
 
@@ -100,14 +101,14 @@ class ProductController extends BaseController
                     if($item->type == ProductTypeEnums::KYY){
                         $copyUrl[] = [
                             'name' => '用户数据接收地址',
-                            'url'  => $n8TransferDataUrl.'/open/yw_kyy/user'
+                            'url'  => $ywTransferDataUrl.'/open/yw_kyy/user'
                         ];
                     }
 
                     if ($item->type == ProductTypeEnums::H5){
                         $copyUrl[] = [
                             'name' => '用户数据接收地址',
-                            'url'  => $n8TransferDataUrl.'/open/yw_h5/user'
+                            'url'  => $ywTransferDataUrl.'/open/yw_h5/user'
                         ];
                     }
                 }
