@@ -15,8 +15,6 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Datas\ProductData;
 use App\Models\ProductAdminModel;
 use App\Models\ProductModel;
-use App\Models\CpCommissionLogModel;
-use App\Models\CpCommissionModel;
 use App\Services\ProductAdminService;
 use Illuminate\Http\Request;
 
@@ -113,6 +111,21 @@ class ProductController extends BaseController
                         ];
                     }
                 }
+
+                if($item->cp_type == CpTypeEnums::FQ){
+
+                    if($item->type == ProductTypeEnums::KYY){
+                        $copyUrl[] = [
+                            'name' => '用户注册数据接收地址',
+                            'url'  => $n8TransferDataUrl.'/open/fq_kyy/reg'
+                        ];
+                        $copyUrl[] = [
+                            'name' => '用户加桌数据接收地址',
+                            'url'  => $n8TransferDataUrl.'/open/fq_kyy/add_shortcut'
+                        ];
+                    }
+                }
+
                 $item->copy_url = $copyUrl;
             }
         });
