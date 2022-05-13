@@ -140,6 +140,9 @@ class UserActionMatchService extends BaseService
                     }
 
                     $extend = $item->extend ? $item->extend->toArray() : [];
+                    if(!empty($extend['oaid']) && !isset($extend['oaid_md5'])){
+                        $extend['oaid_md5'] = $extend['oaid'];
+                    }
                     array_push($convert,array_merge($tmp,$extend));
                 }
 
