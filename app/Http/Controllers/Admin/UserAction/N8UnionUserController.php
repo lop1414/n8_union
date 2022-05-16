@@ -36,7 +36,7 @@ class N8UnionUserController extends UserActionBaseController
      */
     public function selectPrepare(){
         $this->selectFilter('id');
-        $this->selectFilterAdv($this->convertType);
+        $this->selectFilterAdv($this->convertType,'n8_union_users.id');
 
         $this->selectConvertMap($this->convertType);
         $this->selectCustomConvertMap($this->convertType);
