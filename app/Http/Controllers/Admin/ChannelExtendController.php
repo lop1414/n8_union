@@ -9,6 +9,7 @@ use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Functions;
 use App\Common\Services\ErrorLogService;
 use App\Datas\ChannelExtendData;
+use App\Models\ChannelAdminChangeLogModel;
 use App\Models\ChannelExtendModel;
 use App\Models\ChannelModel;
 use App\Models\N8UnionUserModel;
@@ -71,7 +72,17 @@ class ChannelExtendController extends BaseController
                 unset($this->curdService->handleData['admin_id']);
             }
 
+
+            if(isset($this->curdService->handleData['admin_id'])){
+                $channelAdminChangeLog = new ChannelAdminChangeLogModel();
+                $channelAdminChangeLog->channel_id = $this->curdService->findData->channel_id;
+                $channelAdminChangeLog->admin_id_after = $this->curdService->findData->admin_id;
+                $channelAdminChangeLog->admin_id_before = $this->curdService->handleData['admin_id'];
+                $channelAdminChangeLog->save();
+            }
+
         });
+
     }
 
 
