@@ -83,6 +83,13 @@ $router->group([
         $router->post('select', 'Admin\CpCommissionController@select');
     });
 
+    // 书籍分成
+    $router->group(['prefix' => 'book_commission'], function () use ($router) {
+        $router->post('update', 'Admin\BookCommissionController@update');
+        $router->post('create', 'Admin\BookCommissionController@create');
+        $router->post('select', 'Admin\BookCommissionController@select');
+    });
+
 
     // 产品
     $router->group(['prefix' => 'product'], function () use ($router) {
