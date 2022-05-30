@@ -23,6 +23,8 @@ class BookController extends BaseController
     public function dataFilter(){
 
         $this->curdService->customBuilder(function ($builder){
+            $req = $this->curdService->requestData;
+
             $keyword = $req['keyword'] ?? '';
             if(!empty($keyword)){
                 $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `id` LIKE '%{$keyword}%' OR `cp_book_id` LIKE '%{$keyword}%')");
