@@ -32,8 +32,8 @@ class ProductWeixinMiniProgramController extends BaseController
         $this->validRule($requestData,[
             'product_id' => 'required',
             'weixin_mini_program_id' => 'required',
-            'url' => 'required',
-            'path' => 'required',
+            'guide_url'  => 'required',
+            'guide_path' => 'required',
         ]);
 
         $product = (new ProductModel())->where('id',$requestData['product_id'])->first();

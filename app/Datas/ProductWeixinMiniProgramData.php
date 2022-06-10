@@ -58,8 +58,8 @@ class ProductWeixinMiniProgramData extends BaseData
         }
 
         $info->weixin_mini_program_id = $data['weixin_mini_program_id'];
-        $info->url = $data['url'];
-        $info->path = $data['path'];
+        $info->guide_url = $data['guide_url'];
+        $info->guide_path = $data['guide_path'];
         $info->save();
         return $info;
     }

@@ -78,6 +78,7 @@ class ProductController extends BaseController
             $n8TransferDataUrl = config('common.system_api.'.SystemAliasEnum::TRANSFER.'.url');
             foreach ($this->curdService->responseData['list'] as $item){
                 $item->cp_account;
+                $item->weixin_mini_program;
 
                 $admins = [];
                 $item->is_public = 0;
