@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
-use App\Common\Services\ConsoleEchoService;
-use App\Models\UaDeviceModel;
-use App\Services\Ua\UaDeviceService;
+use App\Models\N8UnionUserModel;
+use Illuminate\Support\Facades\DB;
 
 
 class TestCommand extends BaseCommand
@@ -23,34 +22,23 @@ class TestCommand extends BaseCommand
      */
     protected $description = '';
 
-    protected $consoleEchoService;
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct(){
-        parent::__construct();
-        $this->consoleEchoService = new ConsoleEchoService();
-    }
+
 
 
 
     public function handle(){
-        $unionUserModel = (new UaDeviceModel());
+        $unionUserModel = (new N8UnionUserModel());
 
         $lastId = 0;
 
-        $service = new UaDeviceService();
-
         do{
             echo $lastId."\n";
-            $list = $unionUserModel->where('id','>',$lastId)->limit(10000)->get();
-            foreach ($list as $item){
-                $lastId = $item->id;
-                $service->update($item->model);
-            }
+            $list = $unionUserModel->where('id','>',$lastId)->limit(10)->get()->map(function ($user){
+                $user->demo = 1;
+                return $user;
+            });
+
         }while(!$list->isEmpty());
 
     }

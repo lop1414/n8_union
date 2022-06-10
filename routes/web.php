@@ -330,7 +330,7 @@ $router->group([
     $router->post('open_user/bind', 'Front\OpenUserController@bind');
     $router->post('open_user/info', 'Front\OpenUserController@info');
 
-    $router->get('url_link/make', 'Front\MiniProgramUrlLinkController@make');
+    $router->post('url_link/make', 'Front\MiniProgramUrlLinkController@make');
 });
 
 // 测试
