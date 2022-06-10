@@ -84,4 +84,8 @@ class ProductModel extends BaseModel
 
     }
 
+    public function weixinMiniProgram(){
+        return $this->hasOne('App\Models\ProductWeixinMiniProgramModel', 'product_id', 'id');
+    }
+
 }

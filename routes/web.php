@@ -103,6 +103,11 @@ $router->group([
         $router->post('distribution', 'Admin\ProductController@distribution');
     });
 
+    $router->group(['prefix' => 'product_weixin_mini_program'], function () use ($router) {
+        $router->post('save', 'Admin\ProductWeixinMiniProgramController@save');
+        $router->post('read', 'Admin\ProductWeixinMiniProgramController@read');
+    });
+
     // 用户
     $router->group(['prefix' => 'user'], function () use ($router) {
         $router->post('select', 'Admin\UserController@select');
