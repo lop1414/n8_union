@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Console\Commands\RefreshWeixinMiniProgramAccessTokenCommand;
 use App\Console\Commands\SyncDeviceNetworkLicenseCommand;
 use App\Console\Commands\UaReadAnalyseCommand;
 use App\Console\Commands\SaveUserActionCommand;
@@ -41,6 +42,9 @@ class Kernel extends ConsoleKernel
         // 同步设备入网许可信息
         SyncDeviceNetworkLicenseCommand::class,
 
+        // 刷新小程序token
+        RefreshWeixinMiniProgramAccessTokenCommand::class,
+
     ];
 
     /**
@@ -59,6 +63,9 @@ class Kernel extends ConsoleKernel
 
         //创建分表
         $schedule->command('create_table')->cron('0 0 1,15 * *');
+
+        //刷新小程序token
+        $schedule->command('refresh_weixin_program_access_token')->cron('0 * * * *');
 
         //拉取CP渠道
         $schedule->command('pull_cp_channel --date=today')->cron('50 23 * * *');
