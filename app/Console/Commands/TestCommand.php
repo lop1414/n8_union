@@ -28,18 +28,7 @@ class TestCommand extends BaseCommand
 
 
     public function handle(){
-        $unionUserModel = (new N8UnionUserModel());
 
-        $lastId = 0;
-
-        do{
-            echo $lastId."\n";
-            $list = $unionUserModel->where('id','>',$lastId)->limit(10)->get()->map(function ($user){
-                $user->demo = 1;
-                return $user;
-            });
-
-        }while(!$list->isEmpty());
 
     }
 
