@@ -27,9 +27,16 @@ class WeixinMiniProgramService extends BaseService
     protected $appSecret;
 
     /**
+     * @var
+     * token
+     */
+    protected $accessToken;
+
+    /**
      * constructor.
      */
     public function __construct(){
+        parent::__construct();
         $this->sdk = new WeixinMiniProgramSdk();
     }
 
@@ -57,7 +64,7 @@ class WeixinMiniProgramService extends BaseService
         }
 
         $this->appSecret = $map[$this->appId]['app_secret'];
-
+        $this->accessToken = $map[$this->appId]['access_token'];
         return true;
     }
 
