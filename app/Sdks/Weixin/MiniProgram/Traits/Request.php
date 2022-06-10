@@ -36,7 +36,9 @@ trait Request
             $errorMessage = $result['errmsg'] ?? '微信请求错误';
 
             // 隐藏密钥
-            unset($param['secret']);
+            if(isset($param['secret'])){
+                unset($param['secret']);
+            }
 
             throw new CustomException([
                 'code' => 'WEIXIN_REQUEST_ERROR',
