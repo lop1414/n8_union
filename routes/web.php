@@ -330,10 +330,16 @@ $router->group([
 
     $router->post('open_user/bind', 'Front\OpenUserController@bind');
     $router->post('open_user/info', 'Front\OpenUserController@info');
+});
 
-    $router->group(['middleware' => ['access_control_allow_origin']], function () use ($router) {
-        $router->get('url_link/make', 'Front\MiniProgramUrlLinkController@make');
-    });
+
+$router->group([
+    // 路由前缀
+    'prefix' => 'front',
+    // 路由中间件
+    'middleware' => ['simple_sign_valid', 'access_control_allow_origin']
+], function () use ($router) {
+    $router->get('url_link/make', 'Front\MiniProgramUrlLinkController@make');
 });
 
 
