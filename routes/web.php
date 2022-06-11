@@ -350,9 +350,4 @@ $router->post('test', 'TestController@test');
 
 
 //解决options跨域问题
-//$router->group([
-//    'prefix' => 'front',
-//    'middleware' => ['access_control_allow_origin']
-//], function () use ($router) {
-    $router->options('front/url_link/make', '\\App\Common\Controllers\Front\CrossController@index');
-//});
+$router->options('front/url_link/make', '\\App\Common\Controllers\Front\CrossController@index');
