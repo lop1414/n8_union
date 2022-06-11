@@ -332,7 +332,7 @@ $router->group([
     $router->post('open_user/info', 'Front\OpenUserController@info');
 
     $router->group(['middleware' => ['access_control_allow_origin']], function () use ($router) {
-        $router->post('url_link/make', 'Front\MiniProgramUrlLinkController@make');
+        $router->get('url_link/make', 'Front\MiniProgramUrlLinkController@make');
     });
 });
 
