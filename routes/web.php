@@ -350,11 +350,17 @@ $router->post('test', 'TestController@test');
 
 
 //解决options跨域问题
-$router->group([
-    // 路由前缀
-    'prefix' => 'front',
-    // 路由中间件
-    'middleware' => ['access_control_allow_origin']
-], function () use ($router) {
-    $router->options('url_link/make', '\\App\Common\Controllers\Front\CrossController@index');
-});
+//$router->group([
+//    'prefix' => 'front',
+//    'middleware' => ['access_control_allow_origin']
+//], function () use ($router) {
+    $router->options('front/url_link/make', function (){
+        header('Access-Control-Allow-Origin', '*');
+        header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN');
+        header('Access-Control-Expose-Headers', 'Authorization, authenticated');
+        header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
+        header('Access-Control-Allow-Credentials', 'true');
+        header('Content-Type', 'application/json;charset=utf-8');
+        return response('options here!');
+    });
+//});
