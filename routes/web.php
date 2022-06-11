@@ -244,6 +244,7 @@ $router->group([
     // 微信小程序
     $router->group(['prefix' => 'weixin_mini_program'], function () use ($router) {
         $router->post('select', 'Admin\WeixinMiniProgramController@select');
+        $router->post('get', 'Admin\WeixinMiniProgramController@get');
         $router->post('read', 'Admin\WeixinMiniProgramController@read');
         $router->post('create', 'Admin\WeixinMiniProgramController@create');
         $router->post('update', 'Admin\WeixinMiniProgramController@update');
