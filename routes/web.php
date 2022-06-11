@@ -15,9 +15,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->option('/{all}', function ($request){
-    return response('options here!');
-})->where(['all' => '([a-zA-Z0-9-]|/)+']);
+
 
 // 公开接口
 $router->group([
@@ -349,3 +347,9 @@ $router->group([
 
 // 测试
 $router->post('test', 'TestController@test');
+
+
+// 解决options跨域问题
+$router->options('front/url_link/make', function (){
+    return response('options here!');
+});
