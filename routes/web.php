@@ -339,7 +339,7 @@ $router->group([
     // 路由前缀
     'prefix' => 'front',
     // 路由中间件
-    'middleware' => ['simple_sign_valid', 'access_control_allow_origin']
+    'middleware' => ['access_control_allow_origin','simple_sign_valid']
 ], function () use ($router) {
     $router->post('url_link/make', 'Front\MiniProgramUrlLinkController@make');
 });
