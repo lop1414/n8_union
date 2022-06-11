@@ -350,6 +350,4 @@ $router->post('test', 'TestController@test');
 
 
 // 解决options跨域问题
-$router->options('front/url_link/make', function (){
-    return response('options here!');
-});
+$router->options('front/url_link/make', '\\App\Common\Controllers\Front\CrossController@index');
