@@ -343,7 +343,7 @@ $router->group([
     // 路由中间件
     'middleware' => ['simple_sign_valid', 'access_control_allow_origin']
 ], function () use ($router) {
-    $router->get('url_link/make', 'Front\MiniProgramUrlLinkController@make');
+    $router->post('url_link/make', 'Front\MiniProgramUrlLinkController@make');
 });
 
 
