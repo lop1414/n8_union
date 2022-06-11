@@ -331,8 +331,11 @@ $router->group([
     $router->post('open_user/bind', 'Front\OpenUserController@bind');
     $router->post('open_user/info', 'Front\OpenUserController@info');
 
-    $router->post('url_link/make', 'Front\MiniProgramUrlLinkController@make');
+    $router->group(['middleware' => ['access_control_allow_origin']], function () use ($router) {
+        $router->post('url_link/make', 'Front\MiniProgramUrlLinkController@make');
+    });
 });
+
 
 // 测试
 $router->post('test', 'TestController@test');
