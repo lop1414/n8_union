@@ -15,6 +15,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->option('/{all}', function ($request){
+    return response('options here!');
+})->where(['all' => '([a-zA-Z0-9-]|/)+']);
+
 // 公开接口
 $router->group([
     'prefix' => 'open',
