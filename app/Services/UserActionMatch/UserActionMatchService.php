@@ -67,7 +67,7 @@ class UserActionMatchService extends BaseService
      * 匹配周期
      * 5分钟匹配一次
      */
-    protected $matchCycle = 60 * 5;
+    protected $matchCycle = 60 * 10;
 
 
 
