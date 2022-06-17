@@ -43,7 +43,7 @@ class ZyKyyChannelService implements CpChannelInterface
         ];
         $channels = $sdk->getChannels($para);
 
-        foreach ($channels as $channel){
+        foreach ($channels['data'] as $channel){
             // 书籍
             $book['id'] = 0;
             if(!empty($channel['bid'])){
