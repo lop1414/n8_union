@@ -13,6 +13,7 @@ use App\Services\Cp\Channel\TwAppChannelService;
 use App\Services\Cp\Channel\TwKyyChannelService;
 use App\Services\Cp\Channel\YwH5ChannelService;
 use App\Services\Cp\Channel\YwKyyChannelService;
+use App\Services\Cp\Channel\ZyKyyChannelService;
 use App\Services\ProductService;
 use App\Services\Cp\Channel\CpChannelInterface;
 
@@ -47,6 +48,7 @@ class CpChannelService
             FqKyyChannelService::class,
             QyH5ChannelService::class,
             TwKyyChannelService::class,
+            ZyKyyChannelService::class,
         ];
     }
 
