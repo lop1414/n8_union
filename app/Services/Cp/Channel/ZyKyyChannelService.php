@@ -45,11 +45,15 @@ class ZyKyyChannelService implements CpChannelInterface
 
         foreach ($channels as $channel){
             // 书籍
-            $book = $bookService->readSave([
-                'cp_book_id' => $channel['bid'],
-                'name'       => $channel['book_name'],
-                'cp_type'    => $product['cp_type']
-            ]);
+            $book['id'] = 0;
+            if(!empty($channel['bid'])){
+                $book = $bookService->readSave([
+                    'cp_book_id' => $channel['bid'],
+                    'name'       => $channel['book_name'],
+                    'cp_type'    => $product['cp_type']
+                ]);
+            }
+
             // 打开章节
 //            $openChapter = $chapterService->readSave($book['id'],0,$channel['num_name'],$channel['num']);
 
@@ -61,7 +65,7 @@ class ZyKyyChannelService implements CpChannelInterface
                 'product_id'     => $product['id'],
                 'cp_channel_id'  => $channel['id'],
                 'name'           => $channel['name'],
-                'book_id'        => $book['id'],
+                'book_id'        => $book['id'] ?? 0,
                 'chapter_id'     => 0,
                 'force_chapter_id'  => 0,
                 'extends'       => [
