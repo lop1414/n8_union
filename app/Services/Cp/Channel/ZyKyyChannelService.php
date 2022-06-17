@@ -5,7 +5,7 @@ namespace App\Services\Cp\Channel;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
-use App\Common\Sdks\ZY\ZySdk;
+use App\Common\Sdks\Zy\ZySdk;
 use App\Common\Tools\CustomException;
 use App\Services\BookService;
 use App\Services\ChapterService;
