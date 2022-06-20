@@ -36,3 +36,4 @@ INSERT INTO `n8_union`.`cp_commissions` (`cp_type`, `commission`, `created_at`, 
 INSERT INTO `n8_union`.`cp_commissions` (`cp_type`, `commission`, `created_at`, `updated_at`) VALUES ('TW', 0, NULL, NULL);
 INSERT INTO `n8_union`.`cp_commissions` (`cp_type`, `commission`, `created_at`, `updated_at`) VALUES ('BM', 0, NULL, NULL);
 INSERT INTO `n8_union`.`cp_commissions` (`cp_type`, `commission`, `created_at`, `updated_at`) VALUES ('FQ', 0, NULL, NULL);
+INSERT INTO `n8_union`.`cp_commissions` (`cp_type`, `commission`, `created_at`, `updated_at`) VALUES ('ZY', 0, NULL, NULL);
