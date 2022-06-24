@@ -7,7 +7,7 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Models\ProductModel;
-use App\Sdks\Yw\YwSdk;
+use App\Common\Sdks\Yw\YwSdk;
 use App\Services\BookService;
 use App\Services\ChapterService;
 use App\Services\Cp\Book\YwBookService;

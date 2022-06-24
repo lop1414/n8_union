@@ -4,7 +4,7 @@ namespace App\Services\Cp\Chapter;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Models\ProductModel;
-use App\Sdks\Yw\YwSdk;
+use App\Common\Sdks\Yw\YwSdk;
 use App\Services\BookService;
 use App\Services\ChapterService;
 

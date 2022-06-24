@@ -4,7 +4,7 @@ namespace App\Services\Cp\Product;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
-use App\Sdks\Yw\YwSdk;
+use App\Common\Sdks\Yw\YwSdk;
 
 class YwKyyProductService implements CpProductInterface
 {
