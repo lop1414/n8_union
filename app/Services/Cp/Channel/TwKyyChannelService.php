@@ -6,7 +6,7 @@ namespace App\Services\Cp\Channel;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Tools\CustomException;
-use App\Sdks\Tw\TwSdk;
+use App\Common\Sdks\Tw\TwSdk;
 use App\Services\BookService;
 use App\Services\ChapterService;
 
@@ -42,7 +42,7 @@ class TwKyyChannelService implements CpChannelInterface
             'time'  => TIMESTAMP,
             'adate' => date('Ymd',strtotime($date))
         ];
-        $channels = $sdk->getCpChannel($para);
+        $channels = $sdk->getChannel($para);
 
         foreach ($channels as $channel){
             // 书籍
