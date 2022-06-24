@@ -40,7 +40,7 @@ class FqKyyChannelService implements CpChannelInterface
     {
 
         $data = array();
-        $sdk = new FqSdk($product['cp_account']['cp_secret'],$product['cp_secret']);
+        $sdk = new FqSdk($product['cp_account']['account'],$product['cp_account']['cp_secret']);
         $offset = 0;
         do{
             if($cpId){

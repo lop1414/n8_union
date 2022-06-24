@@ -12,7 +12,7 @@ class FqBookService
     public function read(ProductModel $product,string $cpId): array
     {
 
-        $sdk = new FqSdk($product['cp_account']['cp_secret'],$product['cp_secret']);
+        $sdk = new FqSdk($product['cp_account']['account'],$product['cp_account']['cp_secret']);
 
         $res = $sdk->getBookInfo($cpId);
         $data = $res['result'][0];
