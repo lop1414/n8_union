@@ -66,9 +66,7 @@ class ProductModel extends BaseModel
     }
 
 
-    /**
-     * 平台账户 一对一
-     */
+
     public function cp_account(){
         return $this->hasOne('App\Models\CpAccountModel', 'id', 'cp_account_id');
     }

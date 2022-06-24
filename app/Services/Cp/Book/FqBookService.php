@@ -4,7 +4,7 @@ namespace App\Services\Cp\Book;
 
 
 use App\Models\ProductModel;
-use App\Sdks\Fq\FqSdk;
+use App\Common\Sdks\Fq\FqSdk;
 
 class FqBookService
 {
@@ -12,7 +12,7 @@ class FqBookService
     public function read(ProductModel $product,string $cpId): array
     {
 
-        $sdk = new FqSdk($product['cp_product_alias'],$product['cp_secret']);
+        $sdk = new FqSdk($product['cp_account']['cp_secret'],$product['cp_secret']);
 
         $res = $sdk->getBookInfo($cpId);
         $data = $res['result'][0];

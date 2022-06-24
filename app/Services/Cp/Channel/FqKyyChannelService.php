@@ -7,7 +7,7 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Models\ProductModel;
-use App\Sdks\Fq\FqSdk;
+use App\Common\Sdks\Fq\FqSdk;
 use App\Services\BookService;
 use App\Services\ChapterService;
 use App\Services\Cp\Book\FqBookService;
@@ -40,7 +40,7 @@ class FqKyyChannelService implements CpChannelInterface
     {
 
         $data = array();
-        $sdk = new FqSdk($product['cp_product_alias'],$product['cp_secret']);
+        $sdk = new FqSdk($product['cp_account']['cp_secret'],$product['cp_secret']);
         $offset = 0;
         do{
             if($cpId){
