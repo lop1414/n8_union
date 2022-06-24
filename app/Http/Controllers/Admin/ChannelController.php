@@ -260,7 +260,7 @@ class ChannelController extends BaseController
         $req = $request->all();
 
         //根据id更新
-        $channelIds = $req['channel_ids'];
+        $channelIds = $req['channel_ids'] ?? [];
         if(!empty($channelIds)){
             foreach ($channelIds as $channelId){
                 $this->renew($channelId);
