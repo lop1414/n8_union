@@ -8,7 +8,7 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Datas\BookData;
 use App\Datas\ChapterData;
-use App\Sdks\Bm\BmSdk;
+use App\Common\Sdks\Bm\BmSdk;
 
 
 class BmKyyChannelService implements CpChannelInterface
@@ -46,7 +46,7 @@ class BmKyyChannelService implements CpChannelInterface
         $data = array();
 
         do{
-            $channels = $sdk->getCpChannel($para);
+            $channels = $sdk->getChannel($para);
 
             foreach ($channels['list'] as $channel){
 
