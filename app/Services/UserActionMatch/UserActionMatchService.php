@@ -42,7 +42,7 @@ class UserActionMatchService extends BaseService
      * @var int
      * 每页数量
      */
-    protected $pageSize = 5;
+    protected $pageSize = 2;
 
 
     /**
@@ -65,9 +65,9 @@ class UserActionMatchService extends BaseService
     /**
      * @var
      * 匹配周期
-     * 5分钟匹配一次
+     * 15分钟匹配一次
      */
-    protected $matchCycle = 60 * 10;
+    protected $matchCycle = 60 * 15;
 
 
 
