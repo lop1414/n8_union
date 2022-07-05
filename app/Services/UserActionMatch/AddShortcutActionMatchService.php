@@ -44,15 +44,11 @@ class AddShortcutActionMatchService extends UserActionMatchService
 
 
     public function updateActionData($match){
-        $updateData = [
-            'last_match_time'  => date('Y-m-d H:i:s')
-        ];
-
-        if($match['click_id'] > 0){
-            $updateData['click_id'] = $match['click_id'];
+        if($match['click_id'] <= 0){
+            return ;
         }
 
         $where = ['id'=> $match['convert_id']];
-        (new UserShortcutActionData())->update($where,$updateData);
+        (new UserShortcutActionData())->update($where,['click_id' =>  $match['click_id']]);
     }
 }

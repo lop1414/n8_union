@@ -70,6 +70,13 @@ class UserActionMatchService extends BaseService
     protected $matchCycle = 60 * 15;
 
 
+    /**
+     * 上次匹配时间字段
+     * @var string
+     */
+    protected $lastMatchTimeField = 'last_match_time';
+
+
 
     public function __construct(){
         parent::__construct();
@@ -112,6 +119,7 @@ class UserActionMatchService extends BaseService
     public function run(){
 
         $query = $this->getQuery();
+        $lastMatchTimeField = $this->lastMatchTimeField;
         do{
             try {
 
@@ -121,7 +129,12 @@ class UserActionMatchService extends BaseService
                 $convert = [];
 
                 //处理匹配数据
+                $dateTime = date('Y-m-d H:i:s');
                 foreach ($list as $item){
+
+                    $item->$lastMatchTimeField = $dateTime;
+                    $item->save();
+
                     $id = $this->convertType == ConvertTypeEnum::REGISTER ? $item['id'] : $item['uuid'];
                     $unionUser = $this->unionUserData->setParams([
                         'id'   => $id

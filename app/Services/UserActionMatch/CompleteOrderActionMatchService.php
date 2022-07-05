@@ -16,6 +16,13 @@ class CompleteOrderActionMatchService extends UserActionMatchService
     protected $convertType = ConvertTypeEnum::PAY;
 
 
+    /**
+     * 上次匹配时间字段
+     * @var string
+     */
+    protected $lastMatchTimeField = 'complete_last_match_time';
+
+
     public function __construct(){
         parent::__construct();
 
@@ -62,16 +69,12 @@ class CompleteOrderActionMatchService extends UserActionMatchService
 
     public function updateActionData($match){
 
-        $updateData = [
-            'complete_last_match_time'  => date('Y-m-d H:i:s')
-        ];
-
-        if($match['click_id'] > 0){
-            $updateData['complete_click_id'] = $match['click_id'];
+        if($match['click_id'] <= 0){
+            return ;
         }
 
-        $where = ['n8_goid'=> $match['convert_id']];
-        (new OrderData())->update($where,$updateData);
+        $where = ['n8_goid' => $match['convert_id']];
+        (new OrderData())->update($where,['complete_click_id' => $match['click_id']]);
     }
 
 

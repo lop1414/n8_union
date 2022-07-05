@@ -65,15 +65,12 @@ class RegActionMatchService extends UserActionMatchService
 
 
     public function updateActionData($match){
-        $updateData = [
-            'last_match_time'  => date('Y-m-d H:i:s')
-        ];
-        if($match['click_id'] > 0){
-            $updateData['click_id'] = $match['click_id'];
+        if($match['click_id'] <= 0){
+            return ;
         }
 
         $where = ['id' => $match['convert_id']];
-        (new N8UnionUserData())->update($where,$updateData);
+        (new N8UnionUserData())->update($where,['click_id' => $match['click_id']]);
     }
 
 

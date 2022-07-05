@@ -47,17 +47,12 @@ class FollowActionMatchService extends UserActionMatchService
 
 
     public function updateActionData($match){
-
-        $updateData = [
-            'last_match_time'  => date('Y-m-d H:i:s')
-        ];
-
-        if($match['click_id'] > 0){
-            $updateData['click_id'] = $match['click_id'];
+        if($match['click_id'] <= 0){
+            return ;
         }
 
-        $where = ['id'=> $match['convert_id']];
-        (new UserFollowActionData())->update($where,$updateData);
+        $where = ['id' => $match['convert_id']];
+        (new UserFollowActionData())->update($where,['click_id' => $match['click_id']]);
     }
 
 }
