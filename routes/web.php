@@ -92,6 +92,15 @@ $router->group([
         $router->post('select', 'Admin\BookCommissionController@select');
     });
 
+    // 书籍标签
+    $router->group(['prefix' => 'book_label'], function () use ($router) {
+        $router->post('update', 'Admin\BookLabelController@update');
+        $router->post('create', 'Admin\BookLabelController@create');
+        $router->post('select', 'Admin\BookLabelController@select');
+        $router->post('get', 'Admin\BookLabelController@get');
+        $router->post('assign_book', 'Admin\BookLabelController@assignBook');
+    });
+
 
     // 产品
     $router->group(['prefix' => 'product'], function () use ($router) {

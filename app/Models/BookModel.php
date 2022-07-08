@@ -36,4 +36,9 @@ class BookModel extends BaseModel
     }
 
 
+    public function book_lable()
+    {
+        return $this->belongsToMany('App\Models\BookLabelModel','book_book_labels','book_id','book_label_id');
+    }
+
 }
