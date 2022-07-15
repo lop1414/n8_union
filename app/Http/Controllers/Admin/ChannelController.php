@@ -9,6 +9,7 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
+use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Models\ChannelExtendModel;
 use App\Models\ChannelModel;
@@ -352,5 +353,52 @@ class ChannelController extends BaseController
         $channelExtendModel->parent_id = $copyChannel->id;
         $channelExtendModel->save();
         return $this->success();
+    }
+
+
+
+    /**
+     * 保持验证规则
+     */
+    public function saveValidRule(){
+        $this->curdService->addField('product_id')->addValidRule('required');
+        $this->curdService->addField('cp_channel_id')->addValidRule('required');
+        $this->curdService->addField('name')->addValidRule('required');
+        $this->curdService->addField('book_id')->addValidRule('required');
+        $this->curdService->addField('create_time')->addValidRule('required');
+        $this->curdService->addField('updated_time')->addValidRule('required');
+        $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
+        $this->curdService->addField('adv_alias')->addValidEnum(AdvAliasEnum::class);
+    }
+
+    /**
+     * 创建预处理
+     */
+    public function createPrepare(){
+        $this->saveValidRule();
+
+        $this->curdService->saveBefore(function(){
+            if($this->curdService->getModel()->uniqueExist([
+                'product_id' => $this->curdService->handleData['product_id'],
+                'cp_channel_id' => $this->curdService->handleData['cp_channel_id'],
+            ])){
+                throw new CustomException([
+                    'code' => 'DATA_EXIST',
+                    'message' => '渠道已存在'
+                ]);
+            }
+        });
+
+        $this->curdService->saveAfter(function (){
+            $channelExtendModel = new ChannelExtendModel();
+
+            $adminId = $this->curdService->requestData['admin_id'] ?? 0;
+            $channelExtendModel->channel_id = $this->curdService->getModel()->id;
+            $channelExtendModel->admin_id = $adminId ?: $this->adminUserService->readId();
+            $channelExtendModel->status = $this->curdService->requestData['status'];
+            $channelExtendModel->adv_alias = $this->curdService->requestData['adv_alias'];
+            $channelExtendModel->parent_id = 0;
+            $channelExtendModel->save();
+        });
     }
 }
