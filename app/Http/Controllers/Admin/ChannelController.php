@@ -365,8 +365,6 @@ class ChannelController extends BaseController
         $this->curdService->addField('cp_channel_id')->addValidRule('required');
         $this->curdService->addField('name')->addValidRule('required');
         $this->curdService->addField('book_id')->addValidRule('required');
-        $this->curdService->addField('create_time')->addValidRule('required');
-        $this->curdService->addField('updated_time')->addValidRule('required');
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
         $this->curdService->addField('adv_alias')->addValidEnum(AdvAliasEnum::class);
     }
