@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Helpers\Functions;
+use App\Console\Commands\RefreshCpAccessTokenCommand;
 use App\Console\Commands\RefreshWeixinMiniProgramAccessTokenCommand;
 use App\Console\Commands\SyncDeviceNetworkLicenseCommand;
 use App\Console\Commands\UaReadAnalyseCommand;
@@ -46,6 +47,9 @@ class Kernel extends ConsoleKernel
         // 刷新小程序token
         RefreshWeixinMiniProgramAccessTokenCommand::class,
 
+        // 刷新平台账户token
+        RefreshCpAccessTokenCommand::class,
+
     ];
 
     /**
@@ -72,6 +76,8 @@ class Kernel extends ConsoleKernel
 
             //刷新小程序token
             $schedule->command('refresh_weixin_program_access_token')->cron('0 * * * *');
+            //刷新平台账户token
+            $schedule->command('refresh_cp_access_token')->cron('0 * * * *');
 
             //行为匹配
             $matchAdv = [AdvAliasEnum::OCEAN,AdvAliasEnum::BD,AdvAliasEnum::KS,AdvAliasEnum::UC,AdvAliasEnum::GDT];
