@@ -41,8 +41,9 @@ class SaveCompleteOrderActionService extends SaveUserActionService
         }
 
         $completeTimes = (new OrderModel())
-            ->where('n8_guid',$order['n8_guid'])
-            ->where('channel_id',$order['channel_id'])
+            ->where('uuid',$order['uuid'])
+//            ->where('n8_guid',$order['n8_guid'])
+//            ->where('channel_id',$order['channel_id'])
             ->where('status',OrderStatusEnums::COMPLETE)
 //            ->where('order_time','<',$order['order_time'])
             ->count();

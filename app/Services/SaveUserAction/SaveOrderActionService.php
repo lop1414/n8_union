@@ -50,24 +50,27 @@ class SaveOrderActionService extends SaveUserActionService
         // 入库
         $tmpTime = date('Y-m-d H:i:s',strtotime('-24 hours',strtotime($data['action_time'])));
         $orderTimes = (new OrderModel())
-            ->whereRaw("
-                n8_guid = {$data['n8_guid']}
-                AND (
-                    channel_id = {$unionUser['channel_id']}
-                    OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
-                )
-            ")
+            ->where('uuid',$unionUser['id'])
+//            ->whereRaw("
+//                n8_guid = {$data['n8_guid']}
+//                AND (
+//                    channel_id = {$unionUser['channel_id']}
+//                    OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
+//                )
+//            ")
             ->count();
         $status = OrderStatusEnums::COMPLETE;
         $completeTimes = (new OrderModel())
-            ->whereRaw("
-                n8_guid = {$data['n8_guid']}
-                AND status = '{$status}'
-                AND (
-                    channel_id = {$unionUser['channel_id']}
-                    OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
-                )
-            ")
+            ->where('uuid',$unionUser['id'])
+            ->where('status',$status)
+//            ->whereRaw("
+//                n8_guid = {$data['n8_guid']}
+//                AND status = '{$status}'
+//                AND (
+//                    channel_id = {$unionUser['channel_id']}
+//                    OR ( channel_id = 0 AND order_time BETWEEN '{$tmpTime}' AND '{$data['action_time']}')
+//                )
+//            ")
             ->count();
 
 
@@ -76,7 +79,7 @@ class SaveOrderActionService extends SaveUserActionService
             'n8_goid'       => $globalOrder['n8_goid'],
             'uuid'          => $unionUser['id'],
             'product_id'    => $data['product_id'],
-            'channel_id'    => $unionUser['channel_id'],
+            'channel_id'    => $data['channel_id'],
             'adv_alias'     => $data['adv_alias'],
             'order_time'    => $data['action_time'],
             'amount'        => $data['amount'],
