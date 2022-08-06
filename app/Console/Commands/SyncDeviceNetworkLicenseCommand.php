@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Common\Console\BaseCommand;
-use App\Services\Device\DeviceNetworkLicenseService;
+use App\Services\DeviceNetworkLicenseService;
 
 class SyncDeviceNetworkLicenseCommand extends BaseCommand
 {
