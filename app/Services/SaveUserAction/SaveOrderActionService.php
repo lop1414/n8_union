@@ -76,7 +76,7 @@ class SaveOrderActionService extends SaveUserActionService
             'n8_goid'       => $globalOrder['n8_goid'],
             'uuid'          => $unionUser['id'],
             'product_id'    => $data['product_id'],
-            'channel_id'    => $data['channel_id'],
+            'channel_id'    => $unionUser['channel_id'],
             'adv_alias'     => $data['adv_alias'],
             'order_time'    => $data['action_time'],
             'amount'        => $data['amount'],
