@@ -138,7 +138,7 @@ class ChannelController extends BaseController
                 $pageUrl = str_replace('__N8_MULTI_CHANNEL_ID__',0,$pageUrl);
                 $pageUrl = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$pageUrl);
                 $item->page_feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$pageUrl);
-
+                $item->href_url = $item->extends->hap_url?? '';
 
                 //下载链接
                 $popularizeUrl = [];
