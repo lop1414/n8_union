@@ -6,7 +6,7 @@ use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Sdks\Mb\MbSdk;
 
-class MbDyMiniProgramAccountService implements CpAccountInterface
+class MbAccountService implements CpAccountInterface
 {
 
 

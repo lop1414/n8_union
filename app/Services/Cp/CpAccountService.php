@@ -5,7 +5,7 @@ namespace App\Services\Cp;
 
 use App\Models\CpAccountModel;
 use App\Services\Cp\Account\CpAccountInterface;
-use App\Services\Cp\Account\MbDyMiniProgramAccountService;
+use App\Services\Cp\Account\MbAccountService;
 
 class CpAccountService
 {
@@ -29,7 +29,7 @@ class CpAccountService
     static public function getServices(): array
     {
         return [
-            MbDyMiniProgramAccountService::class,
+            MbAccountService::class,
         ];
     }
 
