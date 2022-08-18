@@ -72,7 +72,6 @@ class ProductData extends BaseData
         }
         $info->name = $data['name'];
         $info->save();
-        var_dump($info->id,$data);
         return $info;
     }
 
