@@ -281,7 +281,8 @@ class ChannelController extends BaseController
             'start_date' => date('Y-m-d',strtotime('-1 day')),
             'end_date'   => date('Y-m-d'),
             'product_ids'=> array($req['product_id']),
-            'cp_type'    => $product['cp_type']
+            'cp_type'    => $product['cp_type'],
+            'product_type'=> $product['type'],
         ]);
 
         return $this->success();

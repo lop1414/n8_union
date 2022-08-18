@@ -12,6 +12,7 @@ use App\Services\Cp\Channel\MbDyMiniProgramChannelService;
 use App\Services\Cp\Channel\MbWeChatMiniProgramChannelService;
 use App\Services\Cp\Channel\QyH5ChannelService;
 use App\Services\Cp\Channel\TwAppChannelService;
+use App\Services\Cp\Channel\TwH5ChannelService;
 use App\Services\Cp\Channel\TwKyyChannelService;
 use App\Services\Cp\Channel\YwH5ChannelService;
 use App\Services\Cp\Channel\YwKyyChannelService;
@@ -50,6 +51,7 @@ class CpChannelService
             FqKyyChannelService::class,
             QyH5ChannelService::class,
             TwKyyChannelService::class,
+            TwH5ChannelService::class,
             ZyKyyChannelService::class,
             MbDyMiniProgramChannelService::class,
             MbWeChatMiniProgramChannelService::class,
@@ -80,11 +82,10 @@ class CpChannelService
 
     public function sync()
     {
-        $where = [
-            'product_ids' => $this->getParam('product_ids'),
-            'cp_type'   => $this->service->getCpType(),
-            'type'      => $this->service->getType(),
-        ];
+        $productIds =  $this->getParam('product_ids');
+        $where = $productIds
+            ? ['product_ids' => $this->getParam('product_ids')]
+            : ['cp_type'   => $this->service->getCpType(),'type'=> $this->service->getType()];
 
         $productList = ProductService::get($where);
 
