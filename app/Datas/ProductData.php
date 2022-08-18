@@ -54,10 +54,10 @@ class ProductData extends BaseData
         //清除缓存
         $this->setParams($where)->clear();
 
-        $info = $this->getModel()->where($where)->first();
+        $info = (clone $this->getModel())->where($where)->first();
 
         if(empty($info)){
-            $info = $this->getModel();
+            $info = clone $this->getModel();
             $info->cp_account_id = $data['cp_account_id'];
             $info->cp_product_alias = $data['cp_product_alias'];
             $info->cp_type = $data['cp_type'];
@@ -72,6 +72,7 @@ class ProductData extends BaseData
         }
         $info->name = $data['name'];
         $info->save();
+        var_dump($info->id,$data);
         return $info;
     }
 
