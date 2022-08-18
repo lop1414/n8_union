@@ -67,6 +67,9 @@ class ProductData extends BaseData
             $info->matcher = MatcherEnum::SYS;
             $info->operator = OperatorEnum::SYS;
         }
+        if(isset($data['cp_secret'])){
+            $info->cp_secret = $data['cp_secret'];
+        }
         $info->name = $data['name'];
         $info->save();
         return $info;

@@ -113,6 +113,7 @@ class ProductService extends BaseService
             $cpType = $cpProductService->getCpType();
 
             if(empty($cpTypeParam) || $cpTypeParam == $cpType){
+                $cpProductService->setParam('cp_type',$cpTypeParam);
                 $cpProductService->sync();
             }
         }
