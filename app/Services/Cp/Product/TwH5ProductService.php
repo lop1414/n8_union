@@ -17,7 +17,7 @@ class TwH5ProductService implements CpProductInterface
         $list =  $sdk->getProduct();
 
         $data = [];
-        foreach ($list as $item){
+        foreach ($list['data'] as $item){
             $data[] = [
                 'cp_account_id'     => $cpAccount['id'],
                 'cp_product_alias'  => $item['id'],
