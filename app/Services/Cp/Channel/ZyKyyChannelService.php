@@ -69,8 +69,9 @@ class ZyKyyChannelService implements CpChannelInterface
                 'chapter_id'     => 0,
                 'force_chapter_id'  => 0,
                 'extends'       => [
-//                    'hap_url'   => $channel['hap_links'],
-//                    'h5_url'    => $channel['links']
+                    'hap_url'   => $channel['hap_links'],
+                    'h5_url'    => $channel['links'],
+                    'http_url'    => $channel['hapjs_links'],
                 ],
                 'create_time'    => $channel['created_at'],
                 'updated_time'   => $channel['created_at'],
