@@ -34,7 +34,7 @@ class ZyKyyChannelService implements CpChannelInterface
         //不支持cp id 获取
 
         $data = array();
-        $sdk = new ZySdk($product['cp_product_alias'],$product['cp_secret']);
+        $sdk = new ZySdk($product['cp_product_alias'],$product['cp_secret'],$product['extends']['api_alias']);
         $bookService = new BookService();
         $chapterService = new ChapterService();
 
