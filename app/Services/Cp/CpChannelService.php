@@ -16,6 +16,7 @@ use App\Services\Cp\Channel\TwH5ChannelService;
 use App\Services\Cp\Channel\TwKyyChannelService;
 use App\Services\Cp\Channel\YwH5ChannelService;
 use App\Services\Cp\Channel\YwKyyChannelService;
+use App\Services\Cp\Channel\ZyH5ChannelService;
 use App\Services\Cp\Channel\ZyKyyChannelService;
 use App\Services\ProductService;
 use App\Services\Cp\Channel\CpChannelInterface;
@@ -52,6 +53,7 @@ class CpChannelService
             QyH5ChannelService::class,
             TwKyyChannelService::class,
             TwH5ChannelService::class,
+            ZyH5ChannelService::class,
             ZyKyyChannelService::class,
             MbDyMiniProgramChannelService::class,
             MbWeChatMiniProgramChannelService::class,

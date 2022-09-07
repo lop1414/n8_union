@@ -9,6 +9,7 @@ use App\Services\Cp\Product\CpProductInterface;
 use App\Services\Cp\Product\TwH5ProductService;
 use App\Services\Cp\Product\YwH5ProductService;
 use App\Services\Cp\Product\YwKyyProductService;
+use App\Services\Cp\Product\ZyH5ProductService;
 
 class CpProductService
 {
@@ -37,6 +38,7 @@ class CpProductService
             YwKyyProductService::class,
             YwH5ProductService::class,
             TwH5ProductService::class,
+            ZyH5ProductService::class,
         ];
     }
 
