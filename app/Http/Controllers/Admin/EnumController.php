@@ -3,9 +3,9 @@ namespace App\Http\Controllers\Admin;
 
 
 
+use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\DeviceBrandEnum;
 use App\Common\Enums\SystemAliasEnum;
-use App\Enums\DeviceInfoSourceEnum;
 use Illuminate\Http\Request;
 
 class EnumController extends BaseController
@@ -29,7 +29,10 @@ class EnumController extends BaseController
                 //系统别名
                 $arr = SystemAliasEnum::$list;
                 break;
-
+            case 'cp_type':
+                //产品平台类型
+                $arr = CpTypeEnums::$list;
+                break;
         }
 
 
