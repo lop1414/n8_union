@@ -130,27 +130,6 @@ class ChannelController extends BaseController
                     $url = $advFeedBack[$item['adv_alias']] ?? '';
                     $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
                     $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
-
-                    if($item['adv_alias'] == AdvAliasEnum::OCEAN){
-                        $tmpUrl = $advFeedBack[AdvAliasEnum::OCEAN_V2] ?? '';
-                        $tmpUrl = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$tmpUrl);
-                        $tmpUrl = str_replace('__IOS_CHANNEL_ID__',$item['id'],$tmpUrl);
-
-                        $feedbackUrls = [
-                            [
-                                'name' => '1.0',
-                                'url'  => $item->feedback_url
-                            ]
-                        ];
-                        if(!empty($tmpUrl)){
-                            $feedbackUrls[] = [
-                                'name' => '2.0',
-                                'url'  => $tmpUrl
-                            ];
-                        }
-
-                        $item->feedback_url = $feedbackUrls;
-                    }
                 }
 
 
