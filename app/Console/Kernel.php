@@ -80,7 +80,7 @@ class Kernel extends ConsoleKernel
             $schedule->command('refresh_cp_access_token')->cron('0 * * * *');
 
             //行为匹配
-            $matchAdv = [AdvAliasEnum::OCEAN,AdvAliasEnum::BD,AdvAliasEnum::KS,AdvAliasEnum::UC,AdvAliasEnum::GDT];
+            $matchAdv = [AdvAliasEnum::OCEAN,AdvAliasEnum::OCEAN_V2,AdvAliasEnum::BD,AdvAliasEnum::KS,AdvAliasEnum::UC,AdvAliasEnum::GDT];
             $matchAction = ['reg','follow','add_shortcut','order','complete_order'];
             foreach ($matchAdv as $advAlias){
                 foreach ($matchAction as $action){
