@@ -14,6 +14,7 @@ use App\Common\Services\SystemApi\AdvBdApiService;
 use App\Common\Services\SystemApi\AdvGdtApiService;
 use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
+use App\Common\Services\SystemApi\AdvOceanV2ApiService;
 use App\Common\Services\SystemApi\AdvUcApiService;
 use App\Common\Tools\CustomException;
 use App\Datas\BookData;
@@ -168,6 +169,10 @@ class UserActionMatchService extends BaseService
                     if($this->advAlias == AdvAliasEnum::OCEAN){
                         // 巨量匹配
                         $matchList = (new AdvOceanApiService())->apiConvertMatch($convert);
+
+                    }elseif($this->advAlias == AdvAliasEnum::OCEAN_V2){
+                        // 巨量2.0匹配
+                        $matchList = (new AdvOceanV2ApiService())->apiConvertMatch($convert);
 
                     }elseif ($this->advAlias == AdvAliasEnum::BD){
                         // 百度匹配
