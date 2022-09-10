@@ -52,7 +52,7 @@ class ConvertCallbackMapService extends BaseService
         return array_column($tmp,null,'convert_id');
     }
 
-    public function ocean_v2($convert){
+    public function oceanV2($convert){
         $tmp = (new AdvOceanV2ApiService())->apiGetConvertCallbacks($convert);
         return array_column($tmp,null,'convert_id');
     }
