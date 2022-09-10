@@ -106,6 +106,9 @@ class UserActionBaseController extends BaseController
                     if($requestData['adv_alias'] == AdvAliasEnum::OCEAN){
                         !empty($requestData['unit_id']) && $builder->whereRaw("{$clickField} IN (SELECT id FROM n8_adv_ocean.clicks WHERE ad_id = {$requestData['unit_id']})");
                         !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$convertId} IN (SELECT convert_id FROM n8_adv_ocean.convert_callbacks WHERE convert_type = '{$convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
+                    }if($requestData['adv_alias'] == AdvAliasEnum::OCEAN_V2){
+                        !empty($requestData['unit_id']) && $builder->whereRaw("{$clickField} IN (SELECT id FROM n8_adv_ocean_v2.clicks WHERE promotion_id = {$requestData['unit_id']})");
+                        !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$convertId} IN (SELECT convert_id FROM n8_adv_ocean_v2.convert_callbacks WHERE convert_type = '{$convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");
                     }elseif($requestData['adv_alias'] == AdvAliasEnum::BD){
                         !empty($requestData['unit_id']) && $builder->whereRaw("{$clickField} IN (SELECT id FROM n8_adv_bd.clicks WHERE adgroup_id = {$requestData['unit_id']})");
                         !empty($requestData['convert_callback_status']) && $builder->whereRaw("{$convertId} IN (SELECT convert_id FROM n8_adv_bd.convert_callbacks WHERE convert_type = '{$convertType}' AND convert_callback_status = '{$requestData['convert_callback_status']}')");

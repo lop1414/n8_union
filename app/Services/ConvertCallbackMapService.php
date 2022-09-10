@@ -11,6 +11,7 @@ use App\Common\Services\SystemApi\AdvBdApiService;
 use App\Common\Services\SystemApi\AdvGdtApiService;
 use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
+use App\Common\Services\SystemApi\AdvOceanV2ApiService;
 use App\Common\Services\SystemApi\AdvUcApiService;
 
 class ConvertCallbackMapService extends BaseService
@@ -48,6 +49,11 @@ class ConvertCallbackMapService extends BaseService
 
     public function ocean($convert){
         $tmp = (new AdvOceanApiService())->apiGetConvertCallbacks($convert);
+        return array_column($tmp,null,'convert_id');
+    }
+
+    public function ocean_v2($convert){
+        $tmp = (new AdvOceanV2ApiService())->apiGetConvertCallbacks($convert);
         return array_column($tmp,null,'convert_id');
     }
 
