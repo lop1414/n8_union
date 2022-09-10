@@ -47,6 +47,10 @@ class CustomConvertCallbackMapService extends BaseService
         return array_column($tmp,null,'convert_id');
     }
 
+    public function oceanV2($convert){
+        return [];
+    }
+
 
     public function bd($convert){
         return [];
