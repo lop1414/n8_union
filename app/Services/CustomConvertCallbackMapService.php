@@ -7,7 +7,9 @@ use App\Common\Enums\ConvertTypeEnum;
 use App\Common\Enums\OrderStatusEnums;
 use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
+use App\Common\Services\SystemApi\AdvKsApiService;
 use App\Common\Services\SystemApi\AdvOceanApiService;
+use App\Common\Services\SystemApi\AdvOceanV2ApiService;
 
 class CustomConvertCallbackMapService extends BaseService
 {
@@ -48,7 +50,8 @@ class CustomConvertCallbackMapService extends BaseService
     }
 
     public function oceanV2($convert){
-        return [];
+        $tmp = (new AdvOceanV2ApiService())->apiGetCustomConvertCallbacks($convert);
+        return array_column($tmp,null,'convert_id');
     }
 
 
@@ -57,7 +60,8 @@ class CustomConvertCallbackMapService extends BaseService
     }
 
     public function ks($convert){
-        return [];
+        $tmp = (new AdvKsApiService())->apiGetCustomConvertCallbacks($convert);
+        return array_column($tmp,null,'convert_id');
     }
 
     public function uc($convert){
