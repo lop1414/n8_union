@@ -69,6 +69,10 @@ class ChannelController extends BaseController
                         }
                         $builder->whereIn('e.admin_id',$adminIds);
                     }
+
+                    if(!empty($req['adv_alias'])){
+                        $builder->where('e.adv_alias',$req['adv_alias']);
+                    }
                 }
 
                 if(!empty($req['admin_id'])){
@@ -81,9 +85,7 @@ class ChannelController extends BaseController
                 $builder->where('e.status',$req['status']);
             }
 
-            if(!empty($req['adv_alias'])){
-                $builder->where('e.adv_alias',$req['adv_alias']);
-            }
+
 
             $keyword = $req['keyword'] ?? '';
             if(!empty($keyword)){
