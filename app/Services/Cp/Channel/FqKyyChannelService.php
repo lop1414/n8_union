@@ -65,6 +65,7 @@ class FqKyyChannelService implements CpChannelInterface
                     'force_chapter_id' => 0,
                     'extends'       => [
                         'hap_url'   => $item['promotion_url'],
+                        'h5_url'   => 'https://novel.snssdk.com/page/novelsale/openquickapp?schema='.urlencode($item['promotion_url']),
                     ],
                     'create_time' => $item['create_time'],
                     'updated_time'=> $item['create_time'],

@@ -125,7 +125,18 @@ class CpChannelService
         $products = ProductService::get(['product_id' =>$this->getParam('product_id')]);
         $product = $products[0];
 
-        $cpChannelId = $this->service->create($product,$name,$book,$chapter,$forceChapter);
-        return $cpChannelId;
+        return $this->service->create($product,$name,$book,$chapter,$forceChapter);
+    }
+
+    /**
+     * 是否可以创建渠道
+     * @return bool
+     */
+    public function isCanCreate(): bool
+    {
+        if(!method_exists($this->service,'create')){
+            return false;
+        }
+        return true;
     }
 }

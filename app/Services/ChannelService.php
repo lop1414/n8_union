@@ -164,10 +164,7 @@ class ChannelService extends BaseService
 
             if($product['cp_type'] == $cpType && $product['type'] == $productType){
 
-                if(!method_exists($cpChannelService,'create')){
-                    return false;
-                }
-                return true;
+                return $cpChannelService->isCanCreate();
             }
         }
     }
