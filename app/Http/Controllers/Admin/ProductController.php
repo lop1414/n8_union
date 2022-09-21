@@ -15,6 +15,7 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Datas\ProductData;
 use App\Models\ProductAdminModel;
 use App\Models\ProductModel;
+use App\Services\ChannelService;
 use App\Services\ProductAdminService;
 use Illuminate\Http\Request;
 
@@ -129,6 +130,8 @@ class ProductController extends BaseController
                 }
 
                 $item->copy_url = $copyUrl;
+
+                $item->channel_config = $this->getChannelConfig($item);
             }
         });
     }
@@ -146,8 +149,21 @@ class ProductController extends BaseController
         $this->curdService->getQueryAfter(function(){
             foreach ($this->curdService->responseData as $item){
                 $item->cp_account;
+                $item->channel_config = $this->getChannelConfig($item);
             }
         });
+    }
+
+    protected function getChannelConfig($product): array
+    {
+        $service = new ChannelService();
+        $isCanCreate = $service->isCanCreate($product);
+        $isCanSelect = $service->isCanSelect($product);
+        return [
+            'query_create'=> $isCanSelect,
+            'sync_create' => $isCanSelect && $isCanCreate,
+            'create'      => !$isCanCreate && !$isCanSelect,
+        ];
     }
 
 

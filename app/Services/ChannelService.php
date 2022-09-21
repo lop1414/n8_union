@@ -167,5 +167,34 @@ class ChannelService extends BaseService
                 return $cpChannelService->isCanCreate();
             }
         }
+        return false;
+    }
+
+
+    /**
+     * 是否可以查询
+     * @param ProductModel $product
+     * @return bool
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function isCanSelect(ProductModel $product): bool
+    {
+
+        $container = Container::getInstance();
+        $services = CpChannelService::getServices();
+        foreach ($services as $service){
+
+            $container->bind(CpChannelInterface::class,$service);
+            $cpChannelService = $container->make(CpChannelService::class);
+
+            $cpType = $cpChannelService->getCpType();
+            $productType = $cpChannelService->getType();
+
+            if($product['cp_type'] == $cpType && $product['type'] == $productType){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
