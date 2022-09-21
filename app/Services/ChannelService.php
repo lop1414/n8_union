@@ -149,7 +149,7 @@ class ChannelService extends BaseService
      * @return bool
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function isCanCreate(ProductModel $product): bool
+    public function isCanApiCreate(ProductModel $product): bool
     {
 
         $container = Container::getInstance();
@@ -164,7 +164,7 @@ class ChannelService extends BaseService
 
             if($product['cp_type'] == $cpType && $product['type'] == $productType){
 
-                return $cpChannelService->isCanCreate();
+                return $cpChannelService->isCanApiCreate();
             }
         }
         return false;
@@ -177,7 +177,7 @@ class ChannelService extends BaseService
      * @return bool
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function isCanSelect(ProductModel $product): bool
+    public function isCanApiSelect(ProductModel $product): bool
     {
 
         $container = Container::getInstance();

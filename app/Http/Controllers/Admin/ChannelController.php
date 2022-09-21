@@ -118,7 +118,7 @@ class ChannelController extends BaseController
             $product = ProductModel::find($this->curdService->requestData['product_id']);
             $isCanCopy = false;
             if($product){
-                $isCanCopy =  (new ChannelService())->isCanCreate($product);
+                $isCanCopy =  (new ChannelService())->isCanApiCreate($product);
             }
 
             $isAdmin = $this->adminUserService->isAdmin();
@@ -341,7 +341,7 @@ class ChannelController extends BaseController
         $copyChannel = $this->model->where('id',$req['channel_id'])->first();
 
         $channelService = new ChannelService();
-        if(!$channelService->isCanCreate($copyChannel->product)){
+        if(!$channelService->isCanApiCreate($copyChannel->product)){
             throw new CustomException(['code' => 'NOT_CAN_CREATE_CHANNEL', 'message' => "该小说平台暂不支持"]);
         }
         $cpChannelId = $channelService->create($copyChannel->product,$req['name'],$copyChannel->book,$copyChannel->chapter,$copyChannel->force_chapter);

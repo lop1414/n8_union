@@ -157,12 +157,12 @@ class ProductController extends BaseController
     protected function getChannelConfig($product): array
     {
         $service = new ChannelService();
-        $isCanCreate = $service->isCanCreate($product);
-        $isCanSelect = $service->isCanSelect($product);
+        $isCanApiCreate = $service->isCanApiCreate($product);
+        $isCanApiSelect = $service->isCanApiSelect($product);
         return [
-            'query_create'=> $isCanSelect,
-            'sync_create' => $isCanSelect && $isCanCreate,
-            'create'      => !$isCanCreate && !$isCanSelect,
+            'query_create'=> $isCanApiSelect,
+            'sync_create' => $isCanApiSelect && $isCanApiCreate,
+            'create'      => !$isCanApiCreate && !$isCanApiSelect,
         ];
     }
 

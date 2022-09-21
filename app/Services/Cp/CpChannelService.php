@@ -132,7 +132,7 @@ class CpChannelService
      * 是否可以创建渠道
      * @return bool
      */
-    public function isCanCreate(): bool
+    public function isCanApiCreate(): bool
     {
         if(!method_exists($this->service,'create')){
             return false;
