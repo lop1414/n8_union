@@ -39,6 +39,6 @@ interface CpChannelInterface
      * @return string
      * 创建
      */
-    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,ChapterModel $forceChapter): string;
+//    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,ChapterModel $forceChapter): string;
 
 }

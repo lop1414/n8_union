@@ -5,7 +5,6 @@ namespace App\Services\Cp\Channel;
 
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
-use App\Common\Tools\CustomException;
 use App\Models\ProductModel;
 use App\Common\Sdks\Yw\YwSdk;
 use App\Services\BookService;
@@ -100,14 +99,5 @@ class YwH5ChannelService implements CpChannelInterface
             $info = $this->chapterService->readByUniqueKey($bookId,$cpChapterId);
         }
         return $info;
-    }
-
-
-    public function create($product, $name, $book, $chapter,$forceChapter): string
-    {
-        throw new CustomException([
-            'code'       => 'NOT_CAN_CREATE_CHANNEL',
-            'message'    => "该小说平台暂不支持"
-        ]);
     }
 }

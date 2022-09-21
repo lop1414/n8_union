@@ -6,7 +6,6 @@ namespace App\Services\Cp\Channel;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Sdks\TwH5\TwH5Sdk;
-use App\Common\Tools\CustomException;
 use App\Services\BookService;
 use App\Services\ChapterService;
 
@@ -77,13 +76,5 @@ class TwH5ChannelService implements CpChannelInterface
         }while($total < $channels['count']);
 
         return $data;
-    }
-
-    public function create($product, $name, $book, $chapter,$forceChapter): string
-    {
-        throw new CustomException([
-            'code'       => 'NOT_CAN_CREATE_CHANNEL',
-            'message'    => "该小说平台暂不支持"
-        ]);
     }
 }

@@ -13,6 +13,7 @@ use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Models\ChannelExtendModel;
 use App\Models\ChannelModel;
+use App\Models\ProductModel;
 use App\Services\ChannelService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -113,6 +114,10 @@ class ChannelController extends BaseController
             $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
+            $product = ProductModel::find($this->curdService->requestData['product_id']);
+            $isCanCopy =  (new ChannelService())->isCanCreate($product);
+
+            $isAdmin = $this->adminUserService->isAdmin();
             foreach ($this->curdService->responseData['list'] as $item){
                 $adminId = $item->admin_id ?? 0;
                 $item->product;
@@ -123,13 +128,12 @@ class ChannelController extends BaseController
                 $item->has_extend = !!$adminId;
 
                 //可复制
-//                $item->is_can_copy = !$item->parent_id;
-                $item->is_can_copy = false;
+                $item->is_can_copy = $isCanCopy;
 
 
                 //监测链接
                 $item->feedback_url = '';
-                if($item->admin_id == $this->adminUserService->readId()){
+                if($item->admin_id == $this->adminUserService->readId() || $isAdmin){
                     $url = $advFeedBack[$item['adv_alias']] ?? '';
                     $url = str_replace('__ANDROID_CHANNEL_ID__',$item['id'],$url);
                     $item->feedback_url = str_replace('__IOS_CHANNEL_ID__',$item['id'],$url);
@@ -325,7 +329,7 @@ class ChannelController extends BaseController
             'channel_id.required' => 'channel_id 不能为空',
             'name.required' => '名称不能为空',
             'adv_alias.required' => 'adv_alias 不能为空',
-            'status.required' => 'adv_alias 不能为空',
+            'status.required' => 'status 不能为空',
         ]);
         Functions::hasEnum(AdvAliasEnum::class,$req['adv_alias']);
         Functions::hasEnum(StatusEnum::class,$req['status']);
@@ -333,6 +337,9 @@ class ChannelController extends BaseController
         $copyChannel = $this->model->where('id',$req['channel_id'])->first();
 
         $channelService = new ChannelService();
+        if(!$channelService->isCanCreate($copyChannel->product)){
+            throw new CustomException(['code' => 'NOT_CAN_CREATE_CHANNEL', 'message' => "该小说平台暂不支持"]);
+        }
         $cpChannelId = $channelService->create($copyChannel->product,$req['name'],$copyChannel->book,$copyChannel->chapter,$copyChannel->force_chapter);
 
         // 同步

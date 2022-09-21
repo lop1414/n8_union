@@ -131,10 +131,43 @@ class ChannelService extends BaseService
 
             if($product['cp_type'] == $cpType && $product['type'] == $productType){
 
+                if(!method_exists($cpChannelService,'create')){
+                    return false;
+                }
+
                 $cpChannelService->setParam('product_id',$product['id']);
 
-                $cpChannelId = $cpChannelService->create($name,$book,$chapter,$cpForceChapter);
-                return $cpChannelId;
+                return $cpChannelService->create($name,$book,$chapter,$cpForceChapter);
+            }
+        }
+    }
+
+
+    /**
+     * 是否可以创建渠道
+     * @param ProductModel $product
+     * @return bool
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function isCanCreate(ProductModel $product): bool
+    {
+
+        $container = Container::getInstance();
+        $services = CpChannelService::getServices();
+        foreach ($services as $service){
+
+            $container->bind(CpChannelInterface::class,$service);
+            $cpChannelService = $container->make(CpChannelService::class);
+
+            $cpType = $cpChannelService->getCpType();
+            $productType = $cpChannelService->getType();
+
+            if($product['cp_type'] == $cpType && $product['type'] == $productType){
+
+                if(!method_exists($cpChannelService,'create')){
+                    return false;
+                }
+                return true;
             }
         }
     }
