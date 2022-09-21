@@ -9,6 +9,7 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
+use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Models\ChannelExtendModel;
@@ -115,7 +116,10 @@ class ChannelController extends BaseController
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
             $product = ProductModel::find($this->curdService->requestData['product_id']);
-            $isCanCopy =  (new ChannelService())->isCanCreate($product);
+            $isCanCopy = false;
+            if($product){
+                $isCanCopy =  (new ChannelService())->isCanCreate($product);
+            }
 
             $isAdmin = $this->adminUserService->isAdmin();
             foreach ($this->curdService->responseData['list'] as $item){
