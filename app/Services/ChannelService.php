@@ -76,9 +76,9 @@ class ChannelService extends BaseService
     }
 
 
-    public function sync($param = [])
+    public function sync($cpType, $productType, $startDate, $endDate, $productIds = [] , $cpChannelId = 0)
     {
-        $data = $this->getByApi($param);
+        $data = $this->getByApi($cpType, $productType, $startDate, $endDate, $productIds, $cpChannelId);
 
         $channelModelData = new ChannelData();
         foreach ($data as $item){
@@ -86,15 +86,15 @@ class ChannelService extends BaseService
         }
     }
 
-    public function getByApi($param = []): array
+
+    public function getByApi($cpType, $productType, $startDate, $endDate, $productIds = [], $cpChannelId = 0): array
     {
-        $cpTypeParam = $param['cp_type'] ?? '';
-        $productTypeParam = $param['product_type'] ?? '';
-        if(!empty($cpTypeParam)){
-            Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
+
+        if(!empty($cpType)){
+            Functions::hasEnum(CpTypeEnums::class,$cpType);
         }
-        if(!empty($productTypeParam)){
-            Functions::hasEnum(ProductTypeEnums::class,$productTypeParam);
+        if(!empty($productType)){
+            Functions::hasEnum(ProductTypeEnums::class,$productType);
         }
 
         $container = Container::getInstance();
@@ -106,23 +106,23 @@ class ChannelService extends BaseService
             $container->bind(CpChannelInterface::class,$service);
             $cpChannelService = $container->make(CpChannelService::class);
 
-            if(!empty($productTypeParam) && $productTypeParam != $cpChannelService->getType()){
+            if(!empty($productType) && $productType != $cpChannelService->getType()){
                 continue;
             }
 
-            if(!empty($cpTypeParam) && $cpTypeParam != $cpChannelService->getCpType()){
+            if(!empty($cpType) && $cpType != $cpChannelService->getCpType()){
                 continue;
             }
 
-            $cpChannelService->setParam('start_date',$param['start_date']);
-            $cpChannelService->setParam('end_date',$param['end_date']);
+            $cpChannelService->setParam('start_date',$startDate);
+            $cpChannelService->setParam('end_date',$endDate);
 
-            if(!empty($param['product_ids'])){
-                $cpChannelService->setParam('product_ids',$param['product_ids']);
+            if(!empty($productIds)){
+                $cpChannelService->setParam('product_ids',$productIds);
             }
 
-            if(!empty($param['cp_channel_id'])){
-                $cpChannelService->setParam('cp_id',$param['cp_channel_id']);
+            if(!empty($cpChannelId)){
+                $cpChannelService->setParam('cp_id',$cpChannelId);
             }
             $items = $cpChannelService->getByApi();
             $data = array_merge($data,$items);

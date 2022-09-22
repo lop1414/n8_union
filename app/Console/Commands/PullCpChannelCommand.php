@@ -39,17 +39,14 @@ class PullCpChannelCommand extends BaseCommand
 
         $this->lockRun(function (){
 
-            $param = [];
-
-            $cpTypeParam = $this->option('cp_type');
-            if(!empty($cpTypeParam)){
-                Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
-                $param['cp_type'] = $cpTypeParam;
+            $cpType = $this->option('cp_type');
+            if(!empty($cpType)){
+                Functions::hasEnum(CpTypeEnums::class,$cpType);
             }
 
-            list($param['start_date'],$param['end_date']) = Functions::getDateRange($this->option('date'));
+            list($startDate,$endDate) = Functions::getDateRange($this->option('date'));
 
-            (new ChannelService())->sync($param);
+            (new ChannelService())->sync($cpType, '', $startDate, $endDate);
 
         },'pull_channel',$expire,['log' => true]);
 

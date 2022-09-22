@@ -262,6 +262,11 @@ class ChannelController extends BaseController
     }
 
 
+    protected function syncByApi($cpType, $productType, $startDate, $endDate, $productIds = [] , $cpChannelId = 0){
+        (new ChannelService())->sync($cpType, $productType, $startDate, $endDate, $productIds , $cpChannelId);
+    }
+
+
     /**
      * @param Request $request
      * @return mixed
@@ -280,21 +285,11 @@ class ChannelController extends BaseController
             return $this->success();
         }
 
-
-        $this->validRule($req,[
-            'product_id'    =>  'required',
-        ]);
+        $this->validRule($req,['product_id' =>  'required']);
 
         $product = ProductService::read($req['product_id']);
 
-        (new ChannelService())->sync([
-            'start_date' => date('Y-m-d',strtotime('-1 day')),
-            'end_date'   => date('Y-m-d'),
-            'product_ids'=> array($req['product_id']),
-            'cp_type'    => $product['cp_type'],
-            'product_type'=> $product['type'],
-        ]);
-
+        $this->syncByApi($product['cp_type'], $product['type'], date('Y-m-d',strtotime('-1 day')), date('Y-m-d'),array($req['product_id']));
         return $this->success();
     }
 
@@ -302,16 +297,8 @@ class ChannelController extends BaseController
     protected function renew($channelId){
         $channelInfo = $this->model->where('id',$channelId)->first();
         $date = date('Y-m-d',strtotime($channelInfo->create_time));
-
-        (new ChannelService())->sync([
-            'start_date' => $date,
-            'end_date'   => $date,
-            'product_ids'   => array($channelInfo->product->id),
-            'cp_type'       => $channelInfo->product->cp_type,
-            'cp_channel_id' => $channelInfo->cp_channel_id
-        ]);
-
-        return $this->success();
+        $this->syncByApi($channelInfo->product->cp_type, '', $date, $date, array($channelInfo->product->id) , $channelInfo->cp_channel_id);
+        return true;
     }
 
 
@@ -347,13 +334,8 @@ class ChannelController extends BaseController
 
         // 同步
         $date = date('Y-m-d');
-        (new ChannelService())->sync([
-            'start_date' => $date,
-            'end_date'   => $date,
-            'product_ids'   => array($copyChannel->product->id),
-            'cp_type'       => $copyChannel->product->cp_type,
-            'cp_channel_id' => $cpChannelId
-        ]);
+
+        $this->syncByApi($copyChannel->product->cp_type, '', $date, $date, array($copyChannel->product->id), $cpChannelId);
 
         // 认领
         $channel  = $this->model
