@@ -27,7 +27,8 @@ class ChannelService extends BaseService
      * @throws CustomException
      * 通过cpChannelId,productId 读取渠道信息
      */
-    static public function readChannelByCpChannelId($productId,$cpChannelId){
+    static public function readChannelByCpChannelId($productId,$cpChannelId): ?array
+    {
 
         if(empty($cpChannelId)){
             return [];
@@ -52,7 +53,8 @@ class ChannelService extends BaseService
      * @throws CustomException
      * 通过cpChannelId,productId 读取渠道信息并检查
      */
-    static public function readChannelByCpChannelIdAndCheck($productId,$cpChannelId){
+    static public function readChannelByCpChannelIdAndCheck($productId,$cpChannelId): array
+    {
         $channel = self::readChannelByCpChannelId($productId,$cpChannelId);
         if(empty($channel)){
             throw new CustomException([
@@ -76,6 +78,16 @@ class ChannelService extends BaseService
 
     public function sync($param = [])
     {
+        $data = $this->getByApi($param);
+
+        $channelModelData = new ChannelData();
+        foreach ($data as $item){
+            $channelModelData->save($item);
+        }
+    }
+
+    public function getByApi($param = []): array
+    {
         $cpTypeParam = $param['cp_type'] ?? '';
         $productTypeParam = $param['product_type'] ?? '';
         if(!empty($cpTypeParam)){
@@ -86,8 +98,9 @@ class ChannelService extends BaseService
         }
 
         $container = Container::getInstance();
-
         $services = CpChannelService::getServices();
+
+        $data = [];
         foreach ($services as $service){
 
             $container->bind(CpChannelInterface::class,$service);
@@ -101,7 +114,6 @@ class ChannelService extends BaseService
                 continue;
             }
 
-
             $cpChannelService->setParam('start_date',$param['start_date']);
             $cpChannelService->setParam('end_date',$param['end_date']);
 
@@ -112,8 +124,10 @@ class ChannelService extends BaseService
             if(!empty($param['cp_channel_id'])){
                 $cpChannelService->setParam('cp_id',$param['cp_channel_id']);
             }
-            $cpChannelService->sync();
+            $items = $cpChannelService->getByApi();
+            $data = array_merge($data,$items);
         }
+        return $data;
     }
 
     public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,?ChapterModel $cpForceChapter): string

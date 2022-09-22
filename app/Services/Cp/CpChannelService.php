@@ -2,8 +2,6 @@
 
 namespace App\Services\Cp;
 
-
-use App\Datas\ChannelData;
 use App\Models\BookModel;
 use App\Models\ChapterModel;
 use App\Services\Cp\Channel\BmKyyChannelService;
@@ -28,13 +26,10 @@ class CpChannelService
 
     private $service;
 
-    private $modelData;
-
 
     public function __construct(CpChannelInterface $service)
     {
         $this->service = $service;
-        $this->modelData = new ChannelData();
     }
 
 
@@ -81,14 +76,6 @@ class CpChannelService
         return $this->service->$name(...$arguments);
     }
 
-
-    public function sync()
-    {
-        $data = $this->getByApi();
-        foreach ($data as $item){
-            $this->modelData->save($item);
-        }
-    }
 
     /**
      * 获取接口数据
