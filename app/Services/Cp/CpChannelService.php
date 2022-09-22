@@ -84,6 +84,18 @@ class CpChannelService
 
     public function sync()
     {
+        $data = $this->getByApi();
+        foreach ($data as $item){
+            $this->modelData->save($item);
+        }
+    }
+
+    /**
+     * 获取接口数据
+     * @return array
+     */
+    public function getByApi(): array
+    {
         $productIds =  $this->getParam('product_ids');
         $where = $productIds
             ? ['product_ids' => $this->getParam('product_ids')]
@@ -95,19 +107,17 @@ class CpChannelService
         $endDate = $this->getParam('end_date');
         $cpId = $this->getParam('cp_id');
 
+        $data = [];
         foreach ($productList as $product){
             $date = $startDate;
             do{
-                $data = $this->service->get($product,$date,$cpId);
+                $items = $this->service->get($product,$date,$cpId);
+                $data = array_merge($data,$items);
 
-                if(!empty($data)){
-                    foreach ($data as $item){
-                        $this->modelData->save($item);
-                    }
-                }
                 $date = date('Y-m-d', strtotime('+1 day',strtotime($date)));
             }while($date <= $endDate);
         }
+        return $data;
     }
 
 
