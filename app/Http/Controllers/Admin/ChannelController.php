@@ -9,7 +9,6 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
-use App\Common\Services\BaseService;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
 use App\Models\ChannelExtendModel;
@@ -115,7 +114,7 @@ class ChannelController extends BaseController
             $advFeedBack = Advs::getFeedbackUrlMap($feedbackUrlParam);
             $advPageFeedBack = Advs::getPageFeedbackUrlMap();
 
-            $product = ProductModel::find($this->curdService->requestData['product_id']);
+            $product = ProductModel::find($this->curdService->requestData['product_id'] ?? 0);
             $isCanCopy = false;
             if($product){
                 $isCanCopy =  (new ChannelService())->isCanApiCreate($product);
