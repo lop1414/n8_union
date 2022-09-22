@@ -297,7 +297,7 @@ class ChannelController extends BaseController
     protected function renew($channelId){
         $channelInfo = $this->model->where('id',$channelId)->first();
         $date = date('Y-m-d',strtotime($channelInfo->create_time));
-        $this->syncByApi($channelInfo->product->cp_type, '', $date, $date, array($channelInfo->product->id) , $channelInfo->cp_channel_id);
+        $this->syncByApi($channelInfo->product->cp_type, $channelInfo->product->type, $date, $date, array($channelInfo->product->id) , $channelInfo->cp_channel_id);
         return true;
     }
 
