@@ -3,8 +3,13 @@
 namespace App\Services;
 
 
+use App\Common\Enums\CpTypeEnums;
+use App\Common\Helpers\Functions;
 use App\Common\Services\BaseService;
 use App\Datas\BookData;
+use App\Services\Cp\Book\CpBookInterface;
+use App\Services\Cp\CpBookService;
+use Illuminate\Container\Container;
 
 class BookService extends BaseService
 {
@@ -75,8 +80,51 @@ class BookService extends BaseService
      */
     public function read(int $bookId): ?array
     {
-        $info = $this->modelData->setParams(['id' => $bookId])->read();
-        return $info;
+        return $this->modelData->setParams(['id' => $bookId])->read();
+    }
+
+
+    public function sync($cpType, $productIds, $cpBookId )
+    {
+        $data = $this->readByApi($cpType, $productIds, $cpBookId);
+
+        $bookModelData = new BookData();
+        foreach ($data as $item){
+            $bookModelData->save($item);
+        }
+    }
+
+
+    public function readByApi($cpType, $productIds = [], $cpBookId = 0): array
+    {
+
+        if(!empty($cpType)){
+            Functions::hasEnum(CpTypeEnums::class,$cpType);
+        }
+
+        $container = Container::getInstance();
+        $services = CpBookService::getServices();
+
+        $data = [];
+        foreach ($services as $service){
+
+            $container->bind(CpBookInterface::class,$service);
+            $cpBookService = $container->make(CpBookService::class);
+
+            if(!empty($cpType) && $cpType != $cpBookService->getCpType()){
+                continue;
+            }
+
+            if(!empty($productIds)){
+                $cpBookService->setParam('product_ids',$productIds);
+            }
+
+            if(!empty($cpBookId)){
+                $cpBookService->setParam('cp_id',$cpBookId);
+            }
+            $data[] =  $cpBookService->readByApi();
+        }
+        return $data;
     }
 
 

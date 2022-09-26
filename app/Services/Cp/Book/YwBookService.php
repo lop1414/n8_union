@@ -3,13 +3,18 @@
 namespace App\Services\Cp\Book;
 
 
+use App\Common\Enums\CpTypeEnums;
 use App\Common\Sdks\Yw\YwSdk;
 use App\Models\ProductModel;
 
 
-class YwBookService
+class YwBookService implements CpBookInterface
 {
 
+    public function getCpType(): string
+    {
+        return CpTypeEnums::YW;
+    }
 
 
     public function read(ProductModel $product,string $cpId): array

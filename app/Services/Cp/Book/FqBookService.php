@@ -3,11 +3,17 @@
 namespace App\Services\Cp\Book;
 
 
+use App\Common\Enums\CpTypeEnums;
 use App\Models\ProductModel;
 use App\Common\Sdks\Fq\FqSdk;
 
-class FqBookService
+class FqBookService implements CpBookInterface
 {
+
+    public function getCpType(): string
+    {
+        return CpTypeEnums::FQ;
+    }
 
     public function read(ProductModel $product,string $cpId): array
     {
