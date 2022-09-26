@@ -165,6 +165,8 @@ $router->group([
         $router->post('sync', 'Admin\ChannelController@sync');
         $router->post('copy', 'Admin\ChannelController@copy');
         $router->post('create', 'Admin\ChannelController@create');
+        $router->post('create_with_sync', 'Admin\ChannelController@createWithSync');
+        $router->post('get_not_bind_channel', 'Admin\ChannelController@getNotBindChannel');
     });
     $router->group(['prefix' => 'channel_extend'], function () use ($router) {
         $router->post('batch_save', 'Admin\ChannelExtendController@batchSave');

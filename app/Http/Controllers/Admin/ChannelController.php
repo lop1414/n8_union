@@ -11,8 +11,10 @@ use App\Common\Helpers\Advs;
 use App\Common\Helpers\Functions;
 use App\Common\Tools\CustomException;
 use App\Datas\ChannelData;
+use App\Models\BookModel;
 use App\Models\ChannelExtendModel;
 use App\Models\ChannelModel;
+use App\Models\ChapterModel;
 use App\Models\ProductModel;
 use App\Services\ChannelService;
 use App\Services\ProductService;
@@ -335,7 +337,7 @@ class ChannelController extends BaseController
         // 同步
         $date = date('Y-m-d');
 
-        $this->syncByApi($copyChannel->product->cp_type, '', $date, $date, array($copyChannel->product->id), $cpChannelId);
+        $this->syncByApi($copyChannel->product->cp_type, $copyChannel->product->type, $date, $date, array($copyChannel->product->id), $cpChannelId);
 
         // 认领
         $channel  = $this->model
@@ -353,24 +355,16 @@ class ChannelController extends BaseController
     }
 
 
-
     /**
-     * 保持验证规则
+     * 创建预处理
      */
-    public function saveValidRule(){
+    public function createPrepare(){
         $this->curdService->addField('product_id')->addValidRule('required');
         $this->curdService->addField('cp_channel_id')->addValidRule('required');
         $this->curdService->addField('name')->addValidRule('required');
         $this->curdService->addField('book_id')->addValidRule('required');
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
         $this->curdService->addField('adv_alias')->addValidEnum(AdvAliasEnum::class);
-    }
-
-    /**
-     * 创建预处理
-     */
-    public function createPrepare(){
-        $this->saveValidRule();
 
         $this->curdService->saveBefore(function(){
             if($this->curdService->getModel()->uniqueExist([
@@ -395,5 +389,118 @@ class ChannelController extends BaseController
             $channelExtendModel->parent_id = 0;
             $channelExtendModel->save();
         });
+    }
+
+
+    /**
+     * 获取未绑定渠道
+     * @param Request $request
+     * @return mixed
+     * @throws CustomException
+     */
+    public function getNotBindChannel(Request $request){
+        $requestData = $request->all();
+        $this->validRule($requestData,['product_id' => 'required'],['product_id.required' => 'product_id 不能为空']);
+        $keyword = $requestData['keyword'] ?? '';
+        $product = (new ProductModel())->where('id',$requestData['product_id'])->first();
+
+        //同步
+        $this->syncByApi($product['cp_type'], $product['type'], date('Y-m-d',strtotime('-1 day')), date('Y-m-d'),array($product['id']));
+
+        $channel = $this->model
+            ->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
+            ->select(DB::raw('channels.*'))
+            ->where('channels.product_id',$product['id'])
+            ->whereNull('e.admin_id')
+            ->when($keyword,function ($query,$keyword){
+                return  $query->whereRaw(" (`name` LIKE '%{$keyword}%' OR `id` LIKE '%{$keyword}%' OR `cp_channel_id` LIKE '%{$keyword}%')");
+            })
+            ->get();
+
+        return $this->success($channel);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws \App\Common\Tools\CustomException
+     * 创建后同步书城
+     */
+    public function createWithSync(Request $request){
+
+        $req = $request->all();
+        $this->validRule($req,[
+            'product_id' => 'required',
+            'name' => 'required',
+            'book_id' => 'required',
+            'chapter_id' => 'required',
+//            'force_chapter_id' => 'required',
+            'adv_alias' => 'required',
+            'status' => 'required',
+        ],[
+            'product_id.required' => 'product_id 不能为空',
+            'name.required' => '名称不能为空',
+            'book_id.required' => 'book_id 不能为空',
+            'chapter_id.required' => 'chapter_id 不能为空',
+            'force_chapter_id.required' => 'chapter_id 不能为空',
+            'adv_alias.required' => 'adv_alias 不能为空',
+            'status.required' => 'status 不能为空',
+        ]);
+        Functions::hasEnum(AdvAliasEnum::class,$req['adv_alias']);
+        Functions::hasEnum(StatusEnum::class,$req['status']);
+
+        $channelService = new ChannelService();
+        $product = ProductModel::find($req['product_id']);
+        if(!$product){
+            throw new CustomException(['code' => 'INVALID_PRODUCT_ID', 'message' => "产品ID无效"]);
+        }
+        $book = BookModel::find($req['book_id']);
+        if(!$book){
+            throw new CustomException(['code' => 'INVALID_BOOK_ID', 'message' => "书籍ID无效"]);
+        }
+        $chapter = ChapterModel::find($req['chapter_id']);
+        if(!$chapter){
+            throw new CustomException(['code' => 'INVALID_CHAPTER_ID', 'message' => "章节ID无效"]);
+        }
+
+        $forceChapter = null;
+        if(isset($req['force_chapter_id'])){
+            $forceChapter = ChapterModel::find($req['force_chapter_id']);
+            if(!$forceChapter){
+                throw new CustomException(['code' => 'INVALID_FORCE_CHAPTER_ID', 'message' => "强制章节ID无效"]);
+            }
+        }
+
+        $cpChannelId = $channelService->create($product,$req['name'],$book,$chapter,$forceChapter);
+
+
+        // 同步
+        $date = date('Y-m-d');
+
+        $this->syncByApi($product->cp_type, $product->type, $date, $date, array($product->id), $cpChannelId);
+
+        // 认领
+        $channel  = $this->model
+            ->where('product_id',$product->id)
+            ->where('cp_channel_id',$cpChannelId)
+            ->first();
+
+        $adminId = $this->adminUserService->readId();
+        if(isset($req['admin_id'])){
+            $admin = $this->adminUserService->read($req['admin_id']);
+            if(!$admin){
+                throw new CustomException(['code' => 'INVALID_ADMIN_ID', 'message' => "管理员ID无效"]);
+            }
+        }
+        $channelExtendModel = new ChannelExtendModel();
+        $channelExtendModel->channel_id = $channel->id;
+        $channelExtendModel->adv_alias = $req['adv_alias'];
+        $channelExtendModel->status = $req['status'];
+        $channelExtendModel->admin_id = $adminId;
+        $channelExtendModel->parent_id = 0;
+        $channelExtendModel->save();
+
+        return $this->ret($channel, $channel);
     }
 }
