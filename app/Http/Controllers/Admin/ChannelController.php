@@ -376,6 +376,7 @@ class ChannelController extends BaseController
                     'message' => '渠道已存在'
                 ]);
             }
+            $this->curdService->handleData['create_time'] = $this->curdService->handleData['updated_time'] =  date('Y-m-d H:i:s');
         });
 
         $this->curdService->saveAfter(function (){
