@@ -407,6 +407,8 @@ class ChannelController extends BaseController
         //同步
         $this->syncByApi($product['cp_type'], $product['type'], date('Y-m-d',strtotime('-1 day')), date('Y-m-d'),array($product['id']));
 
+        $page = $requestData['page'] ?? 1;
+        $pageSize = $requestData['page_size'] ?? 10;
         $channel = $this->model
             ->leftJoin('channel_extends AS e','channels.id','=','e.channel_id')
             ->select(DB::raw('channels.*'))
@@ -415,7 +417,13 @@ class ChannelController extends BaseController
             ->when($keyword,function ($query,$keyword){
                 return  $query->whereRaw(" (`name` LIKE '%{$keyword}%' OR `id` LIKE '%{$keyword}%' OR `cp_channel_id` LIKE '%{$keyword}%')");
             })
-            ->get();
+            ->listPage($page,$pageSize);
+
+        foreach ($channel['list'] as $item){
+            $item->book;
+            $item->chapter;
+            $item->force_chapter;
+        }
 
         return $this->success($channel);
     }
