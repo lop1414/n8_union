@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Tools\CustomException;
+use App\Common\Tools\CustomLock;
 use App\Models\BookModel;
 use App\Models\ProductModel;
 use App\Services\BookService;
@@ -47,9 +48,15 @@ class BookController extends BaseController
                         'message' => 'product_id 不能为空'
                     ]);
                 }
-                $product = ProductModel::find($req['product_id']);
-                (new BookService())->sync($product->cp_type, [$product->id] , $keyword);
 
+                //同步频率限制
+                $key = "admin_sync_book_frequency_limit|{$req['product_id']}|{$keyword}";
+                $lock = new CustomLock($key);
+                if(!$lock->isLock()) {
+                    $lock->set(60*5);
+                    $product = ProductModel::find($req['product_id']);
+                    (new BookService())->sync($product->cp_type, [$product->id], $keyword);
+                }
             }
         });
     }

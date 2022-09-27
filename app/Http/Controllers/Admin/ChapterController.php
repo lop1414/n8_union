@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Tools\CustomException;
+use App\Common\Tools\CustomLock;
 use App\Models\ChapterModel;
 use App\Models\ProductModel;
 use App\Services\ChapterService;
@@ -63,6 +64,8 @@ class ChapterController extends BaseController
         $this->curdService->customBuilder(function ($builder){
             $req = $this->curdService->requestData;
 
+
+
             if(isset($req['has_sync']) && $req['has_sync'] == 1){
                 if(!isset($req['product_id'])){
                     throw new CustomException([
@@ -70,9 +73,16 @@ class ChapterController extends BaseController
                         'message' => 'product_id 不能为空'
                     ]);
                 }
-                $product = ProductModel::find($req['product_id']);
-                (new ChapterService())->sync($product->cp_type, [$product->id] , $req['book_id']);
 
+                //同步频率限制
+                $key = "admin_sync_chapter_frequency_limit|{$req['product_id']}|{$req['book_id']}";
+                $lock = new CustomLock($key);
+
+                if(!$lock->isLock()){
+                    $lock->set(60*5);
+                    $product = ProductModel::find($req['product_id']);
+                    (new ChapterService())->sync($product->cp_type, [$product->id] , $req['book_id']);
+                }
             }
         });
     }
