@@ -64,9 +64,7 @@ class ChapterController extends BaseController
         $this->curdService->customBuilder(function ($builder){
             $req = $this->curdService->requestData;
 
-
-
-            if(isset($req['has_sync']) && $req['has_sync'] == 1){
+            if(isset($req['is_sync']) && $req['is_sync'] == 1){
                 if(!isset($req['product_id'])){
                     throw new CustomException([
                         'code' => 'NOT_EXISTENT',

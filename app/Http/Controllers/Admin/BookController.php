@@ -41,7 +41,7 @@ class BookController extends BaseController
             $req = $this->curdService->requestData;
             $keyword = intval($req['keyword'] ?? '');
 
-            if(isset($req['has_sync']) && $req['has_sync'] == 1 && !empty($keyword)){
+            if(isset($req['is_sync']) && $req['is_sync'] == 1 && !empty($keyword)){
                 if(!isset($req['product_id'])){
                     throw new CustomException([
                         'code' => 'NOT_EXISTENT',
