@@ -420,6 +420,7 @@ class ChannelController extends BaseController
             ->listPage($page,$pageSize);
 
         foreach ($channel['list'] as $item){
+            unset($item['extends']);
             $item->book;
             $item->chapter;
             $item->force_chapter;
