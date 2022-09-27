@@ -1,0 +1,90 @@
+<?php
+namespace App\Http\Controllers\Admin;
+
+
+use App\Common\Tools\CustomException;
+use App\Models\ChapterModel;
+use App\Models\ProductModel;
+use App\Services\ChapterService;
+
+class ChapterController extends BaseController
+{
+
+    /**
+     * @var string
+     * 默认排序字段
+     */
+    protected $defaultOrderBy = 'seq';
+
+    /**
+     * @var string
+     * 默认排序类型
+     */
+    protected $defaultOrderType = 'asc';
+
+    /**
+     * constructor.
+     */
+    public function __construct()
+    {
+        $this->model = new ChapterModel();
+
+        parent::__construct();
+    }
+
+    /**
+     * 分页列表预处理
+     */
+    public function selectPrepare(){
+        $this->curdService->selectQueryBefore(function (){
+            $this->dataFilter();
+            $this->syncChapter();
+        });
+    }
+
+    /**
+     * 过滤
+     */
+    protected function dataFilter(){
+        $this->curdService->addField('book_id')->addValidRule('required');
+
+        $this->curdService->customBuilder(function ($builder){
+            $req = $this->curdService->requestData;
+            $builder->where('book_id',$req['book_id']);
+
+            $keyword = $req['keyword'] ?? '';
+            if(!empty($keyword)){
+                $builder->whereRaw(" (`name` LIKE '%{$keyword}%' OR `id` LIKE '%{$keyword}%' OR `cp_chapter_id` LIKE '%{$keyword}%')");
+            }
+        });
+    }
+
+    protected function syncChapter(){
+        $this->curdService->customBuilder(function ($builder){
+            $req = $this->curdService->requestData;
+
+            if(isset($req['has_sync']) && $req['has_sync'] == 1){
+                if(!isset($req['product_id'])){
+                    throw new CustomException([
+                        'code' => 'NOT_EXISTENT',
+                        'message' => 'product_id 不能为空'
+                    ]);
+                }
+                $product = ProductModel::find($req['product_id']);
+                (new ChapterService())->sync($product->cp_type, [$product->id] , $req['book_id']);
+
+            }
+        });
+    }
+
+    /**
+     * 列表预处理
+     */
+    public function getPrepare(){
+        $this->curdService->getQueryBefore(function (){
+            $this->dataFilter();
+            $this->syncChapter();
+        });
+    }
+
+}

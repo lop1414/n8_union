@@ -193,6 +193,12 @@ $router->group([
         $router->post('get', 'Admin\BookController@get');
         $router->post('read', 'Admin\BookController@read');
     });
+    // 章节
+    $router->group(['prefix' => 'chapter'], function () use ($router) {
+        $router->post('select', 'Admin\ChapterController@select');
+        $router->post('get', 'Admin\ChapterController@get');
+        $router->post('read', 'Admin\ChapterController@read');
+    });
     // 测试书籍
     $router->group(['prefix' => 'test_book'], function () use ($router) {
         $router->post('select', 'Admin\TestBookController@select');

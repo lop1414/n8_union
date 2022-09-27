@@ -8,7 +8,7 @@ use App\Common\Sdks\Yw\YwSdk;
 use App\Services\BookService;
 use App\Services\ChapterService;
 
-class YwChapterService
+class YwChapterService implements CpChapterInterface
 {
     protected $bookService;
 
@@ -28,9 +28,21 @@ class YwChapterService
         return CpTypeEnums::YW;
     }
 
+    /**
+     * 同步
+     * @param ProductModel $product
+     * @param int $bookId
+     */
+    public function sync(ProductModel $product,int $bookId){
+        $data = $this->get($product,$bookId);
+        foreach ($data as $item){
+            $this->chapterService->save($item);
+        }
+    }
 
 
-    public function sync(ProductModel $product,int $bookId)
+
+    public function get(ProductModel $product,int $bookId):array
     {
         $sdk = new YwSdk($product['cp_product_alias'],$product['cp_account']['account'],$product['cp_account']['cp_secret']);
 
@@ -39,13 +51,16 @@ class YwChapterService
         $res = $sdk->getChapterList($bookInfo['cp_book_id']);
         $list = $res['chapter_list'] ?? [];
 
+        $data = [];
         foreach ($list as $chapter){
-            $this->chapterService->save([
+            $data[] = [
                 'book_id'       => $bookId,
                 'cp_chapter_id' => $chapter['ccid'],
                 'name'          => $chapter['chapter_title'],
                 'seq'           => $chapter['chapter_seq']
-            ]);
+            ];
+
         }
+        return $data;
     }
 }
