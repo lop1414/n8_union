@@ -468,6 +468,7 @@ class ChannelController extends BaseController
             throw new CustomException(['code' => 'INVALID_BOOK_ID', 'message' => "书籍ID无效"]);
         }
 
+        $forceChapter = null;
         if($product['cp_type'] == CpTypeEnums::FQ){
             //兼容FQ没有章节接口,只需章节序号
             $chapter = new ChapterModel();
@@ -477,16 +478,15 @@ class ChannelController extends BaseController
             if(!$chapter){
                 throw new CustomException(['code' => 'INVALID_CHAPTER_ID', 'message' => "章节ID无效"]);
             }
-        }
 
-
-        $forceChapter = null;
-        if(isset($req['force_chapter_id']) && !empty($req['force_chapter_id'])){
-            $forceChapter = ChapterModel::find($req['force_chapter_id']);
-            if(!$forceChapter){
-                throw new CustomException(['code' => 'INVALID_FORCE_CHAPTER_ID', 'message' => "强制章节ID无效"]);
+            if(isset($req['force_chapter_id']) && !empty($req['force_chapter_id'])){
+                $forceChapter = ChapterModel::find($req['force_chapter_id']);
+                if(!$forceChapter){
+                    throw new CustomException(['code' => 'INVALID_FORCE_CHAPTER_ID', 'message' => "强制章节ID无效"]);
+                }
             }
         }
+
         $adminId = $this->adminUserService->readId();
         if(isset($req['admin_id'])){
             $admin = $this->adminUserService->read($req['admin_id']);
