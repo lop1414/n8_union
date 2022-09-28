@@ -53,10 +53,11 @@ class ChapterController extends BaseController
                     $data[] = [
                         'id'  => $i,
                         'seq' => $i,
-                        'name' => "第{$i}章"
+                        'name' => "第{$i}章",
+                        'book_id' => $req['book_id']
                     ];
                 }
-                $this->curdService->responseData['list'] = $data;
+                $this->curdService->responseData['list'] = array_values($data);
             }
         });
     }
