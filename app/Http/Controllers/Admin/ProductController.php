@@ -160,9 +160,8 @@ class ProductController extends BaseController
         $isCanApiCreate = $service->isCanApiCreate($product);
         $isCanApiSelect = $service->isCanApiSelect($product);
         return [
+            'api_create'  => $isCanApiCreate,
             'query_create'=> $isCanApiSelect,
-            'sync_create' => $isCanApiSelect && $isCanApiCreate,
-            'create'      => !$isCanApiCreate && !$isCanApiSelect,
         ];
     }
 
