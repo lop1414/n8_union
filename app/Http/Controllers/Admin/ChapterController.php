@@ -50,7 +50,7 @@ class ChapterController extends BaseController
                 $maxSeq = 8;
                 $data = [];
                 for ($i=1;$i<= $maxSeq;$i++){
-                    $data[$i] = [
+                    $data[] = [
                         'id'  => $i,
                         'seq' => $i,
                         'name' => "第{$i}章"
