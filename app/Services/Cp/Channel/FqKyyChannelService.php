@@ -35,11 +35,17 @@ class FqKyyChannelService implements CpChannelInterface
         return ProductTypeEnums::KYY;
     }
 
+
+    protected function getSdk(ProductModel $product){
+        return new FqSdk($product['cp_account']['account'],$product['cp_account']['cp_secret']);
+    }
+
+
     public function get($product, $date, $cpId): array
     {
 
         $data = array();
-        $sdk = new FqSdk($product['cp_account']['account'],$product['cp_account']['cp_secret']);
+        $sdk = $this->getSdk($product);
         $offset = 0;
         do{
             if($cpId){
@@ -87,5 +93,15 @@ class FqKyyChannelService implements CpChannelInterface
             $info = $this->bookService->save($readData);
         }
         return $info;
+    }
+
+
+
+    public function create($product, $name, $book, $chapter,$forceChapter,$cpAdminAccount = null): string
+    {
+        $sdk = $this->getSdk($product);
+        $optimizerAccount = $cpAdminAccount ? $cpAdminAccount->extends->optimizer_account : null;
+        $res = $sdk->createChannel($name,$book['cp_book_id'],$chapter['seq'],$optimizerAccount);
+        return $res['promotion_id'];
     }
 }

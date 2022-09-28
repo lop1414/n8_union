@@ -4,6 +4,7 @@ namespace App\Services\Cp;
 
 use App\Models\BookModel;
 use App\Models\ChapterModel;
+use App\Models\CpAdminAccountModel;
 use App\Services\Cp\Channel\BmKyyChannelService;
 use App\Services\Cp\Channel\FqKyyChannelService;
 use App\Services\Cp\Channel\MbDyMiniProgramChannelService;
@@ -116,13 +117,13 @@ class CpChannelService
      * @return string
      * 创建渠道
      */
-    public function create(string $name, BookModel $book, ChapterModel $chapter, ?ChapterModel $forceChapter): string
+    public function create(string $name, BookModel $book, ChapterModel $chapter, ?ChapterModel $forceChapter, ?CpAdminAccountModel $cpAdminAccount): string
     {
 
         $products = ProductService::get(['product_id' =>$this->getParam('product_id')]);
         $product = $products[0];
 
-        return $this->service->create($product,$name,$book,$chapter,$forceChapter);
+        return $this->service->create($product,$name,$book,$chapter,$forceChapter,$cpAdminAccount);
     }
 
     /**

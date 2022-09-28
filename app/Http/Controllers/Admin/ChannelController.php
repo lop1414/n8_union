@@ -332,7 +332,9 @@ class ChannelController extends BaseController
         if(!$channelService->isCanApiCreate($copyChannel->product)){
             throw new CustomException(['code' => 'NOT_CAN_CREATE_CHANNEL', 'message' => "该小说平台暂不支持"]);
         }
-        $cpChannelId = $channelService->create($copyChannel->product,$req['name'],$copyChannel->book,$copyChannel->chapter,$copyChannel->force_chapter);
+
+        $adminId = $this->adminUserService->readId();
+        $cpChannelId = $channelService->create($copyChannel->product,$req['name'],$copyChannel->book,$copyChannel->chapter,$copyChannel->force_chapter,$adminId);
 
         // 同步
         $date = date('Y-m-d');
@@ -348,7 +350,7 @@ class ChannelController extends BaseController
         $channelExtendModel->channel_id = $channel->id;
         $channelExtendModel->adv_alias = $req['adv_alias'];
         $channelExtendModel->status = $req['status'];
-        $channelExtendModel->admin_id = $this->adminUserService->readId();
+        $channelExtendModel->admin_id = $adminId;
         $channelExtendModel->parent_id = $copyChannel->id;
         $channelExtendModel->save();
         return $this->success();
@@ -475,14 +477,22 @@ class ChannelController extends BaseController
         }
 
         $forceChapter = null;
-        if(isset($req['force_chapter_id'])){
+        if(isset($req['force_chapter_id']) && !empty($req['force_chapter_id'])){
             $forceChapter = ChapterModel::find($req['force_chapter_id']);
             if(!$forceChapter){
                 throw new CustomException(['code' => 'INVALID_FORCE_CHAPTER_ID', 'message' => "强制章节ID无效"]);
             }
         }
+        $adminId = $this->adminUserService->readId();
+        if(isset($req['admin_id'])){
+            $admin = $this->adminUserService->read($req['admin_id']);
+            if(!$admin){
+                throw new CustomException(['code' => 'INVALID_ADMIN_ID', 'message' => "管理员ID无效"]);
+            }
+            $adminId = $admin['id'];
+        }
 
-        $cpChannelId = $channelService->create($product,$req['name'],$book,$chapter,$forceChapter);
+        $cpChannelId = $channelService->create($product,$req['name'],$book,$chapter,$forceChapter,$adminId);
 
 
         // 同步
@@ -496,13 +506,7 @@ class ChannelController extends BaseController
             ->where('cp_channel_id',$cpChannelId)
             ->first();
 
-        $adminId = $this->adminUserService->readId();
-        if(isset($req['admin_id'])){
-            $admin = $this->adminUserService->read($req['admin_id']);
-            if(!$admin){
-                throw new CustomException(['code' => 'INVALID_ADMIN_ID', 'message' => "管理员ID无效"]);
-            }
-        }
+
         $channelExtendModel = new ChannelExtendModel();
         $channelExtendModel->channel_id = $channel->id;
         $channelExtendModel->adv_alias = $req['adv_alias'];

@@ -110,7 +110,7 @@ class YwKyyChannelService implements CpChannelInterface
     }
 
 
-    public function create($product, $name, $book, $chapter,$forceChapter): string
+    public function create($product, $name, $book, $chapter,$forceChapter,$cpAdminAccount = null): string
     {
         $sdk = $this->getSdk($product);
         $res = $sdk->createChannel($book['cp_book_id'],$chapter['cp_chapter_id'],$name,$forceChapter['seq']);

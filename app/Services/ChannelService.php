@@ -11,6 +11,7 @@ use App\Datas\ChannelData;
 use App\Datas\ChannelExtendData;
 use App\Models\BookModel;
 use App\Models\ChapterModel;
+use App\Models\CpAdminAccountModel;
 use App\Models\ProductModel;
 use App\Services\Cp\Channel\CpChannelInterface;
 use App\Services\Cp\CpChannelService;
@@ -130,7 +131,7 @@ class ChannelService extends BaseService
         return $data;
     }
 
-    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,?ChapterModel $cpForceChapter): string
+    public function create(ProductModel $product,string $name,BookModel $book,ChapterModel $chapter,?ChapterModel $cpForceChapter,$adminId = 0): string
     {
 
         $container = Container::getInstance();
@@ -150,8 +151,14 @@ class ChannelService extends BaseService
                 }
 
                 $cpChannelService->setParam('product_id',$product['id']);
-
-                return $cpChannelService->create($name,$book,$chapter,$cpForceChapter);
+                $cpAdminAccount = null;
+                if($adminId){
+                    $cpAdminAccount = (new CpAdminAccountModel)
+                        ->where('admin_id',$adminId)
+                        ->where('cp_type',$cpType)
+                        ->first();
+                }
+                return $cpChannelService->create($name,$book,$chapter,$cpForceChapter,$cpAdminAccount);
             }
         }
     }
