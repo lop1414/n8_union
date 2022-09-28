@@ -448,19 +448,13 @@ class ChannelController extends BaseController
             'book_id' => 'required',
             'chapter_id' => 'required',
 //            'force_chapter_id' => 'required',
-            'adv_alias' => 'required',
-            'status' => 'required',
         ],[
             'product_id.required' => 'product_id 不能为空',
             'name.required' => '名称不能为空',
             'book_id.required' => 'book_id 不能为空',
             'chapter_id.required' => 'chapter_id 不能为空',
             'force_chapter_id.required' => 'chapter_id 不能为空',
-            'adv_alias.required' => 'adv_alias 不能为空',
-            'status.required' => 'status 不能为空',
         ]);
-        Functions::hasEnum(AdvAliasEnum::class,$req['adv_alias']);
-        Functions::hasEnum(StatusEnum::class,$req['status']);
 
         $channelService = new ChannelService();
         $product = ProductModel::find($req['product_id']);
@@ -505,15 +499,6 @@ class ChannelController extends BaseController
             ->where('product_id',$product->id)
             ->where('cp_channel_id',$cpChannelId)
             ->first();
-
-
-        $channelExtendModel = new ChannelExtendModel();
-        $channelExtendModel->channel_id = $channel->id;
-        $channelExtendModel->adv_alias = $req['adv_alias'];
-        $channelExtendModel->status = $req['status'];
-        $channelExtendModel->admin_id = $adminId;
-        $channelExtendModel->parent_id = 0;
-        $channelExtendModel->save();
 
         return $this->ret($channel, $channel);
     }
