@@ -420,6 +420,7 @@ class ChannelController extends BaseController
             ->when($keyword,function ($query,$keyword){
                 return  $query->whereRaw(" (`name` LIKE '%{$keyword}%' OR `id` LIKE '%{$keyword}%' OR `cp_channel_id` LIKE '%{$keyword}%')");
             })
+            ->orderBy('create_time','desc')
             ->listPage($page,$pageSize);
 
         foreach ($channel['list'] as $item){
