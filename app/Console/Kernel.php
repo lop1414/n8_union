@@ -6,6 +6,7 @@ use App\Common\Enums\AdvAliasEnum;
 use App\Common\Helpers\Functions;
 use App\Console\Commands\RefreshCpAccessTokenCommand;
 use App\Console\Commands\RefreshWeixinMiniProgramAccessTokenCommand;
+use App\Console\Commands\SyncCpAdminAccountCommand;
 use App\Console\Commands\SyncDeviceNetworkLicenseCommand;
 use App\Console\Commands\UaReadAnalyseCommand;
 use App\Console\Commands\SaveUserActionCommand;
@@ -49,6 +50,8 @@ class Kernel extends ConsoleKernel
 
         // 刷新平台账户token
         RefreshCpAccessTokenCommand::class,
+        // 同步书城账户信息
+        SyncCpAdminAccountCommand::class
 
     ];
 
