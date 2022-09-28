@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Common\Enums\CpTypeEnums;
 use App\Common\Tools\CustomException;
 use App\Common\Tools\CustomLock;
 use App\Models\ChapterModel;
@@ -40,6 +41,23 @@ class ChapterController extends BaseController
         $this->curdService->selectQueryBefore(function (){
             $this->dataFilter();
             $this->syncChapter();
+        });
+        $this->curdService->selectQueryAfter(function (){
+            $req = $this->curdService->requestData;
+            $product = ProductModel::find($req['product_id']);
+            if($product['cp_type'] == CpTypeEnums::FQ){
+                // 兼容FQ没有章节接口
+                $maxSeq = 8;
+                $data = [];
+                for ($i=1;$i<= $maxSeq;$i++){
+                    $data[$i] = [
+                        'id'  => $i,
+                        'seq' => $i,
+                        'name' => "第{$i}章"
+                    ];
+                }
+                $this->curdService->responseData['list'] = $data;
+            }
         });
     }
 

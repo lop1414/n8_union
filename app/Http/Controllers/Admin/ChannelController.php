@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Common\Enums\AdvAliasEnum;
+use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Enums\StatusEnum;
 use App\Common\Helpers\Advs;
@@ -466,10 +467,18 @@ class ChannelController extends BaseController
         if(!$book){
             throw new CustomException(['code' => 'INVALID_BOOK_ID', 'message' => "书籍ID无效"]);
         }
-        $chapter = ChapterModel::find($req['chapter_id']);
-        if(!$chapter){
-            throw new CustomException(['code' => 'INVALID_CHAPTER_ID', 'message' => "章节ID无效"]);
+
+        if($product['cp_type'] == CpTypeEnums::FQ){
+            //兼容FQ没有章节接口,只需章节序号
+            $chapter = new ChapterModel();
+            $chapter->seq = $req['chapter_id'];
+        }else{
+            $chapter = ChapterModel::find($req['chapter_id']);
+            if(!$chapter){
+                throw new CustomException(['code' => 'INVALID_CHAPTER_ID', 'message' => "章节ID无效"]);
+            }
         }
+
 
         $forceChapter = null;
         if(isset($req['force_chapter_id']) && !empty($req['force_chapter_id'])){
