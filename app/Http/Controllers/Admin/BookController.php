@@ -37,8 +37,10 @@ class BookController extends BaseController
             if(!empty($cpBookId)){
                 $builder->where('cp_book_id',$cpBookId);
             }
-            $product = ProductModel::find($req['product_id']);
-            $builder->where('cp_type',$product['cp_type']);
+            if(isset($req['product_id'])){
+                $product = ProductModel::find($req['product_id']);
+                $builder->where('cp_type',$product['cp_type']);
+            }
         });
     }
 
