@@ -27,17 +27,17 @@ class QywxController extends FrontController
 
         $input = file_get_contents("php://input");
 
-        $xml = simplexml_load_string($input);
-        $xmlData = [];
-        foreach ($xml as $k => $v) {
-            $xmlData[(string) $k] = (string) $v;
-        }
+//        $xml = simplexml_load_string($input);
+//        $xmlData = [];
+//        foreach ($xml as $k => $v) {
+//            $xmlData[(string) $k] = (string) $v;
+//        }
 
         $errorLogService = new ErrorLogService();
         $errorLogService->create('QYWX_MSG_LOG', '企业微信消息日志', [
             'request_data' => $requestData,
             'input' => $input,
-            'xml_data' => $xmlData,
+            //'xml_data' => $xmlData,
         ], ExceptionTypeEnum::CUSTOM);
 
         return $this->success();
