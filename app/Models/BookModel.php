@@ -27,6 +27,15 @@ class BookModel extends BaseModel
     ];
 
 
+    /**
+     * @param $value
+     * @return string
+     * 属性访问器
+     */
+    public function getCpBookIdAttribute($value)
+    {
+        return "{$value}";
+    }
 
     /**
      * 章节 一对多
