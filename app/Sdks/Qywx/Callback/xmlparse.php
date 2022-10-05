@@ -18,16 +18,13 @@ class XMLParse
 	 */
 	public function extract($xmltext)
 	{
-		try {
-			$xml = new DOMDocument();
-			$xml->loadXML($xmltext);
-			$array_e = $xml->getElementsByTagName('Encrypt');
-			$encrypt = $array_e->item(0)->nodeValue;
-			return array(0, $encrypt);
-		} catch (Exception $e) {
-			print $e . "\n";
-			return array(ErrorCode::$ParseXmlError, null);
-		}
+        $xml = simplexml_load_string($xmltext);
+        $xmlData = [];
+        foreach ($xml as $k => $v) {
+            $xmlData[(string) $k] = (string) $v;
+        }
+        $encrypt = $xmlData['Encrypt'];
+        return array(0, $encrypt);
 	}
 
 	/**
