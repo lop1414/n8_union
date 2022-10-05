@@ -356,6 +356,7 @@ $router->group([
     'middleware' => ['access_control_allow_origin']
 ], function () use ($router) {
     $router->get('qywx/echo_str', 'Front\QywxController@echoStr');
+    $router->post('qywx/echo_str', 'Front\QywxController@echoStr');
 });
 
 
