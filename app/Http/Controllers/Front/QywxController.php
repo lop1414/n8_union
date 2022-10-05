@@ -32,21 +32,6 @@ class QywxController extends FrontController
             ],
         ];
 
-        $input = file_get_contents("php://input");
-
-//        $xml = simplexml_load_string($input);
-//        $xmlData = [];
-//        foreach ($xml as $k => $v) {
-//            $xmlData[(string) $k] = (string) $v;
-//        }
-
-        $errorLogService = new ErrorLogService();
-        $errorLogService->create('QYWX_MSG_LOG', '企业微信消息日志', [
-            'request_data' => $requestData,
-            'input' => $input,
-            //'xml_data' => $xmlData,
-        ], ExceptionTypeEnum::CUSTOM);
-
         $corpId = $requestData['corp_id'] ?? '';
         $encodingAesKey = $corpMap[$corpId]['aes_key'];
         $token = $corpMap[$corpId]['token'];
@@ -54,17 +39,36 @@ class QywxController extends FrontController
         $sVerifyMsgSig = $requestData['msg_signature'];
         $sVerifyTimeStamp = $requestData['timestamp'];
         $sVerifyNonce = $requestData['nonce'];
-        $sVerifyEchoStr = $requestData['echostr'];
+        $sVerifyEchoStr = $requestData['echostr'] ?? '';
         $sEchoStr = "";
 
-        $wxcpt = new WXBizMsgCrypt($token, $encodingAesKey, $corpId);
-        $errCode = $wxcpt->VerifyURL($sVerifyMsgSig, $sVerifyTimeStamp, $sVerifyNonce, $sVerifyEchoStr, $sEchoStr);
-        if ($errCode == 0) {
-            // success
-        } else {
-            print("ERR: " . $errCode . "\n\n");
-        }
+        if(!empty($sVerifyEchoStr)){
+            $wxcpt = new WXBizMsgCrypt($token, $encodingAesKey, $corpId);
+            $errCode = $wxcpt->VerifyURL($sVerifyMsgSig, $sVerifyTimeStamp, $sVerifyNonce, $sVerifyEchoStr, $sEchoStr);
+            if ($errCode == 0) {
+                // success
+            } else {
+                print("ERR: " . $errCode . "\n\n");
+            }
 
-        return response($sEchoStr);
+            return response($sEchoStr);
+        }else{
+            $input = file_get_contents("php://input");
+
+            $xml = simplexml_load_string($input);
+            $xmlData = [];
+            foreach ($xml as $k => $v) {
+                $xmlData[(string) $k] = (string) $v;
+            }
+
+            $errorLogService = new ErrorLogService();
+            $errorLogService->create('QYWX_MSG_LOG', '企业微信消息日志', [
+                'request_data' => $requestData,
+                'input' => $input,
+                'xml_data' => $xmlData,
+            ], ExceptionTypeEnum::CUSTOM);
+
+            return $this->success();
+        }
     }
 }
