@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Front;
 use App\Common\Controllers\Front\FrontController;
 use App\Common\Enums\ExceptionTypeEnum;
 use App\Common\Services\ErrorLogService;
+use App\Common\Tools\CustomException;
+use App\Models\QywxCorpModel;
 use App\Sdks\Qywx\QywxSdk;
 use Illuminate\Http\Request;
 use App\Sdks\Qywx\Callback\WXBizMsgCrypt;
@@ -26,17 +28,22 @@ class QywxController extends FrontController
     public function echoStr(Request $request){
         $requestData = $request->all();
 
-        $corpMap = [
-            'wwb628aa48d41017d0' => [
-                'token' => 'l0dqs7YuuEPPDmAE',
-                'aes_key' => 'PkUCGGlJvL8Bx3uZoXgYyHaNhrNtpRmvVGlAPHMqTgd',
-                'access_token' => 'fE8KgHVzVoSPcTSDIHRgBtunYDP4H02BpoM-0zj7XifQg_XyJI-fUG-n7nLlSkmH4eFNsXVIMYr5KbnGJSWZPNma-McwCSffUG53oF0-e7NNlu2TvTcz8P1Le0hhd7tfscAV36eA5_-kPdUek-Y9NRwNlLCdFhZkmAeXeGeTA8i8kf7oAeqyAMjZ-ky4dCUQZJE-Ls6OSjZ0O6WvdL6uPw',
-            ],
-        ];
-
         $corpId = $requestData['corp_id'] ?? '';
-        $encodingAesKey = $corpMap[$corpId]['aes_key'];
-        $token = $corpMap[$corpId]['token'];
+
+        $qywxCorpModel = new QywxCorpModel();
+        $qywxCorp = $qywxCorpModel->where('id', $corpId)->first();
+        if(empty($qywxCorp)){
+            throw new CustomException([
+                'code' => 'NOT_FOUND_CORP',
+                'message' => '找不到该主体',
+                'data' => [
+                    'corp_id' => $corpId,
+                ],
+            ]);
+        }
+
+        $encodingAesKey = $qywxCorp->aes_key;
+        $token = $qywxCorp->token;
 
         $sVerifyMsgSig = $requestData['msg_signature'];
         $sVerifyTimeStamp = $requestData['timestamp'];
@@ -88,8 +95,9 @@ class QywxController extends FrontController
                 }
 
                 $qywxSdk = new QywxSdk();
-                $data = $qywxSdk->syncMsg($corpMap[$corpId]['access_token'], $msgXmlData['Token']);
+                $data = $qywxSdk->syncMsg($qywxCorp->access_token, $msgXmlData['Token']);
                 $firstMsg = $data['msg_list'][0];
+                dd($data['msg_list']);
                 $userId = '';
                 if(isset($firstMsg['external_userid'])){
                     $userId = $firstMsg['external_userid'];
