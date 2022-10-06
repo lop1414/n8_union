@@ -108,7 +108,8 @@ class QywxController extends FrontController
                 $lastWelcomeMsg = end($welcomeMsg);
                 $welcomeCode = $lastWelcomeMsg['event']['welcome_code'] ?? '';
                 if(!empty($welcomeCode) && (TIMESTAMP - $lastWelcomeMsg['send_time'] < 20)){
-                    $qywxSdk->sendTextWelcomeMsg($qywxCorp->access_token, $welcomeCode, '来了老铁');
+                    $content = $qywxCorp->welcome_content ?? '欢迎咨询';
+                    $qywxSdk->sendTextWelcomeMsg($qywxCorp->access_token, $welcomeCode, $content);
                 }
 
                 return $this->success();
