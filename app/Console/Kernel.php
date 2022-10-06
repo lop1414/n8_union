@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Common\Enums\AdvAliasEnum;
 use App\Common\Helpers\Functions;
+use App\Console\Commands\Qywx\QywxRefreshAccessTokenCommand;
 use App\Console\Commands\RefreshCpAccessTokenCommand;
 use App\Console\Commands\RefreshWeixinMiniProgramAccessTokenCommand;
 use App\Console\Commands\SyncCpAdminAccountCommand;
@@ -51,8 +52,10 @@ class Kernel extends ConsoleKernel
         // 刷新平台账户token
         RefreshCpAccessTokenCommand::class,
         // 同步书城账户信息
-        SyncCpAdminAccountCommand::class
+        SyncCpAdminAccountCommand::class,
 
+        // 企业微信刷新access token
+        QywxRefreshAccessTokenCommand::class,
     ];
 
     /**
@@ -96,6 +99,9 @@ class Kernel extends ConsoleKernel
             $year = date('Y');
             $schedule->command("sync_device_network_license  --year='{$year}'")->cron('* * 1 * *');
 
+
+            // 企业微信刷新 access_token
+            $schedule->command('qywx:refresh_access_token')->cron('* * * * *');
         }
 
         //行为数据入库

@@ -6,7 +6,7 @@ use App\Common\Controllers\Front\FrontController;
 use App\Common\Enums\ExceptionTypeEnum;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
-use App\Models\QywxCorpModel;
+use App\Models\Qywx\QywxCorpModel;
 use App\Sdks\Qywx\QywxSdk;
 use Illuminate\Http\Request;
 use App\Sdks\Qywx\Callback\WXBizMsgCrypt;
@@ -23,7 +23,8 @@ class QywxController extends FrontController
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory
+     * @return \Illuminate\Http\Response|\Laravel\Lumen\Http\ResponseFactory|mixed
+     * @throws CustomException
      */
     public function echoStr(Request $request){
         $requestData = $request->all();

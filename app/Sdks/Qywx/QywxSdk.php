@@ -2,12 +2,14 @@
 
 namespace App\Sdks\Qywx;
 
+use App\Sdks\Qywx\Traits\AccessToken;
 use App\Sdks\Qywx\Traits\Msg;
 use App\Sdks\Qywx\Traits\Request;
 
 class QywxSdk
 {
     use Request;
+    use AccessToken;
     use Msg;
 
     /**
