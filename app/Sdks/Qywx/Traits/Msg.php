@@ -26,4 +26,26 @@ trait Msg
 
         return $this->publicRequest($url, $param,'POST');
     }
+
+    /**
+     * @param $accessToken
+     * @param $welcomeCode
+     * @param $content
+     * @return mixed
+     * 发送文本欢迎语
+     */
+    public function sendTextWelcomeMsg($accessToken, $welcomeCode, $content){
+        $url = $this->getUrl('kf/send_msg_on_event');
+        $url .= '?access_token='.$accessToken;
+
+        $param = [
+            'code' => $welcomeCode,
+            'msgtype' => 'text',
+            'text' => [
+                'content' => $content,
+            ],
+        ];
+
+        return $this->publicRequest($url, $param,'POST');
+    }
 }

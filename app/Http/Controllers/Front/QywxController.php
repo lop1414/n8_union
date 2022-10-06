@@ -96,42 +96,26 @@ class QywxController extends FrontController
 
                 $qywxSdk = new QywxSdk();
                 $data = $qywxSdk->syncMsg($qywxCorp->access_token, $msgXmlData['Token']);
-                $firstMsg = $data['msg_list'][0];
-                dd($data['msg_list']);
-                $userId = '';
-                if(isset($firstMsg['external_userid'])){
-                    $userId = $firstMsg['external_userid'];
-                }elseif(isset($firstMsg['event']['external_userid'])){
-                    $userId = $firstMsg['event']['external_userid'];
+
+                $welcomeMsg = [];
+                foreach($data['msg_list'] as $msg){
+                    if($msg['msgtype'] == 'event' && !empty($msg['event']['welcome_code'])){
+                        $msg['send_time_format'] = date('Y-m-d H:i:s', $msg['send_time']);
+                        $welcomeMsg[] = $msg;
+                    }
                 }
 
-                $timestamp = TIMESTAMP;
-                $url = "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUxNjA2MjEwNg==&scene=124#wechat_redirect";
-                $picUrl = "https://storage-n8-page.zengzhizongni.com/file/image/0b/0b58f2d96f8e0a215f92edef14c4021e.png";
-                $title = "关注公众号";
-                $description = "关注公众号继续阅读";
+                $lastWelcomeMsg = end($welcomeMsg);
+                $welcomeCode = $lastWelcomeMsg['event']['welcome_code'] ?? '';
+                if(!empty($welcomeCode) && (TIMESTAMP - $lastWelcomeMsg['send_time'] < 20)){
+                    $qywxSdk->sendTextWelcomeMsg($qywxCorp->access_token, $welcomeCode, '来了老铁');
+                }
 
-                $callbackXml = "<xml>
-<ToUserName><![CDATA[{$userId}]]></ToUserName>
-<FromUserName><![CDATA[{$msgXmlData['ToUserName']}]]></FromUserName>
-<CreateTime>{$timestamp}</CreateTime>
-<MsgType><![CDATA[news]]></MsgType>
-<ArticleCount>1</ArticleCount>
-<Articles>
-<item>
-<Title><![CDATA[{$title}]]></Title> 
-<Description><![CDATA[{$description}]]></Description>
-<PicUrl><![CDATA[{$picUrl}]]></PicUrl>
-<Url><![CDATA[{$url}]]></Url>
-</item>
-</Articles>
-</xml>";
-                return response($callbackXml);
+                return $this->success();
             } else {
                 print("ERR: " . $errCode . "\n\n");
             }
 
-            return $this->success();
         }
     }
 }
