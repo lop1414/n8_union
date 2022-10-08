@@ -337,7 +337,7 @@ $router->group([
     });
 });
 
-// 前端接口
+// 前端接口（签名）
 $router->group([
     'prefix' => 'front',
     'middleware' => ['simple_sign_valid']
@@ -348,6 +348,15 @@ $router->group([
 
     $router->post('open_user/bind', 'Front\OpenUserController@bind');
     $router->post('open_user/info', 'Front\OpenUserController@info');
+});
+
+// 前端接口（无签名）
+$router->group([
+    'prefix' => 'front',
+    'middleware' => ['access_control_allow_origin']
+], function () use ($router) {
+    $router->get('qywx/echo_str', 'Front\QywxController@echoStr');
+    $router->post('qywx/echo_str', 'Front\QywxController@echoStr');
 });
 
 
