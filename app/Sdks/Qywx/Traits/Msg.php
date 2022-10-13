@@ -48,4 +48,28 @@ trait Msg
 
         return $this->publicRequest($url, $param,'POST');
     }
+
+    /**
+     * @param $accessToken
+     * @param $externalUserid
+     * @param $openKfid
+     * @param $content
+     * @return mixed
+     * 发送文本消息
+     */
+    public function sendTextMsg($accessToken, $externalUserid, $openKfid, $content){
+        $url = $this->getUrl('kf/send_msg');
+        $url .= '?access_token='.$accessToken;
+
+        $param = [
+            'touser' => $externalUserid,
+            'open_kfid' => $openKfid,
+            'msgtype' => 'text',
+            'text' => [
+                'content' => $content,
+            ],
+        ];
+
+        return $this->publicRequest($url, $param,'POST');
+    }
 }

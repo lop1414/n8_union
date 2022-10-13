@@ -106,6 +106,13 @@ class QywxController extends FrontController
                     }
                 }
 
+                $msgList = $data['msg_list'];
+                $lastMsg = end($msgList);
+                if(!empty($lastMsg) && $lastMsg['msgtype'] == 'text' && $lastMsg['text']['content'] === '12138'){
+                    $content = $qywxCorp->welcome_content ?? '调试信息';
+                    $qywxSdk->sendTextMsg($qywxCorp->access_token, $lastMsg['external_userid'], $lastMsg['open_kfid'], $content);
+                }
+
                 $lastWelcomeMsg = end($welcomeMsg);
                 $welcomeCode = $lastWelcomeMsg['event']['welcome_code'] ?? '';
                 if(!empty($welcomeCode) && (TIMESTAMP - $lastWelcomeMsg['send_time'] < 20)){
