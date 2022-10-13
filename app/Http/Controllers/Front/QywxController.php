@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Front;
 
 use App\Common\Controllers\Front\FrontController;
 use App\Common\Enums\ExceptionTypeEnum;
+use App\Common\Helpers\Emoji;
+use App\Common\Helpers\Functions;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
 use App\Models\Qywx\QywxCorpModel;
@@ -109,7 +111,7 @@ class QywxController extends FrontController
                 $msgList = $data['msg_list'];
                 $lastMsg = end($msgList);
                 if(!empty($lastMsg) && $lastMsg['msgtype'] == 'text' && $lastMsg['text']['content'] === '12138'){
-                    $content = $qywxCorp->welcome_content ?? '调试信息';
+                    $content = Emoji::decode($qywxCorp->welcome_content) ?? '调试信息';
                     $qywxSdk->sendTextMsg($qywxCorp->access_token, $lastMsg['external_userid'], $lastMsg['open_kfid'], $content);
                 }
 
