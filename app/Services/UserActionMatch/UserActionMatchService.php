@@ -38,6 +38,11 @@ class UserActionMatchService extends BaseService
      */
     protected $timeRange;
 
+    /**
+     * @var bool
+     */
+    protected $debug = false;
+
 
     /**
      * @var int
@@ -103,6 +108,10 @@ class UserActionMatchService extends BaseService
         $this->advAlias = $alias;
     }
 
+    public function openDebug(){
+        $this->debug = true;
+    }
+
 
 
     public function setTimeRange($startTime,$endTime){
@@ -117,9 +126,9 @@ class UserActionMatchService extends BaseService
 
 
 
-    public function run(){
+    public function run($param = []){
 
-        $query = $this->getQuery();
+        $query = $this->getQuery($param);
         $lastMatchTimeField = $this->lastMatchTimeField;
         do{
             try {
@@ -188,6 +197,10 @@ class UserActionMatchService extends BaseService
                         $matchList = (new AdvGdtApiService())->apiConvertMatch($convert);
                     }
 
+                    if($this->debug){
+                        dump($convert,$matchList);
+                    }
+
                     // 匹配结果处理
                     foreach ($matchList as $match){
 
@@ -207,6 +220,7 @@ class UserActionMatchService extends BaseService
 
                 // echo
                 (new ConsoleEchoService())->error("自定义异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
+                return;
             }catch (\Exception $e){
 
                 DB::rollBack();
@@ -216,7 +230,7 @@ class UserActionMatchService extends BaseService
 
                 // echo
                 (new ConsoleEchoService())->error("异常 {code:{$e->getCode()},msg:{$e->getMessage()}}");
-
+                return;
             }
 
         }while(!$list->isEmpty());
@@ -224,7 +238,7 @@ class UserActionMatchService extends BaseService
     }
 
 
-    public function getQuery(){
+    public function getQuery($param = []){
         throw new CustomException([
             'code' => 'PLEASE_WRITE_CODE',
             'message' => '请书写代码 getQuery',

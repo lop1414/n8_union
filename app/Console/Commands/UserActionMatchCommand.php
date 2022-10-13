@@ -12,7 +12,7 @@ class UserActionMatchCommand extends BaseCommand
      * 命令行执行命令
      * @var string
      */
-    protected $signature = 'user_action_match {--adv_alias=} {--action=} {--time=}';
+    protected $signature = 'user_action_match {--adv_alias=} {--action=} {--time=} {--debug=} {--n8_guid=}';
 
     /**
      * 命令描述
@@ -38,6 +38,7 @@ class UserActionMatchCommand extends BaseCommand
     public function handle(){
         $action    = $this->option('action');
         $advAlias  = $this->option('adv_alias');
+        $debug     = $this->option('debug');
         if(is_null($action)){
             $this->consoleEchoService->error('action 参数必传');
             return ;
@@ -62,11 +63,19 @@ class UserActionMatchCommand extends BaseCommand
         $service = new $class;
         $service->setAdvAlias($advAlias);
         $service->setTimeRange($startTime,$endTime);
+        if($debug){
+            $service->openDebug();
+        }
 
         $key = "user_action_match|{$action}|{$advAlias}";
 
         $this->lockRun(function () use ($service,$action){
-            $service->run();
+            $param = [];
+            $n8Guid  = $this->option('n8_guid');
+            if($n8Guid){
+                $param['n8_guid'] = $n8Guid;
+            }
+            $service->run($param);
         },$key, 60*60*3,['log' => true]);
     }
 

@@ -23,18 +23,25 @@ class RegActionMatchService extends UserActionMatchService
 
 
 
-    public function getQuery(){
+    public function getQuery($param = []){
         $before = $this->getMatchCycleTime();
 
-        return $this->model
+        $query =  $this->model
             ->where('adv_alias',$this->advAlias)
-            ->when($this->timeRange,function ($query){
-                $query->whereBetween('created_time',$this->timeRange);
-            })
-            ->where('click_id',0)
             ->where('channel_id','>',0)
             ->whereRaw(" (last_match_time IS NULL OR last_match_time <= '{$before}')")
             ->orderBy('created_time');
+
+        if(isset($param['n8_guid'])){
+            return $query->where('n8_guid',$param['n8_guid']);
+        }
+
+
+        return $query
+            ->where('click_id',0)
+            ->when($this->timeRange,function ($query){
+                return $query->whereBetween('created_time',$this->timeRange);
+            });
     }
 
 
@@ -45,7 +52,7 @@ class RegActionMatchService extends UserActionMatchService
 
         if( $item['matcher'] != MatcherEnum::SYS && empty($requestId)){
             // request id 兼容二版上报过来数据 后面可以去掉
-            echo " {$unionUser['n8_guid']} 归因方不是系统 且没有request id不进行匹配\n";
+            echo "归因方不是系统 且没有request id不进行匹配( n8_guid:{$unionUser['n8_guid']} )\n";
             return false;
         }
 

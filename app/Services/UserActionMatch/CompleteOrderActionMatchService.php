@@ -33,22 +33,28 @@ class CompleteOrderActionMatchService extends UserActionMatchService
 
 
 
-    public function getQuery(){
+    public function getQuery($param = []){
         $before = $this->getMatchCycleTime();
 
-        return $this->model
+        $query = $this->model
             ->select(DB::raw("orders.*"))
             ->leftJoin('n8_union_users AS u','orders.uuid','=','u.id')
             ->where('u.adv_alias',$this->advAlias)
             ->where('orders.status',OrderStatusEnums::COMPLETE)
-            ->when($this->timeRange,function ($query){
-                $query->whereBetween('orders.complete_time',$this->timeRange);
-            })
-            ->where('u.click_id','>',0)
-            ->where('orders.complete_click_id',0)
             ->where('u.channel_id','>',0)
             ->whereRaw(" (orders.complete_last_match_time IS NULL OR orders.complete_last_match_time <= '{$before}')")
             ->orderBy('orders.complete_time');
+
+        if(isset($param['n8_guid'])){
+            return $query->where('n8_guid',$param['n8_guid']);
+        }
+
+        return $query
+            ->where('u.click_id','>',0)
+            ->where('orders.complete_click_id',0)
+            ->when($this->timeRange,function ($query){
+                $query->whereBetween('orders.complete_time',$this->timeRange);
+            });
     }
 
 
