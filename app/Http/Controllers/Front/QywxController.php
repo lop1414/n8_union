@@ -100,11 +100,11 @@ class QywxController extends FrontController
                 $qywxSdk = new QywxSdk();
                 $data = $qywxSdk->syncMsg($qywxCorp->access_token, $msgXmlData['Token'], $qywxCorp->cursor);
 
-                $welcomeMsg = [];
+                $welcomeMsgs = [];
                 foreach($data['msg_list'] as $msg){
                     if($msg['msgtype'] == 'event' && !empty($msg['event']['welcome_code'])){
                         $msg['send_time_format'] = date('Y-m-d H:i:s', $msg['send_time']);
-                        $welcomeMsg[] = $msg;
+                        $welcomeMsgs[] = $msg;
                     }
                 }
 
@@ -120,10 +120,11 @@ class QywxController extends FrontController
                     $qywxSdk->sendTextMsg($qywxCorp->access_token, $lastMsg['external_userid'], $lastMsg['open_kfid'], $content);
                 }
 
-                $lastWelcomeMsg = end($welcomeMsg);
-                $welcomeCode = $lastWelcomeMsg['event']['welcome_code'] ?? '';
-                if(!empty($welcomeCode) && (TIMESTAMP - $lastWelcomeMsg['send_time'] < 20)){
-                    $qywxSdk->sendTextWelcomeMsg($qywxCorp->access_token, $welcomeCode, $content);
+                foreach($welcomeMsgs as $welcomeMsg){
+                    $welcomeCode = $welcomeMsg['event']['welcome_code'] ?? '';
+                    if(!empty($welcomeCode) && (TIMESTAMP - $welcomeMsg['send_time'] < 20)){
+                        $qywxSdk->sendTextWelcomeMsg($qywxCorp->access_token, $welcomeCode, $content);
+                    }
                 }
 
                 return $this->success();
