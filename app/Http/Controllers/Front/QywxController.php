@@ -98,7 +98,7 @@ class QywxController extends FrontController
                 }
 
                 $qywxSdk = new QywxSdk();
-                $data = $qywxSdk->syncMsg($qywxCorp->access_token, $msgXmlData['Token']);
+                $data = $qywxSdk->syncMsg($qywxCorp->access_token, $msgXmlData['Token'], $qywxCorp->cursor);
 
                 $welcomeMsg = [];
                 foreach($data['msg_list'] as $msg){
@@ -108,10 +108,14 @@ class QywxController extends FrontController
                     }
                 }
 
+                $qywxCorp->cursor = $data['next_cursor'];
+                $qywxCorp->save();
+
                 $content = Emoji::decode($qywxCorp->welcome_content) ?? '欢迎咨询';
 
                 $msgList = $data['msg_list'];
                 $lastMsg = end($msgList);
+
                 if(!empty($lastMsg) && $lastMsg['msgtype'] == 'text' && $lastMsg['text']['content'] === '12138'){
                     $qywxSdk->sendTextMsg($qywxCorp->access_token, $lastMsg['external_userid'], $lastMsg['open_kfid'], $content);
                 }
