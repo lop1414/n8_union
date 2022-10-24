@@ -16,6 +16,7 @@ class QueueEnums
     const USER_ADD_SHORTCUT_ACTION = 'USER_ADD_SHORTCUT_ACTION';
     const USER_FOLLOW_ACTION = 'USER_FOLLOW_ACTION';
     const USER_READ_ACTION = 'USER_READ_ACTION';
+    const USER_READ_SIGN_ACTION = 'USER_READ_SIGN_ACTION';
     const USER_COMPLETE_ORDER_ACTION = 'USER_COMPLETE_ORDER_ACTION';
 
 
@@ -34,6 +35,7 @@ class QueueEnums
         ['id' => self::USER_ADD_SHORTCUT_ACTION,'name' => '加桌行为'],
         ['id' => self::USER_FOLLOW_ACTION,      'name' => '关注行为'],
         ['id' => self::USER_READ_ACTION,        'name' => '阅读行为'],
+        ['id' => self::USER_READ_SIGN_ACTION,    'name' => '阅读标记'],
         ['id' => self::USER_COMPLETE_ORDER_ACTION,'name' => '完成订单']
     ];
 

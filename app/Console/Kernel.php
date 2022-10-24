@@ -105,7 +105,7 @@ class Kernel extends ConsoleKernel
         }
 
         //行为数据入库
-        $userAction = ['reg','follow','add_shortcut','order','complete_order','login','read'];
+        $userAction = ['reg','follow','add_shortcut','order','complete_order','login','read','read_sign'];
         foreach ($userAction as $action){
             $matchCommand = "save_user_action --action={$action}";
             $schedule->command($matchCommand)->cron('* * * * *');
