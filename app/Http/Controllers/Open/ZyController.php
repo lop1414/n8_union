@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Open;
 
 
 use App\Common\Enums\CpTypeEnums;
+use App\Common\Enums\ResponseCodeEnum;
 use App\Common\Tools\CustomException;
 use App\Enums\QueueEnums;
 use App\Common\Services\DataToQueueService;
@@ -56,7 +57,7 @@ class ZyController extends BaseController
             'created_time' => $requestData['created_time']
         ]);
 
-        return $this->success();
+        return $this->_response(0, '成功');
     }
 
 
