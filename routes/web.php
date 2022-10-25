@@ -38,7 +38,7 @@ $router->group([
     });
 
     $router->post('yw/action_report/read', 'Open\YwController@read');// 阅文-阅读行为
-    $router->post('zy/action_report/read_sign', 'Open\ZyController@readSign');// 阅文-阅读标记
+    $router->get('zy/action_report/read_sign', 'Open\ZyController@readSign');// 阅文-阅读标记
 });
 
 
