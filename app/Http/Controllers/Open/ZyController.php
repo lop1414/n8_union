@@ -25,7 +25,7 @@ class ZyController extends BaseController
      */
     public function readSign(Request $request){
         $requestData = $request->all();
-        $requestData['created_time'] = date('Y-m-d H:i:s');
+        $createdTime = date('Y-m-d H:i:s');
         // 必传参数
         $this->validRule($requestData,[
             'id'       =>  'required',
@@ -54,7 +54,8 @@ class ZyController extends BaseController
             'product_id' => $product['id'],
             'cp_type' => CpTypeEnums::ZY,
             'read_sign_type' => $readSignType,
-            'created_time' => $requestData['created_time']
+            'created_time'   => $createdTime,
+            'extends'        => $requestData
         ]);
 
         return $this->_response(0, '成功');
