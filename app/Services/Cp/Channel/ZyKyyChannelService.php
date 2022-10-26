@@ -8,6 +8,7 @@ use App\Common\Enums\ProductTypeEnums;
 use App\Common\Sdks\Zy\ZySdk;
 use App\Services\BookService;
 use App\Services\ChapterService;
+use App\Services\ReadSignService;
 
 
 class ZyKyyChannelService implements CpChannelInterface
@@ -42,15 +43,26 @@ class ZyKyyChannelService implements CpChannelInterface
         ];
         $channels = $sdk->getChannels($para);
 
+        $readSignService = new ReadSignService();
         foreach ($channels['data'] as $channel){
             // 书籍
             $book['id'] = 0;
+            $readSign = [];
             if(!empty($channel['bid'])){
                 $book = $bookService->readSave([
                     'cp_book_id' => $channel['bid'],
                     'name'       => $channel['book_name'],
                     'cp_type'    => $product['cp_type']
                 ]);
+
+                $readSignData = ['book_id' => $book['id']];
+
+                for($i = 1;$i < 4;$i++){
+                    $tmpChapterId = $book['id'].'_'.$channel['sign_num_'.$i];
+                    $chapter = $chapterService->readSave($book['id'],$tmpChapterId,$channel['sign_num_'.$i.'_name'],$channel['sign_num_'.$i]);
+                    $readSignData['sign_chapter_id_'.$i] = $chapter['id'];
+                }
+                $readSign = $readSignService->saveWithGet($readSignData);
             }
 
             // 打开章节
@@ -59,7 +71,6 @@ class ZyKyyChannelService implements CpChannelInterface
             //强制章节
 //            $installChapter = $chapterService->readSave($book['id'],0,$channel['follow_num_name'],$channel['follow_num']);
 
-
             $data[] = [
                 'product_id'     => $product['id'],
                 'cp_channel_id'  => $channel['id'],
@@ -67,6 +78,7 @@ class ZyKyyChannelService implements CpChannelInterface
                 'book_id'        => $book['id'] ?? 0,
                 'chapter_id'     => 0,
                 'force_chapter_id'  => 0,
+                'read_sign_id'  => $readSign['id'] ?? 0,
                 'extends'       => [
                     'hap_url'   => $channel['hap_links'],
                     'h5_url'    => $channel['links'],

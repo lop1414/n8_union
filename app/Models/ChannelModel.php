@@ -22,6 +22,7 @@ class ChannelModel extends BaseModel
         'book_id',
         'chapter_id',
         'force_chapter_id',
+        'read_sign_id',
         'extends',
         'create_time',
         'updated_time',
