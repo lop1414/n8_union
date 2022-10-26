@@ -48,6 +48,7 @@ class ChannelExtendController extends BaseController
         $this->curdService->saveBefore(function(){
             // 赋值 admin_id
             $this->curdService->handleData['admin_id'] = $this->adminUserService->readId();
+            $this->curdService->handleData['read_sign_id'] = 0;
         });
     }
 
