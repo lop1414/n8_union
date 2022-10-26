@@ -41,6 +41,7 @@ class ChannelExtendController extends BaseController
             ->addValidRule('required')
             ->addValidEnum(AdvAliasEnum::class);
         $this->curdService->addField('status')->addValidEnum(StatusEnum::class);
+        $this->curdService->addField('read_sign_id')->addDefaultValue(0);
 
         // 追加主键
         $this->curdService->addColumns([$this->curdService->getModel()->getPrimaryKey()]);
@@ -48,7 +49,6 @@ class ChannelExtendController extends BaseController
         $this->curdService->saveBefore(function(){
             // 赋值 admin_id
             $this->curdService->handleData['admin_id'] = $this->adminUserService->readId();
-            $this->curdService->handleData['read_sign_id'] = 0;
         });
     }
 

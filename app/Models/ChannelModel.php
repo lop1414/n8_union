@@ -87,4 +87,11 @@ class ChannelModel extends BaseModel
     }
 
 
+    /**
+     * 阅读标记
+     */
+    public function read_sign(){
+        return $this->hasOne('App\Models\ReadSignModel', 'id', 'read_sign_id');
+    }
+
 }
