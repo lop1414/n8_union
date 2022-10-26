@@ -14,6 +14,7 @@ class ReadSignModel extends BaseModel
     protected $table = 'read_signs';
 
     protected $fillable = [
+        'name',
         'book_id',
         'sign_chapter_id_1',
         'sign_chapter_id_2',

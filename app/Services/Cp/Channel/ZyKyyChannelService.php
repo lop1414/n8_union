@@ -56,12 +56,14 @@ class ZyKyyChannelService implements CpChannelInterface
                 ]);
 
                 $readSignData = ['book_id' => $book['id']];
-
+                $readSignName = $book['name'];
                 for($i = 1;$i < 4;$i++){
                     $tmpChapterId = $book['id'].'_'.$channel['sign_num_'.$i];
                     $chapter = $chapterService->readSave($book['id'],$tmpChapterId,$channel['sign_num_'.$i.'_name'],$channel['sign_num_'.$i]);
                     $readSignData['sign_chapter_id_'.$i] = $chapter['id'];
+                    $readSignName .= '_'.($i+1);
                 }
+                $readSignData['name'] = $readSignName;
                 $readSign = $readSignService->saveWithGet($readSignData);
             }
 
