@@ -167,7 +167,8 @@ class ChannelController extends BaseController
 
                 $item->popularize_url = $popularizeUrl;
 
-                $item->read_sign_id = $item->read_sign_id ?: $item->extends->read_sign_id;
+                $read_sign_id = $item->read_sign_id ?: $item->extends->read_sign_id;
+                $item->read_sign_id = $read_sign_id;
                 $item->read_sign->sign_chapter_1;
                 $item->read_sign->sign_chapter_2;
                 $item->read_sign->sign_chapter_3;
