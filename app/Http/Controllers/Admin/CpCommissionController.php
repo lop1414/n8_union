@@ -44,6 +44,8 @@ class CpCommissionController extends BaseController
 
 
         $this->curdService->saveBefore(function(){
+            unset($this->curdService->handleData['created_at']);
+            unset($this->curdService->handleData['updated_at']);
             // 历史记录
             $cpCommissionLogModel = new CpCommissionLogModel();
             $last = $cpCommissionLogModel->where('cp_type',  $this->curdService->handleData['cp_type'])
