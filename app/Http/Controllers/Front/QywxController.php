@@ -9,6 +9,7 @@ use App\Common\Helpers\Functions;
 use App\Common\Services\ErrorLogService;
 use App\Common\Tools\CustomException;
 use App\Models\Qywx\QywxCorpModel;
+use App\Models\Qywx\QywxKefuModel;
 use App\Sdks\Qywx\QywxSdk;
 use Illuminate\Http\Request;
 use App\Sdks\Qywx\Callback\WXBizMsgCrypt;
@@ -109,7 +110,7 @@ class QywxController extends FrontController
                 }
 
                 $qywxCorp->cursor = $data['next_cursor'];
-                $qywxCorp->save();
+                !Functions::isLocal() && $qywxCorp->save();
 
                 $content = Emoji::decode($qywxCorp->welcome_content) ?? '欢迎咨询';
 
@@ -117,10 +118,19 @@ class QywxController extends FrontController
                 $lastMsg = end($msgList);
 
                 if(!empty($lastMsg) && $lastMsg['msgtype'] == 'text' && $lastMsg['text']['content'] === '12138'){
+                    $qywxKefu = $this->getKefu($lastMsg);
+                    if(!empty($qywxKefu)){
+                        $content = Emoji::decode($qywxKefu->welcome_content);
+                    }
                     $qywxSdk->sendTextMsg($qywxCorp->access_token, $lastMsg['external_userid'], $lastMsg['open_kfid'], $content);
                 }
 
                 foreach($welcomeMsgs as $welcomeMsg){
+                    $qywxKefu = $this->getKefu($welcomeMsg);
+                    if(!empty($qywxKefu)){
+                        $content = Emoji::decode($qywxKefu->welcome_content);
+                    }
+
                     $welcomeCode = $welcomeMsg['event']['welcome_code'] ?? '';
                     if(!empty($welcomeCode) && (TIMESTAMP - $welcomeMsg['send_time'] < 20)){
                         $qywxSdk->sendTextWelcomeMsg($qywxCorp->access_token, $welcomeCode, $content);
@@ -129,9 +139,32 @@ class QywxController extends FrontController
 
                 return $this->success();
             } else {
-                print("ERR: " . $errCode . "\n\n");
+                //print("ERR: " . $errCode . "\n\n");
+                return $this->networkError();
             }
-
         }
+    }
+
+    /**
+     * @param $msg
+     * @return |null
+     * 获取客服
+     */
+    public function getKefu($msg){
+        $qywxKefu = null;
+
+        $openKfid = '';
+        if(!empty($msg['open_kfid'])){
+            $openKfid = $msg['open_kfid'];
+        }elseif(!empty($msg['event']['open_kfid'])){
+            $openKfid = $msg['event']['open_kfid'];
+        }
+
+        if(!empty($openKfid)){
+            $qywxKefuModel = new QywxKefuModel();
+            $qywxKefu = $qywxKefuModel->find($openKfid);
+        }
+
+        return $qywxKefu;
     }
 }
