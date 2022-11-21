@@ -86,12 +86,13 @@ class FqKyyChannelService implements CpChannelInterface
 
     protected function readBook(ProductModel $product,string $cpId): array
     {
-        $cpType = $this->getCpType();
-        $info = $this->bookService->readByUniqueKey($cpId,$cpType);
-        if(empty($info)){
+//        $cpType = $this->getCpType();
+//        $info = $this->bookService->readByUniqueKey($cpId,$cpType);
+//        if(empty($info)){
+            // 番茄会直接改书名 这里每次都获取更新
             $readData = (new FqBookService())->read($product,$cpId);
             $info = $this->bookService->save($readData);
-        }
+//        }
         return $info;
     }
 
