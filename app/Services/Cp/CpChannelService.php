@@ -7,6 +7,7 @@ use App\Models\ChapterModel;
 use App\Models\CpAdminAccountModel;
 use App\Services\Cp\Channel\BmKyyChannelService;
 use App\Services\Cp\Channel\FqKyyChannelService;
+use App\Services\Cp\Channel\HsDjGzhChannelService;
 use App\Services\Cp\Channel\MbDyMiniProgramChannelService;
 use App\Services\Cp\Channel\MbWeChatMiniProgramChannelService;
 use App\Services\Cp\Channel\QyH5ChannelService;
@@ -53,6 +54,7 @@ class CpChannelService
             ZyKyyChannelService::class,
             MbDyMiniProgramChannelService::class,
             MbWeChatMiniProgramChannelService::class,
+            HsDjGzhChannelService::class
         ];
     }
 
