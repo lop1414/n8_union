@@ -6,6 +6,7 @@ namespace App\Services\Cp;
 use App\Datas\ProductData;
 use App\Models\CpAccountModel;
 use App\Services\Cp\Product\CpProductInterface;
+use App\Services\Cp\Product\HsDjGzhProductService;
 use App\Services\Cp\Product\TwH5ProductService;
 use App\Services\Cp\Product\YwH5ProductService;
 use App\Services\Cp\Product\YwKyyProductService;
@@ -39,6 +40,7 @@ class CpProductService
             YwH5ProductService::class,
             TwH5ProductService::class,
             ZyH5ProductService::class,
+            HsDjGzhProductService::class,
         ];
     }
 

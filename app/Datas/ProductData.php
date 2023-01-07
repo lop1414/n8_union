@@ -70,6 +70,9 @@ class ProductData extends BaseData
         if(isset($data['cp_secret'])){
             $info->cp_secret = $data['cp_secret'];
         }
+        if(isset($data['extends'])){
+            $info->extends = $data['extends'];
+        }
         $info->name = $data['name'];
         $info->save();
         return $info;
