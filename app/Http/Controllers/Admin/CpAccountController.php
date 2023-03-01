@@ -92,7 +92,8 @@ class CpAccountController extends BaseController
         $item = $this->curdService->read();
 
         (new ProductService())->sync([
-            'cp_type'    => $item->cp_type,
+            'cp_type'        => $item->cp_type,
+            'cp_account_id'  => $item->id
         ]);
 
 

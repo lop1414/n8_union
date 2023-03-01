@@ -101,6 +101,7 @@ class ProductService extends BaseService
         if(!empty($cpTypeParam)){
             Functions::hasEnum(CpTypeEnums::class,$cpTypeParam);
         }
+        $cpAccountId = $param['cp_account_id'] ?? 0;
 
         $container = Container::getInstance();
 
@@ -114,6 +115,7 @@ class ProductService extends BaseService
 
             if(empty($cpTypeParam) || $cpTypeParam == $cpType){
                 $cpProductService->setParam('cp_type',$cpTypeParam);
+                $cpProductService->setParam('cp_account_id',$cpAccountId);
                 $cpProductService->sync();
             }
         }

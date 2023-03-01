@@ -6,6 +6,8 @@ namespace App\Services\Cp;
 use App\Datas\ProductData;
 use App\Models\CpAccountModel;
 use App\Services\Cp\Product\CpProductInterface;
+use App\Services\Cp\Product\FqH5ProductService;
+use App\Services\Cp\Product\FqKyyProductService;
 use App\Services\Cp\Product\HsDjGzhProductService;
 use App\Services\Cp\Product\TwH5ProductService;
 use App\Services\Cp\Product\YwH5ProductService;
@@ -41,6 +43,8 @@ class CpProductService
             TwH5ProductService::class,
             ZyH5ProductService::class,
             HsDjGzhProductService::class,
+            FqKyyProductService::class,
+            FqH5ProductService::class
         ];
     }
 
@@ -69,10 +73,14 @@ class CpProductService
     public function sync()
     {
         $cpType = $this->getParam('cp_type');
+        $cpAccountId = $this->getParam('cp_account_id');
 
         $cpAccounts = (new CpAccountModel())
             ->when($cpType,function ($query,$cpType){
                 return $query->where('cp_type',$cpType);
+            })
+            ->when($cpAccountId,function ($query,$cpAccountId){
+                return $query->where('id',$cpAccountId);
             })
             ->get();
 
