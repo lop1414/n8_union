@@ -6,6 +6,7 @@ use App\Models\BookModel;
 use App\Models\ChapterModel;
 use App\Models\CpAdminAccountModel;
 use App\Services\Cp\Channel\BmKyyChannelService;
+use App\Services\Cp\Channel\FqH5ChannelService;
 use App\Services\Cp\Channel\FqKyyChannelService;
 use App\Services\Cp\Channel\HsDjGzhChannelService;
 use App\Services\Cp\Channel\MbDyMiniProgramChannelService;
@@ -47,6 +48,7 @@ class CpChannelService
             TwAppChannelService::class,
             BmKyyChannelService::class,
             FqKyyChannelService::class,
+            FqH5ChannelService::class,
             QyH5ChannelService::class,
             TwKyyChannelService::class,
             TwH5ChannelService::class,
