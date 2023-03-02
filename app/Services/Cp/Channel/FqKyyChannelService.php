@@ -58,7 +58,10 @@ class FqKyyChannelService implements CpChannelInterface
 
             foreach ($list['result'] as $item){
                 //书籍信息
-                $book = $this->readBook($product,$item['book_id']);
+                $book = [];
+                if(isset($item['book_id'])){
+                    $book = $this->readBook($product,$item['book_id']);
+                }
                 //章节信息
                 $chapter = $this->chapterService->readSave($book['id'],$item['chapter_id'],$item['chapter_title'],$item['chapter_order']);
 
@@ -66,7 +69,7 @@ class FqKyyChannelService implements CpChannelInterface
                     'product_id'    => $product['id'],
                     'cp_channel_id' => $item['promotion_id'],
                     'name'          => $item['promotion_name'],
-                    'book_id'       => $book['id'],
+                    'book_id'       => $book['id'] ?? 0,
                     'chapter_id'    => $chapter['id'] ?? 0,
                     'force_chapter_id' => 0,
                     'extends'       => [
