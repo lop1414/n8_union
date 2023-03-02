@@ -20,7 +20,7 @@ class FqKyyProductService implements CpProductInterface
         $cpAccountModelData = new CpAccountData();
         do{
             $list = $sdk->getProducts($this->appType,$page);
-            dump($list);
+
             foreach ($list['package_info_open_list'] as $item){
                 $total += 1;
                 $newAccount = $cpAccountModelData->save([
