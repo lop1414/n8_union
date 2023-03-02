@@ -4,13 +4,15 @@ namespace App\Services\Cp\Channel;
 
 
 use App\Common\Enums\ProductTypeEnums;
-use App\Services\Cp\Product\FqKyyProductService;
 
 
-class FqH5ChannelService extends FqKyyProductService
+class FqH5ChannelService extends FqKyyChannelService
 {
 
-
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function getType(): string
     {
