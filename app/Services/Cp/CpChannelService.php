@@ -11,6 +11,7 @@ use App\Services\Cp\Channel\FqKyyChannelService;
 use App\Services\Cp\Channel\HsDjGzhChannelService;
 use App\Services\Cp\Channel\MbDyMiniProgramChannelService;
 use App\Services\Cp\Channel\MbWeChatMiniProgramChannelService;
+use App\Services\Cp\Channel\QrWeChatMiniProgramChannelService;
 use App\Services\Cp\Channel\QyH5ChannelService;
 use App\Services\Cp\Channel\TwAppChannelService;
 use App\Services\Cp\Channel\TwH5ChannelService;
@@ -56,7 +57,8 @@ class CpChannelService
             ZyKyyChannelService::class,
             MbDyMiniProgramChannelService::class,
             MbWeChatMiniProgramChannelService::class,
-            HsDjGzhChannelService::class
+            HsDjGzhChannelService::class,
+            QrWeChatMiniProgramChannelService::class,
         ];
     }
 
