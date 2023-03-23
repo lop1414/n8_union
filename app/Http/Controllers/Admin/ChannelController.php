@@ -303,7 +303,7 @@ class ChannelController extends BaseController
 
         $product = ProductService::read($req['product_id']);
 
-        $this->syncByApi($product['cp_type'], $product['type'], date('Y-m-d',strtotime('-1 day')), date('Y-m-d'),array($req['product_id']));
+        $this->syncByApi($product['cp_type'], $product['type'], date('Y-m-d'), date('Y-m-d'),array($req['product_id']));
         return $this->success();
     }
 
