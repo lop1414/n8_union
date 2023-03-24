@@ -33,6 +33,11 @@ class N8UnionUserService extends BaseService
     public $unionUserModelData;
     public $unionUserUaInfoModel;
 
+    //无需渠道保护的平台
+    protected $noProtectChannelCpTypes = [
+        CpTypeEnums::QR
+    ];
+
     public function __construct(){
         parent::__construct();
         $this->unionUserModelData = new N8UnionUserData();
@@ -49,11 +54,15 @@ class N8UnionUserService extends BaseService
 
     public function updateSave($user,$actionData){
         $product = ProductService::read($user['product_id']);
-        // 渠道变更无效
-        if($product['matcher'] == MatcherEnum::SYS && !$this->isValidChange($user,$actionData['channel_id'],$actionData['action_time'])){
-            $actionData['channel_id'] = $user['channel_id'];
-            $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $actionData['channel_id']])->read();
-            $actionData['adv_alias'] = $channelExtend['adv_alias'];
+
+        //无需渠道保护的平台
+        if(!in_array($product['cp_type'],$this->noProtectChannelCpTypes)){
+            // 渠道变更无效
+            if($product['matcher'] == MatcherEnum::SYS && !$this->isValidChange($user,$actionData['channel_id'],$actionData['action_time'])){
+                $actionData['channel_id'] = $user['channel_id'];
+                $channelExtend = (new ChannelExtendData())->setParams(['channel_id' => $actionData['channel_id']])->read();
+                $actionData['adv_alias'] = $channelExtend['adv_alias'];
+            }
         }
 
         $unionUser = $this->read($user['n8_guid'],$actionData['channel_id']);
