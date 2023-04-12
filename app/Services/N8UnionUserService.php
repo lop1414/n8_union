@@ -35,7 +35,8 @@ class N8UnionUserService extends BaseService
 
     //无需渠道保护的平台
     protected $noProtectChannelCpTypes = [
-        CpTypeEnums::QR
+        CpTypeEnums::QR,
+        CpTypeEnums::BMDJ
     ];
 
     public function __construct(){
