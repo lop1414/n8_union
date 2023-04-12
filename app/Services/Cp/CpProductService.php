@@ -5,6 +5,7 @@ namespace App\Services\Cp;
 
 use App\Datas\ProductData;
 use App\Models\CpAccountModel;
+use App\Services\Cp\Product\BmdjWechatMiniProgramProductService;
 use App\Services\Cp\Product\CpProductInterface;
 use App\Services\Cp\Product\FqH5ProductService;
 use App\Services\Cp\Product\FqKyyProductService;
@@ -44,7 +45,8 @@ class CpProductService
             ZyH5ProductService::class,
             HsDjGzhProductService::class,
             FqKyyProductService::class,
-            FqH5ProductService::class
+            FqH5ProductService::class,
+            BmdjWechatMiniProgramProductService::class,
         ];
     }
 

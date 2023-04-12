@@ -5,6 +5,7 @@ namespace App\Services\Cp;
 use App\Models\BookModel;
 use App\Models\ChapterModel;
 use App\Models\CpAdminAccountModel;
+use App\Services\Cp\Channel\BmdjWechatMiniProgramChannelService;
 use App\Services\Cp\Channel\BmKyyChannelService;
 use App\Services\Cp\Channel\FqH5ChannelService;
 use App\Services\Cp\Channel\FqKyyChannelService;
@@ -59,6 +60,7 @@ class CpChannelService
             MbWeChatMiniProgramChannelService::class,
             HsDjGzhChannelService::class,
             QrWeChatMiniProgramChannelService::class,
+            BmdjWechatMiniProgramChannelService::class,
         ];
     }
 
