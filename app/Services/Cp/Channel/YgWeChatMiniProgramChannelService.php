@@ -6,6 +6,7 @@ namespace App\Services\Cp\Channel;
 use App\Common\Enums\CpTypeEnums;
 use App\Common\Enums\ProductTypeEnums;
 use App\Common\Sdks\Yg\YgSdk;
+use App\Common\Tools\CustomException;
 use App\Services\BookService;
 use App\Services\ChapterService;
 
@@ -43,6 +44,13 @@ class YgWeChatMiniProgramChannelService implements CpChannelInterface
 
 
         $channels = $sdk->getChannelListByWeb($product['cp_secret'],$startTime,$endTime);
+
+        if(!isset($channels['total'])){
+            throw new CustomException([
+                'code' => 'YG_WEB_REQUEST_ERROR',
+                'message' => '请联系管理员'
+            ]);
+        }
 
         if($channels['total'] <= 0){
             return [];
