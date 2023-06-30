@@ -9,6 +9,7 @@ use App\Common\Sdks\Qr\QrSdk;
 use App\Common\Tools\CustomException;
 use App\Services\BookService;
 use App\Services\ChapterService;
+use App\Services\ProductService;
 
 
 class QrWeChatMiniProgramChannelService implements CpChannelInterface
@@ -28,12 +29,19 @@ class QrWeChatMiniProgramChannelService implements CpChannelInterface
     }
 
 
+    protected function getSdk($product): QrSdk
+    {
+        $cpAccount = $product['cp_account'];
+        list($hostId,$appid) = explode('#',$cpAccount['account']);
+        return new QrSdk($hostId,$appid,$cpAccount['cp_secret']);
+    }
+
 
     public function get($product, $date, $cpId): array
     {
         //不支持cp id 获取
         $data = array();
-        $sdk = new QrSdk($product['extends']['host_id'],$product['cp_product_alias'],$product['cp_secret']);
+        $sdk = $this->getSdk($product);
 
         $bookService = new BookService();
         $chapterService = new ChapterService();
@@ -41,21 +49,25 @@ class QrWeChatMiniProgramChannelService implements CpChannelInterface
         $startTime = $date.' 00:00:00';
         $endTime = $date.' 23:59:59';
 
+        $productList = (new ProductService())->get([
+            'cp_type'=> CpTypeEnums::QR,
+        ]);
+        $productMap = array_column($productList->toArray(),'id','cp_product_alias');
         try {
             $channels = $sdk->getChannelList($startTime,$endTime);
 
             if($channels['total'] <= 0){
                 return [];
             }
-
             foreach ($channels['promotionList'] as $item){
+                $tmpProduct = $productMap[$item['pack_appid']];
                 // 书籍
                 $book['id'] = 0;
 
                 $book = $bookService->readSave([
                     'cp_book_id' => $item['video_id'],
                     'name'       => $item['video_name'],
-                    'cp_type'    => $product['cp_type']
+                    'cp_type'    => $tmpProduct['cp_type']
                 ]);
 
                 // 打开章节
@@ -63,7 +75,7 @@ class QrWeChatMiniProgramChannelService implements CpChannelInterface
 
 
                 $data[] = [
-                    'product_id'    => $product['id'],
+                    'product_id'    => $tmpProduct['id'],
                     'cp_channel_id' => $item['promotion_id'],
                     'name'          => $item['promotion_name'],
                     'book_id'       => $book['id'],
