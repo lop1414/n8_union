@@ -50,7 +50,6 @@ class OrderController extends UserActionBaseController
                             'order_id'  => $orderId
                         ])
                         ->read();
-                    if(!empty($globalOrder)) $globalOrder['n8_goid'] = 0;
 
                     $builder->where('n8_goid',$globalOrder['n8_goid']);
                 }
