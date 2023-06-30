@@ -65,9 +65,11 @@ class UaReadService
         if(strpos($ua,'iPhone') !== false){
             $this->deviceModel = 'iPhone';
             //系统版本
-            $tmp = explode('iPhone OS',$arrMatches[2][0]);
-            $sysVersion =  explode('like',$tmp[1]);
-            $this->sysVersion = trim($sysVersion[0]);
+            if(isset($arrMatches[2][0])) {
+                $tmp = explode('iPhone OS', $arrMatches[2][0]);
+                $sysVersion = explode('like', $tmp[1]);
+                $this->sysVersion = trim($sysVersion[0]);
+            }
 
         }else{
 
