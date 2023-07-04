@@ -52,7 +52,7 @@ class QrWeChatMiniProgramChannelService implements CpChannelInterface
         $productList = (new ProductService())->get([
             'cp_type'=> CpTypeEnums::QR,
         ]);
-        $productMap = array_column($productList->toArray(),'id','cp_product_alias');
+        $productMap = array_column($productList->toArray(),null,'cp_product_alias');
         try {
             $channels = $sdk->getChannelList($startTime,$endTime);
 
