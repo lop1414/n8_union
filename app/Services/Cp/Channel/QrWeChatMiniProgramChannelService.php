@@ -83,6 +83,7 @@ class QrWeChatMiniProgramChannelService implements CpChannelInterface
                     'force_chapter_id' => $forceChapter['id'] ?? 0,
                     'extends'       => [
                         'h5_url'    => $item['promotion_wechat_redirect_url'],
+                        'page_path' => $item['miniapp_path']
                     ],
                     'create_time' => $item['create_time'],
                     'updated_time' => $item['create_time'],
