@@ -67,7 +67,7 @@ class YgWeChatMiniProgramChannelService implements CpChannelInterface
             ]);
 
             // 打开章节
-            $chapter = $chapterService->readSave($book['id'],$item['chapter_id'],$item['chapter_name'],$item['chapter_idx']?:0);
+            $chapter = $chapterService->readSave($book['id'],$item['chapter_id'],$item['chapter_name'],$item['chapter_idx']??0);
 
 
             $data[] = [
