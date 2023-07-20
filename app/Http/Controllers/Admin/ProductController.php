@@ -115,6 +115,15 @@ class ProductController extends BaseController
                     }
                 }
 
+                if($item->cp_type == CpTypeEnums::YWDJ){
+                    if($item->type == ProductTypeEnums::WECHAT_MINI_PROGRAM){
+                        $copyUrl[] = [
+                            'name' => '用户数据接收地址',
+                            'url'  => $ywTransferDataUrl.'/open/yw_dj/user'
+                        ];
+                    }
+                }
+
                 if($item->cp_type == CpTypeEnums::FQ){
 
                     if($item->type == ProductTypeEnums::KYY){
