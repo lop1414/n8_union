@@ -13,6 +13,7 @@ use App\Services\Cp\Product\HsDjGzhProductService;
 use App\Services\Cp\Product\TwH5ProductService;
 use App\Services\Cp\Product\YwH5ProductService;
 use App\Services\Cp\Product\YwKyyProductService;
+use App\Services\Cp\Product\YwdjWeChatMiniProgramProductService;
 use App\Services\Cp\Product\ZyH5ProductService;
 
 class CpProductService
@@ -41,6 +42,7 @@ class CpProductService
         return [
             YwKyyProductService::class,
             YwH5ProductService::class,
+            YwdjWeChatMiniProgramProductService::class,
             TwH5ProductService::class,
             ZyH5ProductService::class,
             HsDjGzhProductService::class,
