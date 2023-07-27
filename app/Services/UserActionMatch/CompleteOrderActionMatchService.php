@@ -42,6 +42,7 @@ class CompleteOrderActionMatchService extends UserActionMatchService
             ->where('u.adv_alias',$this->advAlias)
             ->where('orders.status',OrderStatusEnums::COMPLETE)
             ->where('u.channel_id','>',0)
+            ->where('orders.order_time','>=',time() - 86400)
             ->whereRaw(" (orders.complete_last_match_time IS NULL OR orders.complete_last_match_time <= '{$before}')")
             ->orderBy('orders.complete_time');
 
